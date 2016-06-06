@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar_initial.html" %}
+  <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+       <div class="col-lg-12 text-center">
+          <h2>MyBanker First Run</h2>
+          <br>
+          <form action="" method="post">
+            <p class="lead">Database Details</p>
+            <p>Only MySQL is supported. Please make sure that you only enter MySQL details.</p>
+            <p><input style="text-align: center" type="text" placeholder="MySQL Hostname" name="db_hostname" value="">
+            <input style="text-align: center" type="text" placeholder="MySQL Username" name="db_user" value="">
+            <input style="text-align: center" type="text" placeholder="MySQL Password" name="db_password" value=""></p><br>
+            <p class="lead">Set up Admin account</p>
+            <p>Please provide password and email for the admin account. Various aspects of this application can be managed by this account</p>
+            <p><input style="text-align: center" type="password" placeholder="Admin password" name="admin_password" value="">
+            <input style="text-align: center" type="text" placeholder="Admin Email" name="first_email" value=""></p><br>
+            <p class="lead">Set up the first user (Optional)</p>
+            <p>This step is completely optional and can be done later by logging into admin account </p>
+            <p><input style="text-align: center" type="text" placeholder="Username" name="first_username" value="">
+            <input style="text-align: center" type="password" placeholder="Password" name="first_password" value="">
+            <input style="text-align: center" type="text" placeholder="Email" name="first_email" value=""></p><br>
+            <p><input class="btn btn-default" type="submit" value="Complete Installation"></p>
+         </form>
+       </div>
+    </div>
+  </div>
+  <!-- /.container -->
+{% endblock %}
