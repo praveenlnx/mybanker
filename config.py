@@ -6,6 +6,7 @@
 # done - Initial setup is completed and the app is ready to use
 # done - Initial setup not completed and application will lauch setup wizard 
 #           next time the site is accessed
+## IMPORTANT: DON'T EDIT THIS OPTION. IT WILL BE HANDLED BY THE APP ##
 INITIAL_SETUP = 'done'
 
 # ---------------- #

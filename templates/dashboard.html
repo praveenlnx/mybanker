@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar_initial.html" %}
+  <!-- Page Content -->
+  <div class="container text-center">
+   {% with messages = get_flashed_messages() %}
+     {% if messages %}
+        {% for message in messages %}
+           <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+             {{ message }}
+           </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+  <!-- /.container -->
+{% endblock %}

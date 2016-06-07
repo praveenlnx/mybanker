@@ -3,8 +3,17 @@
 {% include "navbar_initial.html" %}
   <!-- Page Content -->
   <div class="container text-center">
+   {% with messages = get_flashed_messages() %}
+     {% if messages %}
+        {% for message in messages %}
+           <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+             {{ message }}
+           </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
    <div class="col-md-8 col-md-offset-4">
-    <form class="form-signin" style="width: 300px;">
+    <form method="post" action="/dashboard" class="form-signin" style="width: 300px;">
       <h3 class="form-signin-heading">Please log in</h3>
       <label for="username" class="sr-only">Username</label>
       <input type="text" id="username" class="form-control" name="username" placeholder="Username" required autofocus><br>
