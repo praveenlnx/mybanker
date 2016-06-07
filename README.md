@@ -3,6 +3,7 @@ The new MyBanker Personal Finance Application
 
 ### Description
 A web application written in Python using Flask framework. Its a personal finance application which you can use to track your day-to-day expenses. Some of the things you can do with it are
+
 * Add/modify/delete accounts
 * Record income and expenses
 * Transfer funds between accounts
