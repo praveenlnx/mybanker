@@ -38,8 +38,11 @@ def dashboard():
   password = request.form['password']
   if checkLogin(username, password):
     session['logged_in'] = True
-    flash("Welcome %s!" % getNameofUser(username))
-    return render_template('dashboard.html')
+    session['username'] = username
+    dashboard = 'dashboard.html'
+    if username == "admin":
+      dashboard = 'dashboard_admin.html'
+    return render_template(dashboard, loginUser=getNameofUser(username))
   else:
     return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
 
