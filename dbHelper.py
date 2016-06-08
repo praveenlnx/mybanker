@@ -35,17 +35,33 @@ def runQueriesFromFile(queryfile):
   return "Success"
 
 # Method to validate login credentials entered
-def checkLogin(name, password):
+def checkLogin(username, password):
   conn = mysql.connect()
   cursor = conn.cursor()
   try:
-    query = 'SELECT password FROM users where name = "%s"' % name
-    cursor.execute(query)
+    cursor.execute('SELECT password FROM users WHERE username = "%s"' % username)
     for row in cursor.fetchall():
       if sha256(password).hexdigest() == row[0]:
         return True
       else:
         return False
   except Exception as e:
+    conn.close()
+    gc.collect()
     return False
+  conn.close()
+  gc.collect()
 
+# Get Name from Username
+def getNameofUser(username):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    cursor.execute('SELECT name FROM users WHERE username = "%s"' % username)
+    return cursor.fetchone()[0]
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return False
+  conn.close()
+  gc.collect()
