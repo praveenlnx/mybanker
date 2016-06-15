@@ -72,7 +72,6 @@ def addUser(name, username, password, email):
   cursor = conn.cursor()
   try:
     query = "INSERT INTO users VALUES('%s', '%s', '%s', '%s', '%s', CURDATE())" % (name, username, 'no', sha256(password).hexdigest(), email)
-    print query
     cursor.execute(query)
     conn.commit()
   except Exception as e:
@@ -82,3 +81,23 @@ def addUser(name, username, password, email):
   conn.close()
   gc.collect()
   return "User %s added successfully" % name
+
+# Method to update admin password
+def updatePassword(username, currentpassword, newpassword):
+  if currentpassword == newpassword:
+    return "Funny! Idea here is to change password not set the same password again"
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  currentPW = sha256(currentpassword).hexdigest()
+  newPW = sha256(newpassword).hexdigest()
+  try:
+    query = "UPDATE users SET password='%s' WHERE username='%s' AND password='%s'" % (newPW, username, currentPW)
+    cursor.execute(query)
+    conn.commit()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return str(e)
+  conn.close()
+  gc.collect()
+  return "Password updated successfully"

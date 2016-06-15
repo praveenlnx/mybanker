@@ -1,6 +1,6 @@
 # Imports section
 from flask import Flask, render_template, request, session, flash
-from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser
+from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword
 from functools import wraps
 import fileinput, gc
 
@@ -91,6 +91,16 @@ def adduser():
     flash(data)
   return render_template('adduser.html')
 
+# Change Admin Password route
+@app.route('/changeAdminPass', methods=['GET', 'POST'])
+@login_required
+def changeAdminPass():
+  if request.method == "POST":
+    currentPW = request.form['currentpw']
+    newPW = request.form['newpw']
+    data = updatePassword('admin', currentPW, newPW)
+    flash(data)
+  return render_template('change_admin_pass.html')
 # Main Function
 if __name__ == "__main__":
   app.run(port=8002, debug=True)
