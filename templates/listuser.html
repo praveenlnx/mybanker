@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar_admin.html" %}
+  <!-- Page Content -->
+  <div class="container">
+    <div class="col-md-6 col-md-offset-4">
+      {% if userdict %}
+        {% for row in userdict %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">
+              <span class="glyphicon glyphicon-user" style="margin-right:5px;" aria-hidden="true"></span>
+                {{ row[0] }}
+            </h3>
+          </div>
+          <div class="panel-body">
+            {{ row[1] }}<br>
+            <a href="mailto:{{ row[4] }}">{{ row[4] }}</a><br><br>
+            <small><i>Account created on {{ row[5] }}</i></small>
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+      <a href="/dashboard">Back to Dashboard</a>
+    </div>
+  </div>
+  <!-- /.container -->
+{% endblock %}

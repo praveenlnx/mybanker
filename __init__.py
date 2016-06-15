@@ -1,6 +1,6 @@
 # Imports section
 from flask import Flask, render_template, request, session, flash
-from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword
+from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers
 from functools import wraps
 import fileinput, gc
 
@@ -101,6 +101,13 @@ def changeAdminPass():
     data = updatePassword('admin', currentPW, newPW)
     flash(data)
   return render_template('change_admin_pass.html')
+
+# List User Route
+@app.route('/listuser')
+@login_required
+def listuser():
+  userdict = listMybankerUsers()
+  return render_template('listuser.html', userdict=userdict)
 # Main Function
 if __name__ == "__main__":
   app.run(port=8002, debug=True)

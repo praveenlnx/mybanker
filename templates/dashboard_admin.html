@@ -19,7 +19,7 @@
       <p>Add a new MyBanker user here.<br>
       To edit an existing user, click on List Users where you will be able to edit individual users.</p>
       <a class="btn btn-primary btn-sm" href="{{ url_for('adduser') }}" role="button">Add User</a> 
-      <a class="btn btn-primary btn-sm" href="#" role="button">List Users</a><br> 
+      <a class="btn btn-primary btn-sm" href="{{ url_for('listuser') }}" role="button">List Users</a><br> 
     <br><h4>Manage transaction categories</h4>
       <p>View or add more transaction categories here.<br>
       Please make sure to appropriately select the category type that you are adding.</p>

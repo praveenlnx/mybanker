@@ -104,3 +104,20 @@ def updatePassword(username, currentpassword, newpassword):
     return "Password for %s updated successfully" % username
   else:
     return "Operation failed! Password didn't match"
+
+# List all users and send as dictionary
+def listMybankerUsers():
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  userdict = []
+  try:
+    cursor.execute('SELECT * FROM users')
+    userdict = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return userdict
+    
