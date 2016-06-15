@@ -90,14 +90,17 @@ def updatePassword(username, currentpassword, newpassword):
   cursor = conn.cursor()
   currentPW = sha256(currentpassword).hexdigest()
   newPW = sha256(newpassword).hexdigest()
-  try:
-    query = "UPDATE users SET password='%s' WHERE username='%s' AND password='%s'" % (newPW, username, currentPW)
-    cursor.execute(query)
-    conn.commit()
-  except Exception as e:
+  if checkLogin(username, currentpassword):
+    try:
+      query = "UPDATE users SET password='%s' WHERE username='%s' AND password='%s'" % (newPW, username, currentPW)
+      cursor.execute(query)
+      conn.commit()
+    except Exception as e:
+      conn.close()
+      gc.collect()
+      return str(e)
     conn.close()
     gc.collect()
-    return str(e)
-  conn.close()
-  gc.collect()
-  return "Password updated successfully"
+    return "Password for %s updated successfully" % username
+  else:
+    return "Operation failed! Password didn't match"
