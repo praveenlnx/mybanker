@@ -14,5 +14,21 @@
     {% endwith %}
   <p class="lead">Admin Dashboard</p>
   </div>
+  <div class="container">
+    <h4>Manage Users</h4>
+      <p>Add a new MyBanker user here.<br>
+      To edit an existing user, click on List Users where you will be able to edit individual users.</p>
+      <a class="btn btn-primary btn-sm" href="{{ url_for('adduser') }}" role="button">Add User</a> 
+      <a class="btn btn-primary btn-sm" href="#" role="button">List Users</a><br> 
+    <br><h4>Manage transaction categories</h4>
+      <p>View or add more transaction categories here.<br>
+      Please make sure to appropriately select the category type that you are adding.</p>
+      <a class="btn btn-primary btn-sm" href="#" role="button">Add category</a> 
+      <a class="btn btn-primary btn-sm" href="#" role="button">List categories</a> <br>
+    <br><h4>Misc</h4>
+      <p>Change admin password</p>
+      <a class="btn btn-primary btn-sm" href="#" role="button">Change password</a> 
+    </div>
+  </div>
   <!-- /.container -->
 {% endblock %}

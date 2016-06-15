@@ -1,6 +1,6 @@
 # Imports section
 from flask import Flask, render_template, request, session, flash
-from dbHelper import runQueriesFromFile, checkLogin, getNameofUser
+from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser
 from functools import wraps
 import fileinput, gc
 
@@ -32,17 +32,22 @@ def index():
 # Login Dashboard Route
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
+  dashboard = 'dashboard.html'
   if not request.method == "POST":
+    if 'logged_in' in session:
+      if session['username'] == 'admin':
+        return render_template('dashboard_admin.html')
+      return render_template(dashboard)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
   if checkLogin(username, password):
     session['logged_in'] = True
     session['username'] = username
-    dashboard = 'dashboard.html'
+    session['user'] = getNameofUser(username)
     if username == "admin":
       dashboard = 'dashboard_admin.html'
-    return render_template(dashboard, loginUser=getNameofUser(username))
+    return render_template(dashboard)
   else:
     return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
 
@@ -72,6 +77,19 @@ def setup():
 def logout():
   session.clear()
   return render_template('index.html', message="You have been logged out!", mtype="info")
+
+# Add User route
+@app.route('/adduser', methods=['GET', 'POST'])
+@login_required
+def adduser():
+  if request.method == "POST":
+    name = request.form['name']
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+    data = addUser(name, username, password, email)
+    flash(data)
+  return render_template('adduser.html')
 
 # Main Function
 if __name__ == "__main__":

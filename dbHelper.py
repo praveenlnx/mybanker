@@ -65,3 +65,20 @@ def getNameofUser(username):
     return False
   conn.close()
   gc.collect()
+
+# Method to add new user
+def addUser(name, username, password, email):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "INSERT INTO users VALUES('%s', '%s', '%s', '%s', '%s', CURDATE())" % (name, username, 'no', sha256(password).hexdigest(), email)
+    print query
+    cursor.execute(query)
+    conn.commit()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return str(e)
+  conn.close()
+  gc.collect()
+  return "User %s added successfully" % name
