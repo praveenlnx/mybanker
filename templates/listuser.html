@@ -3,9 +3,10 @@
 {% include "navbar_admin.html" %}
   <!-- Page Content -->
   <div class="container">
-    <div class="col-md-6 col-md-offset-4">
-      {% if userdict %}
-        {% for row in userdict %}
+   <div class="row">
+   {% if userdict %}
+     {% for row in userdict %}
+      <div class="col-md-4">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">
@@ -19,10 +20,11 @@
             <small><i>Account created on {{ row[5] }}</i></small>
           </div>
         </div>
-        {% endfor %}
-      {% endif %}
-      <a href="/dashboard">Back to Dashboard</a>
-    </div>
+      </div>
+     {% endfor %}
+   {% endif %}
+   </div>
+   <a href="/dashboard">Back to Dashboard</a>
   </div>
   <!-- /.container -->
 {% endblock %}
