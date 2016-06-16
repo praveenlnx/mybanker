@@ -1,6 +1,6 @@
 # Imports section
 from flask import Flask, render_template, request, session, flash
-from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers
+from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers, getCategories, addCategory
 from functools import wraps
 import fileinput, gc
 
@@ -108,6 +108,19 @@ def changeAdminPass():
 def listuser():
   userdict = listMybankerUsers()
   return render_template('listuser.html', userdict=userdict)
+
+# Manage categories Route
+@app.route('/managecategories', methods=['GET', 'POST'])
+@login_required
+def managecategories():
+  if request.method == "POST":
+    if 'incategory' in request.form:
+      data = addCategory(request.form['incategory'], 'IN')
+    else:
+      data = addCategory(request.form['excategory'], 'EX')
+    flash(data)
+  inc_categories, exp_categories = getCategories()
+  return render_template('managecategories.html', inc_categories=inc_categories, exp_categories=exp_categories)
 
 # Main Function
 if __name__ == "__main__":

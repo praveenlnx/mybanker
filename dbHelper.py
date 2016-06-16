@@ -121,3 +121,44 @@ def listMybankerUsers():
   gc.collect()
   return userdict
     
+# Get list of categories
+def getCategories():
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  inc_categories = []
+  exp_categories = []
+  try:
+    cursor.execute('SELECT name FROM categories WHERE type="IN"')
+    for item in cursor.fetchall():
+      inc_categories.append(item[0])
+    cursor.execute('SELECT name FROM categories WHERE type="EX"')
+    for item in cursor.fetchall():
+      exp_categories.append(item[0])
+  except:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return inc_categories, exp_categories
+
+# Add a new category
+def addCategory(name, cat_type):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "INSERT INTO categories VALUES('%s', '%s')" % (name.upper(), cat_type)
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if len(data) is 0:
+      conn.commit()
+      returnstring = "New category %s added" % name
+    else:
+      returnstring = str(data[0])
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return str(e)
+  conn.close()
+  gc.collect()
+  return returnstring
