@@ -162,3 +162,19 @@ def addCategory(name, cat_type):
   conn.close()
   gc.collect()
   return returnstring
+
+# Check how many accounts a user has got
+def checkTotalAccounts(username):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "SELECT COUNT(*) FROM accounts WHERE owner = '%s'" % username
+    cursor.execute(query)
+    accountsTotal = cursor.fetchone()[0]
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return accountsTotal

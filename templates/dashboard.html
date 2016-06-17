@@ -2,7 +2,7 @@
 {% block body %}
 {% include "navbar_user.html" %}
   <!-- Page Content -->
-  <div class="container text-center">
+  <div class="container">
    {% with messages = get_flashed_messages() %}
      {% if messages %}
         {% for message in messages %}
@@ -12,6 +12,17 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
+  <div class="jumbotron">
+    <h3>Welcome {{ session['user'] }}!</h3>
+    {% if jumbomessage %}
+    <p>{{ jumbomessage  }}</p>
+    {% endif %}
+    <p>
+      <a class="btn btn-primary" href="#" role="button">Add account</a>
+      <a class="btn btn-primary" href="#" role="button">View reports</a>
+      <a class="btn btn-primary" href="#" role="button">Message Inbox</a>
+    </p>
+</div>
   </div>
   <!-- /.container -->
 {% endblock %}

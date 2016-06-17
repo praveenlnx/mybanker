@@ -1,6 +1,6 @@
 # Imports section
 from flask import Flask, render_template, request, session, flash
-from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers, getCategories, addCategory
+from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers, getCategories, addCategory, checkTotalAccounts
 from functools import wraps
 import fileinput, gc
 
@@ -33,11 +33,13 @@ def index():
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
   dashboard = 'dashboard.html'
+  dashboard_admin = 'dashboard_admin.html'
+  jumbomessage = None
   if not request.method == "POST":
     if 'logged_in' in session:
       if session['username'] == 'admin':
-        return render_template('dashboard_admin.html')
-      return render_template(dashboard)
+        return render_template(dashboard_admin)
+      return render_template(dashboard, jumbomessage=junbomessage)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
@@ -46,8 +48,14 @@ def dashboard():
     session['username'] = username
     session['user'] = getNameofUser(username)
     if username == "admin":
-      dashboard = 'dashboard_admin.html'
-    return render_template(dashboard)
+      return render_template(dashboard_admin)
+    else:
+      accounts = checkTotalAccounts(username)
+      if accounts == 0:
+        jumbomessage = "You don't have any accounts setup. Please add a new account to manage and start tracking."
+      else:
+        jumbomessage = "You have %s accounts configured." % accounts
+      return render_template(dashboard, jumbomessage=jumbomessage)
   else:
     return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
 
