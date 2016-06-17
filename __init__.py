@@ -1,6 +1,6 @@
 # Imports section
 from flask import Flask, render_template, request, session, flash
-from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers, getCategories, addCategory, checkTotalAccounts
+from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers, getCategories, addCategory, checkTotalAccounts, addAccountDB
 from functools import wraps
 import fileinput, gc
 
@@ -39,7 +39,8 @@ def dashboard():
     if 'logged_in' in session:
       if session['username'] == 'admin':
         return render_template(dashboard_admin)
-      return render_template(dashboard, jumbomessage=junbomessage)
+      jumbomessage = dashboardMessage(session['username'])
+      return render_template(dashboard, jumbomessage=jumbomessage)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
@@ -50,14 +51,20 @@ def dashboard():
     if username == "admin":
       return render_template(dashboard_admin)
     else:
-      accounts = checkTotalAccounts(username)
-      if accounts == 0:
-        jumbomessage = "You don't have any accounts setup. Please add a new account to manage and start tracking."
-      else:
-        jumbomessage = "You have %s accounts configured." % accounts
+      jumbomessage = dashboardMessage(username)
       return render_template(dashboard, jumbomessage=jumbomessage)
   else:
     return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
+
+def dashboardMessage(username):
+  jumbomessage = []
+  # Check how many accounts the user has got
+  accounts = checkTotalAccounts(username)
+  if accounts == 0:
+    jumbomessage.append("You don't have any accounts setup. Please add a new account to manage and start tracking.")
+  else:
+    jumbomessage.append("You have %s accounts configured." % accounts)
+  return jumbomessage
 
 # Setup MyBanker Route
 @app.route('/setup', methods=['GET', 'POST'])
@@ -129,6 +136,25 @@ def managecategories():
     flash(data)
   inc_categories, exp_categories = getCategories()
   return render_template('managecategories.html', inc_categories=inc_categories, exp_categories=exp_categories)
+
+# Add Account Route
+@app.route('/addaccount', methods=['GET', 'POST'])
+@login_required
+def addaccount():
+  if request.method == "POST":
+    accinfo = {}
+    accinfo['name'] = request.form['accountname']
+    accinfo['owner'] = session['username']
+    accinfo['balance'] = request.form['accountbalance']
+    accinfo['notes'] = request.form['accountnotes']
+    accinfo['exclude'] = 'no'
+    if 'exclude' in request.form:
+      accinfo['exclude'] = 'yes'
+    accinfo['type'] = 'A'
+    if request.form['accounttype'] == 'liability':
+      accinfo['type'] = 'L'
+    flash(addAccountDB(accinfo))
+  return render_template('addaccount.html')
 
 # Main Function
 if __name__ == "__main__":

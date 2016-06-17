@@ -178,3 +178,27 @@ def checkTotalAccounts(username):
   conn.close()
   gc.collect()
   return accountsTotal
+
+# Add a new account
+def addAccountDB(accinfo):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  # Hardcoded to GBP at the moment. Need to revisit
+  currency = "GBP"
+  try:
+    query = "INSERT INTO accounts VALUES('%s','%s',%s,'%s',CURDATE(),CURDATE(),'%s','%s','%s')" % \
+             (accinfo['name'], accinfo['owner'], accinfo['balance'], accinfo['notes'], accinfo['exclude'], currency, accinfo['type'])
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if len(data) is 0:
+      conn.commit()
+      returnString = "New account %s added" % accinfo['name']
+    else:
+      returnString = str(data[0])
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return str(e)
+  conn.close()
+  gc.collect()
+  return returnString
