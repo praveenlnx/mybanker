@@ -5,26 +5,63 @@
   <div class="container">
    {% with messages = get_flashed_messages() %}
      {% if messages %}
-        {% for message in messages %}
-           <div style="margin-top:10px;" class="alert alert-danger" role="alert">
-             {{ message }}
-           </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-  <div class="jumbotron">
+       {% for message in messages %}
+         <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+           {{ message }}
+         </div>
+       {% endfor %}
+     {% endif %}
+   {% endwith %}
+   <div class="jumbotron">
     <h3>Welcome {{ session['user'] }}!</h3>
-    {% if jumbomessage %}
-      {% for message in jumbomessage %}
-        <p><small><font color="gray">{{ message }}</font></small></p>
-      {% endfor %}
-    {% endif %}
-    <p>
+     {% if jumbomessage %}
+       {% for message in jumbomessage %}
+         <p><small><font color="gray">{{ message }}</font></small></p>
+       {% endfor %}
+     {% endif %}
+     <p>
       <a class="btn btn-primary" href="{{ url_for('addaccount') }}" role="button">Add account</a>
       <a class="btn btn-primary" href="#" role="button">View reports</a>
       <a class="btn btn-primary" href="#" role="button">Message Inbox</a>
-    </p>
-</div>
+     </p>
+   </div>
+   <!-- If accounts found, list them in a table -->
+   {% if accounts %}
+     <div class="panel panel-default">
+       <div class="panel-heading">
+         <h3 class="panel-title">Your Accounts at a glance</h3>
+       </div>
+       <div class="panel-body">
+         <table class="table">
+           <thead>
+             <tr>
+               <th>Account</th>
+               <th>Balance</th>
+               <th>Last Operated</th>
+               <th>Active Since</th>
+             </tr>
+           </thead>
+           <tbody>
+           {% for account in accounts %}
+            <tr>
+             <td><a href="#">{{ account[0] }}</a></td>
+             <td>{{ account[1] }}</td>
+             <td>{{ account[2] }}</td>
+             <td>{{ account[3] }}</td>
+            </tr>
+           {% endfor %} 
+           </tbody>
+         </table>
+         <p>
+          <a class="btn btn-default" href="#" role="button">Add income transaction</a>
+          <a class="btn btn-default" href="#" role="button">Add expense transaction</a>
+          <a class="btn btn-default" href="#" role="button">Transfer Funds between accounts</a>
+         </p>
+         <br><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+         <font color="gray">Click individual accounts to see transactions</font>
+       </div>
+     </div>
+   {% endif %}
   </div>
   <!-- /.container -->
 {% endblock %}

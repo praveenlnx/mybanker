@@ -1,6 +1,6 @@
 # Imports section
 from flask import Flask, render_template, request, session, flash
-from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers, getCategories, addCategory, checkTotalAccounts, addAccountDB
+from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers, getCategories, addCategory, checkTotalAccounts, addAccountDB, getAccounts
 from functools import wraps
 import fileinput, gc
 
@@ -35,12 +35,15 @@ def dashboard():
   dashboard = 'dashboard.html'
   dashboard_admin = 'dashboard_admin.html'
   jumbomessage = None
+  accounts = None
   if not request.method == "POST":
     if 'logged_in' in session:
       if session['username'] == 'admin':
         return render_template(dashboard_admin)
       jumbomessage = dashboardMessage(session['username'])
-      return render_template(dashboard, jumbomessage=jumbomessage)
+      if checkTotalAccounts(session['username']) != 0:
+        accounts = getAccounts(session['username'])
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
@@ -52,7 +55,9 @@ def dashboard():
       return render_template(dashboard_admin)
     else:
       jumbomessage = dashboardMessage(username)
-      return render_template(dashboard, jumbomessage=jumbomessage)
+      if checkTotalAccounts(username) != 0:
+        accounts = getAccounts(username)
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts)
   else:
     return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
 

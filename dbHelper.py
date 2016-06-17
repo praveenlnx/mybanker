@@ -202,3 +202,19 @@ def addAccountDB(accinfo):
   conn.close()
   gc.collect()
   return returnString
+
+# Get accounts for dashboard table
+def getAccounts(username):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "SELECT name, balance, lastoperated, created FROM accounts WHERE owner = '%s'" % username
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data
