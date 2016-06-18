@@ -208,7 +208,7 @@ def getAccounts(username):
   conn = mysql.connect()
   cursor = conn.cursor()
   try:
-    query = "SELECT name, balance, lastoperated, created FROM accounts WHERE owner = '%s'" % username
+    query = "SELECT name, balance, lastoperated, created, type FROM accounts WHERE owner = '%s'" % username
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
@@ -224,7 +224,10 @@ def getTransactions(username, accountname):
   conn = mysql.connect()
   cursor = conn.cursor()
   try:
-    query = "SELECT opdate, description, credit, debit, category FROM transactions WHERE owner = '%s' AND account = '%s'" \
+    query = "SELECT opdate, description, credit, debit, category \
+             FROM transactions \
+             WHERE owner = '%s' AND account = '%s' \
+             ORDER BY opdate DESC LIMIT 20" \
             % (username, accountname)
     cursor.execute(query)
     data = cursor.fetchall()
