@@ -218,3 +218,20 @@ def getAccounts(username):
   conn.close()
   gc.collect()
   return data
+
+# Get account transactions
+def getTransactions(username, accountname):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "SELECT opdate, description, credit, debit, category FROM transactions WHERE owner = '%s' AND account = '%s'" \
+            % (username, accountname)
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data

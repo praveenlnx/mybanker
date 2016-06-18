@@ -1,8 +1,12 @@
 # Imports section
 from flask import Flask, render_template, request, session, flash
-from dbHelper import runQueriesFromFile, checkLogin, getNameofUser, addUser, updatePassword, listMybankerUsers, getCategories, addCategory, checkTotalAccounts, addAccountDB, getAccounts
 from functools import wraps
 import fileinput, gc
+from dbHelper import (
+         runQueriesFromFile, checkLogin, getNameofUser, addUser, 
+         updatePassword, listMybankerUsers, getCategories, addCategory, 
+         checkTotalAccounts, addAccountDB, getAccounts, getTransactions
+         )
 
 # Initialize Flask object
 app = Flask(__name__)
@@ -160,6 +164,15 @@ def addaccount():
       accinfo['type'] = 'L'
     flash(addAccountDB(accinfo))
   return render_template('addaccount.html')
+
+# Account Transactions Route
+@app.route('/<username>/account/<accountname>')
+@login_required
+def account_transactions(username, accountname):
+  transactions = None
+  if username and accountname:
+    transactions = getTransactions(username, accountname)
+  return render_template('account-transactions.html', username=username, accountname=accountname, transactions=transactions)
 
 # Main Function
 if __name__ == "__main__":

@@ -32,7 +32,7 @@
          <h3 class="panel-title">Your Accounts at a glance</h3>
        </div>
        <div class="panel-body">
-         <table class="table">
+         <table class="table table-hover">
            <thead>
              <tr>
                <th>Account</th>
@@ -44,7 +44,11 @@
            <tbody>
            {% for account in accounts %}
             <tr>
-             <td><a href="#">{{ account[0] }}</a></td>
+             <td>
+               <a href="{{ url_for('account_transactions', username=session['username'], accountname=account[0]) }}">
+                 {{ account[0] }}
+               </a>
+             </td>
              <td>{{ account[1] }}</td>
              <td>{{ account[2] }}</td>
              <td>{{ account[3] }}</td>
@@ -53,8 +57,7 @@
            </tbody>
          </table>
          <p>
-          <a class="btn btn-default" href="#" role="button">Add income transaction</a>
-          <a class="btn btn-default" href="#" role="button">Add expense transaction</a>
+          <a class="btn btn-default" href="#" role="button">Record a new transaction</a>
           <a class="btn btn-default" href="#" role="button">Transfer Funds between accounts</a>
          </p>
          <br><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
