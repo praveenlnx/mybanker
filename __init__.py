@@ -5,7 +5,8 @@ import fileinput, gc
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
-         checkTotalAccounts, addAccountDB, getAccounts, getTransactions
+         checkTotalAccounts, addAccountDB, getAccounts, getTransactions,
+         getCategoryType, addTransactionsDB
          )
 
 # Initialize Flask object
@@ -173,6 +174,22 @@ def account_transactions(username, accountname):
   if username and accountname:
     transactions = getTransactions(username, accountname)
   return render_template('account-transactions.html', username=username, accountname=accountname, transactions=transactions)
+
+# Add a new transaction Route
+@app.route('/addtransaction', methods=['GET', 'POST'])
+@login_required
+def addtransaction():
+  inc_categories, exp_categories = getCategories()
+  categories = exp_categories + inc_categories
+  accounts = getAccounts(session['username'])
+  if request.method == "POST":
+    account = request.form['account']
+    category = request.form['category']
+    amount = request.form['amount']
+    date = request.form['date']
+    notes = request.form['notes']
+    flash(addTransactionsDB(date, notes, amount, category, account, session['username']))
+  return render_template('addtransaction.html', categories=categories, accounts=accounts)
 
 # Main Function
 if __name__ == "__main__":

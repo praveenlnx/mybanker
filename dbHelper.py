@@ -238,3 +238,92 @@ def getTransactions(username, accountname):
   conn.close()
   gc.collect()
   return data
+
+# Check category type
+def getCategoryType(category):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "SELECT type FROM categories WHERE name = '%s'" % category
+    cursor.execute(query)
+    data = cursor.fetchone()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data[0]
+
+# Add transaction
+def addTransactionsDB(date, notes, amount, category, account, owner):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  credit, debit, updatetype = ["NULL", amount, "debit"]
+  if getCategoryType(category) == "IN":
+    credit, debit, updatetype = [amount, "NULL", "credit"]
+  try:
+    query = "INSERT INTO transactions VALUES('%s', '%s', '%s', %s, %s, '%s', '%s')" % \
+             (date, notes, category, credit, debit, account, owner)
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if len(data) is 0:
+      conn.commit()
+      if updateAccounts(account, owner, amount, updatetype):
+        returnString = "Transaction added successfully"
+      else:
+        returnString = "Failed to update accounts table. But transaction recorded"
+    else:
+      returnString = str(data[0])
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return str(e)
+  conn.close()
+  gc.collect()
+  return returnString
+
+# Get account Type
+def checkAccountType(account, owner):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  isassetAcc = True
+  try:
+    query = "SELECT type FROM accounts WHERE name = '%s' AND owner = '%s'" % \
+             (account, owner)
+    cursor.execute(query)
+    data = cursor.fetchone()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  if data[0] == "L":
+    isassetAcc = False
+  return isassetAcc
+
+# Update Balance in Accounts table
+def updateAccounts(name, owner, amount, updatetype):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  sign,operator = ["+", "-"]
+  isassetAcc = checkAccountType(name, owner)
+  if not isassetAcc:
+    sign = "-"
+  if updatetype == "credit":
+    operator = "+"
+  try:
+    query = "UPDATE accounts \
+             SET balance = balance %s %s%s, lastoperated = CURDATE() \
+             WHERE name = '%s' AND owner = '%s'" % \
+             (operator, sign, amount, name, owner)
+    cursor.execute(query)
+    conn.commit()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return False
+  conn.close()
+  gc.collect()
+  return True
