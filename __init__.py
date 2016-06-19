@@ -191,6 +191,22 @@ def addtransaction():
     flash(addTransactionsDB(date, notes, amount, category, account, session['username']))
   return render_template('addtransaction.html', categories=categories, accounts=accounts)
 
+# Transfer funds Route
+@app.route('/transferfunds', methods=['GET', 'POST'])
+@login_required
+def transferfunds():
+  accounts = getAccounts(session['username'])
+  if request.method == "POST":
+    fromacc = request.form['fromaccount']
+    toacc = request.form['toaccount']
+    amount = request.form['amount']
+    date = request.form['date']
+    notes = request.form['notes']
+    addTransactionsDB(date, notes, amount, "TRANSFER OUT", fromacc, session['username'])
+    addTransactionsDB(date, notes, amount, "TRANSFER IN", toacc, session['username'])
+    flash("Funds transferred from %s to %s successfully" % (fromacc, toacc))
+  return render_template('transferfunds.html', accounts=accounts)
+
 # Main Function
 if __name__ == "__main__":
   app.run(port=8002, debug=True)
