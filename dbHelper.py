@@ -204,11 +204,14 @@ def addAccountDB(accinfo):
   return returnString
 
 # Get accounts for dashboard table
-def getAccounts(username):
+def getAccounts(username, account="all"):
   conn = mysql.connect()
   cursor = conn.cursor()
+  appendquery = ""
+  if account != "all":
+    appendquery = "AND name = '%s'" % account
   try:
-    query = "SELECT name, balance, lastoperated, created, type FROM accounts WHERE owner = '%s'" % username
+    query = "SELECT name, balance, lastoperated, created, type, description FROM accounts WHERE owner = '%s' %s" % (username, appendquery)
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:

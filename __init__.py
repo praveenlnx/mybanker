@@ -173,7 +173,8 @@ def account_transactions(username, accountname):
   transactions = None
   if username and accountname:
     transactions = getTransactions(username, accountname)
-  return render_template('account-transactions.html', username=username, accountname=accountname, transactions=transactions)
+    accinfo = getAccounts(username, accountname)
+  return render_template('account-transactions.html', username=username, accinfo=accinfo, transactions=transactions)
 
 # Add a new transaction Route
 @app.route('/addtransaction', methods=['GET', 'POST'])
