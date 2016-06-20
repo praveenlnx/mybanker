@@ -6,7 +6,7 @@ from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
          checkTotalAccounts, addAccountDB, getAccounts, getTransactions,
-         getCategoryType, addTransactionsDB
+         getCategoryType, addTransactionsDB, getNetworth
          )
 
 # Initialize Flask object
@@ -41,6 +41,7 @@ def dashboard():
   dashboard_admin = 'dashboard_admin.html'
   jumbomessage = None
   accounts = None
+  networth = 0.00
   if not request.method == "POST":
     if 'logged_in' in session:
       if session['username'] == 'admin':
@@ -48,7 +49,8 @@ def dashboard():
       jumbomessage = dashboardMessage(session['username'])
       if checkTotalAccounts(session['username']) != 0:
         accounts = getAccounts(session['username'])
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts)
+        networth = getNetworth(session['username'])
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
@@ -62,7 +64,8 @@ def dashboard():
       jumbomessage = dashboardMessage(username)
       if checkTotalAccounts(username) != 0:
         accounts = getAccounts(username)
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts)
+        networth = getNetworth(username)
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth)
   else:
     return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
 
@@ -167,12 +170,15 @@ def addaccount():
   return render_template('addaccount.html')
 
 # Account Transactions Route
-@app.route('/<username>/account/<accountname>')
+@app.route('/<username>/account/<accountname>/<period>', methods=['GET', 'POST'])
 @login_required
-def account_transactions(username, accountname):
-  transactions = None
-  if username and accountname:
-    transactions = getTransactions(username, accountname)
+def account_transactions(username, accountname, period):
+  transactions = year = month = None
+  if username and accountname and period:
+    if request.method == "POST":
+      year = request.form['year']
+      month = request.form['month']
+    transactions = getTransactions(username, accountname, period, year, month)
     accinfo = getAccounts(username, accountname)
   return render_template('account-transactions.html', username=username, accinfo=accinfo, transactions=transactions)
 

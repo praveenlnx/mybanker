@@ -211,7 +211,7 @@ def getAccounts(username, account="all"):
   if account != "all":
     appendquery = "AND name = '%s'" % account
   try:
-    query = "SELECT name, balance, lastoperated, created, type, description FROM accounts WHERE owner = '%s' %s" % (username, appendquery)
+    query = "SELECT name, balance, lastoperated, created, type, description, excludetotal FROM accounts WHERE owner = '%s' %s" % (username, appendquery)
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
@@ -223,15 +223,36 @@ def getAccounts(username, account="all"):
   return data
 
 # Get account transactions
-def getTransactions(username, accountname):
+def getTransactions(username, accountname, period, year, month):
   conn = mysql.connect()
   cursor = conn.cursor()
+  advQuery = limitQuery = ''
+
+  if 'normal' in period:
+    limitQuery = 'LIMIT 20'
+
+  if 'PRE_' in period:
+    if 'thisweek' in period:
+      advQuery = "AND YEARWEEK(opdate) = YEARWEEK(NOW())"
+    elif 'lastweek' in period:
+      advQuery = "AND YEARWEEK(opdate) = YEARWEEK(NOW())-1"
+    elif 'thismonth' in period:
+      advQuery = "AND YEAR(opdate) = YEAR(CURDATE()) AND MONTH(opdate) = MONTH(NOW())"
+    elif 'lastmonth' in period:
+      advQuery = "AND YEAR(opdate) = YEAR(CURDATE()) AND MONTH(opdate) = MONTH(NOW())-1"
+    elif 'last5days' in period:
+      advQuery = "AND opdate >= DATE_SUB(CURDATE(), INTERVAL 5 DAY)"
+    elif 'last30days' in period:
+      advQuery = "AND opdate >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)"
+  elif 'selective' in period:
+    advQuery ="AND YEAR(opdate) = %s AND MONTH(opdate) = %s" % (year, month)
+
   try:
     query = "SELECT opdate, description, credit, debit, category \
              FROM transactions \
-             WHERE owner = '%s' AND account = '%s' \
-             ORDER BY opdate DESC LIMIT 20" \
-            % (username, accountname)
+             WHERE owner = '%s' AND account = '%s' %s \
+             ORDER BY opdate DESC %s" \
+            % (username, accountname, advQuery, limitQuery)
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
@@ -330,3 +351,16 @@ def updateAccounts(name, owner, amount, updatetype):
   conn.close()
   gc.collect()
   return True
+
+# Get networth of a user
+def getNetworth(username):
+  networth = 0.00
+  accounts = getAccounts(username)
+  for account in accounts:
+    if 'yes' in account[6]:
+      continue
+    if 'L' in account[4]:
+      networth = networth - float(account[1])
+    else:
+      networth = networth + float(account[1])
+  return networth
