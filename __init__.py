@@ -1,7 +1,9 @@
 # Imports section
-from flask import Flask, render_template, request, session, flash
+from flask import Flask, render_template, request, session, flash, url_for
 from functools import wraps
 import fileinput, gc
+from datetime import date
+from reportHelper import inexTrend, expenseStats
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
@@ -213,6 +215,24 @@ def transferfunds():
     addTransactionsDB(date, notes, amount, "TRANSFER IN", toacc, session['username'])
     flash("Funds transferred from %s to %s successfully" % (fromacc, toacc))
   return render_template('transferfunds.html', accounts=accounts)
+
+# Reports Route
+@app.route('/reports', methods=['GET', 'POST'])
+@login_required
+def reports():
+  if checkTotalAccounts(session['username']) == 0:
+    flash("No reports as you don't have any accounts setup. Please start adding your accounts")
+    jumbomessage = dashboardMessage(session['username'])
+    return render_template('dashboard.html', jumbomessage=jumbomessage)
+  inexYear = expenseYear = date.today().year
+  if request.method == "POST":
+    if 'inexyear' in request.form:
+      inexYear = request.form['inexyear']
+    elif 'expyear' in request.form:
+      expenseYear = request.form['expyear']
+  inexGraph = inexTrend(session['username'], inexYear)
+  expenseGraph = expenseStats(session['username'], expenseYear)
+  return render_template('reports.html', inexGraph=inexGraph, expenseGraph=expenseGraph)
 
 # Main Function
 if __name__ == "__main__":

@@ -364,3 +364,77 @@ def getNetworth(username):
     else:
       networth = networth + float(account[1])
   return networth
+
+# Get income/expense monthly for a user for a specific year
+def getInEx(username, year):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+
+  ignoreAccounts = []
+  accounts = getAccounts(username)
+  for account in accounts:
+    if account[6] == 'yes':
+      ignoreAccounts.append('"%s"' % account[0])
+  ignoredAccounts = ",".join(ignoreAccounts)
+
+  try:
+    query = """
+            SELECT name, COALESCE(SUM_DATA.credit, 0.00) AS credit, COALESCE(SUM_DATA.debit, 0.00) AS debit
+            FROM months
+            LEFT JOIN (
+             SELECT MONTH(opdate) AS mnth, SUM(credit) AS credit, SUM(debit) AS debit
+             FROM transactions
+             WHERE owner = '%s'
+                   AND YEAR(opdate) = %s
+                   AND account NOT IN (%s)
+                   AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+             GROUP BY MONTH(opdate)
+            ) SUM_DATA
+            ON months.name = SUM_DATA.mnth
+            ORDER BY months.name
+            """ % (username, year, ignoredAccounts)
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data
+
+# Get expense stats for a specific year
+def getExpenseStats(username, year):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+
+  ignoreAccounts = []
+  accounts = getAccounts(username)
+  for account in accounts:
+    if account[6] == 'yes':
+      ignoreAccounts.append('"%s"' % account[0])
+  ignoredAccounts = ",".join(ignoreAccounts)
+
+  try:
+    query = """
+            SELECT category, SUM(debit)
+            FROM transactions t1
+            INNER JOIN (
+              SELECT name
+              FROM categories
+              WHERE type = 'EX' AND name NOT IN ('TRANSFER OUT')
+            ) t2
+            ON t1.category = t2.name
+            WHERE YEAR(t1.opdate) = %s AND t1.owner = '%s'
+            GROUP BY t1.category
+            """ % (year, username)
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data
+
