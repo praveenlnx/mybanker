@@ -81,6 +81,16 @@
          <font color="gray">Click individual accounts to see transactions</font>
        </div>
      </div>
+   <div class="panel panel-default">
+     <div class="panel-heading">
+       <h3 class="panel-title"> Income/Expense Trend since beginning</h3>
+     </div>
+     <div class="panel-body">
+       {% if inexAllGraph %}
+       <embed type="image/svg+xml" src={{inexAllGraph|safe}} style='max-width:1000px'/>
+       {% endif %}
+     </div>
+   </div>
    {% endif %}
   </div>
   <!-- /.container -->

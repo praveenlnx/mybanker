@@ -1,5 +1,6 @@
 from flask import current_app as app
 import pygal
+from pygal.style import LightColorizedStyle
 from dbHelper import getInEx, getExpenseStats
 
 # Generate bar chart for income/expense for the selected year
@@ -22,7 +23,7 @@ def inexTrend(username, year):
 
 # Generate pie chart for expense stats for the selected year
 def expenseStats(username, year):
-  chart = pygal.Pie(legen_at_bottom=True)
+  chart = pygal.Pie(legen_at_bottom=True, tooltip_border_radius=10)
   chart.title = "Expense stats for %s" % year
   expensedata = getExpenseStats(username, year)
   if not expensedata is None:
@@ -30,4 +31,20 @@ def expenseStats(username, year):
       chart.add(row[0], row[1])
   else:
     chart.add('line',[])
+  return chart.render_data_uri()
+
+# Generate line chart for income expense trend since beginning for a user
+def inexTrendAll(username):
+  chart = pygal.Line(legend_at_bottom=True, interpolate='cubic', pretty_print=True, tooltip_border_radius=10, fill=True, height=400, style=LightColorizedStyle, dots_size=1)
+  income_data = []
+  expense_data = []
+  inexAllData = getInEx(username, None, "all")
+  if not inexAllData is None:
+    for row in inexAllData:
+      income_data.append(row[1])
+      expense_data.append(row[2])
+    chart.add('Income', income_data)
+    chart.add('Expense', expense_data)
+  else:
+    chart.add('line', [])
   return chart.render_data_uri()

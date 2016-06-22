@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, session, flash, url_for
 from functools import wraps
 import fileinput, gc
 from datetime import date
-from reportHelper import inexTrend, expenseStats
+from reportHelper import inexTrend, expenseStats, inexTrendAll
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
@@ -44,6 +44,7 @@ def dashboard():
   jumbomessage = None
   accounts = None
   networth = 0.00
+  inexAllGraph = None
   if not request.method == "POST":
     if 'logged_in' in session:
       if session['username'] == 'admin':
@@ -52,7 +53,8 @@ def dashboard():
       if checkTotalAccounts(session['username']) != 0:
         accounts = getAccounts(session['username'])
         networth = getNetworth(session['username'])
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth)
+        inexAllGraph = inexTrendAll(session['username'])
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
@@ -67,7 +69,8 @@ def dashboard():
       if checkTotalAccounts(username) != 0:
         accounts = getAccounts(username)
         networth = getNetworth(username)
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth)
+        inexAllGraph = inexTrendAll(session['username'])
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph)
   else:
     return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
 

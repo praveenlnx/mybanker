@@ -365,8 +365,8 @@ def getNetworth(username):
       networth = networth + float(account[1])
   return networth
 
-# Get income/expense monthly for a user for a specific year
-def getInEx(username, year):
+# Get income/expense monthly/or since beginning for a user
+def getInEx(username, year, period="selective"):
   conn = mysql.connect()
   cursor = conn.cursor()
 
@@ -378,21 +378,31 @@ def getInEx(username, year):
   ignoredAccounts = ",".join(ignoreAccounts)
 
   try:
-    query = """
-            SELECT name, COALESCE(SUM_DATA.credit, 0.00) AS credit, COALESCE(SUM_DATA.debit, 0.00) AS debit
-            FROM months
-            LEFT JOIN (
-             SELECT MONTH(opdate) AS mnth, SUM(credit) AS credit, SUM(debit) AS debit
-             FROM transactions
-             WHERE owner = '%s'
-                   AND YEAR(opdate) = %s
-                   AND account NOT IN (%s)
-                   AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
-             GROUP BY MONTH(opdate)
-            ) SUM_DATA
-            ON months.name = SUM_DATA.mnth
-            ORDER BY months.name
-            """ % (username, year, ignoredAccounts)
+    if period == "selective":
+      query = """
+              SELECT name, COALESCE(SUM_DATA.credit, 0.00) AS credit, COALESCE(SUM_DATA.debit, 0.00) AS debit
+              FROM months
+              LEFT JOIN (
+               SELECT MONTH(opdate) AS mnth, SUM(credit) AS credit, SUM(debit) AS debit
+               FROM transactions
+               WHERE owner = '%s'
+                     AND YEAR(opdate) = %s
+                     AND account NOT IN (%s)
+                     AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+               GROUP BY MONTH(opdate)
+              ) SUM_DATA
+              ON months.name = SUM_DATA.mnth
+              ORDER BY months.name
+              """ % (username, year, ignoredAccounts)
+    else:
+      query = """
+              SELECT EXTRACT(YEAR_MONTH FROM opdate) AS period, SUM(credit) AS credit, SUM(debit) AS debit
+              FROM transactions
+              WHERE owner = '%s'
+                    AND account NOT IN (%s)
+                    AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+              GROUP BY period
+              """ % (username, ignoredAccounts)
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
