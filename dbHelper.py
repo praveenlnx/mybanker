@@ -3,6 +3,7 @@ from flask import Flask
 from flask import current_app as app
 from flaskext.mysql import MySQL
 from hashlib import sha256
+from operator import itemgetter
 import gc
 
 app = Flask(__name__)
@@ -369,14 +370,6 @@ def getNetworth(username):
 def getInEx(username, year, period="selective"):
   conn = mysql.connect()
   cursor = conn.cursor()
-
-  ignoreAccounts = []
-  accounts = getAccounts(username)
-  for account in accounts:
-    if account[6] == 'yes':
-      ignoreAccounts.append('"%s"' % account[0])
-  ignoredAccounts = ",".join(ignoreAccounts)
-
   try:
     if period == "selective":
       query = """
@@ -393,7 +386,7 @@ def getInEx(username, year, period="selective"):
               ) SUM_DATA
               ON months.name = SUM_DATA.mnth
               ORDER BY months.name
-              """ % (username, year, ignoredAccounts)
+              """ % (username, year, getIgnoredAccounts(username))
     else:
       query = """
               SELECT EXTRACT(YEAR_MONTH FROM opdate) AS period, SUM(credit) AS credit, SUM(debit) AS debit
@@ -402,7 +395,8 @@ def getInEx(username, year, period="selective"):
                     AND account NOT IN (%s)
                     AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
               GROUP BY period
-              """ % (username, ignoredAccounts)
+              ORDER BY period
+              """ % (username, getIgnoredAccounts(username))
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
@@ -417,14 +411,6 @@ def getInEx(username, year, period="selective"):
 def getExpenseStats(username, year):
   conn = mysql.connect()
   cursor = conn.cursor()
-
-  ignoreAccounts = []
-  accounts = getAccounts(username)
-  for account in accounts:
-    if account[6] == 'yes':
-      ignoreAccounts.append('"%s"' % account[0])
-  ignoredAccounts = ",".join(ignoreAccounts)
-
   try:
     query = """
             SELECT category, SUM(debit)
@@ -435,9 +421,9 @@ def getExpenseStats(username, year):
               WHERE type = 'EX' AND name NOT IN ('TRANSFER OUT')
             ) t2
             ON t1.category = t2.name
-            WHERE YEAR(t1.opdate) = %s AND t1.owner = '%s'
+            WHERE YEAR(t1.opdate) = %s AND t1.owner = '%s' AND account NOT IN (%s)
             GROUP BY t1.category
-            """ % (year, username)
+            """ % (year, username, getIgnoredAccounts(username))
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
@@ -448,3 +434,55 @@ def getExpenseStats(username, year):
   gc.collect()
   return data
 
+# Get category stats for specific category for specific user
+def getCategoryStats(username, category):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  optype = "debit"
+  if getCategoryType(category) == "IN":
+    optype = "credit"
+  try:
+    query = """
+            SELECT EXTRACT(YEAR_MONTH FROM opdate) AS period, SUM(%s) AS %s
+            FROM transactions
+            WHERE owner = '%s'
+                  AND category = '%s'
+                  AND account NOT IN (%s)
+                  AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+            GROUP BY period
+            ORDER BY period
+            """ % (optype, optype, username, category, getIgnoredAccounts(username))
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data
+  return None
+
+# Get accounts that are excluded
+def getIgnoredAccounts(username):
+  ignoreAccounts = []
+  accounts = getAccounts(username)
+  for account in accounts:
+    if account[6] == 'yes':
+      ignoreAccounts.append('"%s"' % account[0])
+  return ",".join(ignoreAccounts)
+
+# Do some maths to get more detailed category stats
+def getDetailedCategoryStats(data):
+  if data is None:
+    return None
+  else:
+    # Find total spent in this category since beginning
+    totalSpent = sum(item[1] for item in data)
+    monthlyAvg = float(totalSpent) / float(len(data))
+    monthlyAvg = "%.2f" % monthlyAvg
+    sortedData = sorted(data, key=itemgetter(1))
+    lowest = [sortedData[0][0], sortedData[0][1]] 
+    highest = [sortedData[-1][0], sortedData[-1][1]]
+    categoryStatsData = [totalSpent, monthlyAvg, highest, lowest]
+    return categoryStatsData

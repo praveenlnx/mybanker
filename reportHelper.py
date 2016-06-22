@@ -1,7 +1,7 @@
 from flask import current_app as app
 import pygal
 from pygal.style import LightColorizedStyle
-from dbHelper import getInEx, getExpenseStats
+from dbHelper import getInEx, getExpenseStats, getCategoryStats, getDetailedCategoryStats
 
 # Generate bar chart for income/expense for the selected year
 def inexTrend(username, year):
@@ -48,3 +48,19 @@ def inexTrendAll(username):
   else:
     chart.add('line', [])
   return chart.render_data_uri()
+
+# Generate line chart for category
+def categoryStats(username, category):
+  chart = pygal.Line(legend_at_bottom=True, interpolate='cubic', tooltip_border_radius=10, fill=True, style=LightColorizedStyle, height=350, dot_size=1)
+  chart.title = "Stats for category: %s" % category
+  dataSeries = []
+  statsdata = None
+  data = getCategoryStats(username, category)
+  if not data is None:
+    statsdata = getDetailedCategoryStats(data)
+    for row in data:
+      dataSeries.append(row[1])
+    chart.add(category, dataSeries)
+  else:
+    chart.add('line',[])  
+  return chart.render_data_uri(), statsdata

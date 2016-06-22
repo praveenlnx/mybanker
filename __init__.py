@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, session, flash, url_for
 from functools import wraps
 import fileinput, gc
 from datetime import date
-from reportHelper import inexTrend, expenseStats, inexTrendAll
+from reportHelper import inexTrend, expenseStats, inexTrendAll, categoryStats
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
@@ -228,14 +228,20 @@ def reports():
     jumbomessage = dashboardMessage(session['username'])
     return render_template('dashboard.html', jumbomessage=jumbomessage)
   inexYear = expenseYear = date.today().year
+  categoryStatsGraph = None
+  categoryStatsData = None
   if request.method == "POST":
     if 'inexyear' in request.form:
       inexYear = request.form['inexyear']
     elif 'expyear' in request.form:
       expenseYear = request.form['expyear']
+    elif 'statcategory' in request.form:
+      statcategory = request.form['statcategory']
+      categoryStatsGraph, categoryStatsData = categoryStats(session['username'], statcategory)
+  categories = getCategories()
   inexGraph = inexTrend(session['username'], inexYear)
   expenseGraph = expenseStats(session['username'], expenseYear)
-  return render_template('reports.html', inexGraph=inexGraph, expenseGraph=expenseGraph)
+  return render_template('reports.html', inexGraph=inexGraph, expenseGraph=expenseGraph, categories=categories, categoryStatsGraph=categoryStatsGraph, categoryStatsData=categoryStatsData)
 
 # Main Function
 if __name__ == "__main__":
