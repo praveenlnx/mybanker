@@ -4,6 +4,7 @@ from flask import current_app as app
 from flaskext.mysql import MySQL
 from hashlib import sha256
 from operator import itemgetter
+import calendar
 import gc
 
 app = Flask(__name__)
@@ -499,8 +500,10 @@ def getDetailedCategoryStats(data):
     monthlyAvg = float(totalSpent) / float(len(data))
     monthlyAvg = "%.2f" % monthlyAvg
     sortedData = sorted(data, key=itemgetter(1))
-    lowest = [sortedData[0][0], sortedData[0][1]] 
-    highest = [sortedData[-1][0], sortedData[-1][1]]
+    lowestPeriod = "%s %s" % (calendar.month_name[sortedData[0][0] % 100], str(sortedData[0][0])[:-2])
+    lowest = [lowestPeriod, sortedData[0][1]]
+    highestPeriod = "%s %s" % (calendar.month_name[sortedData[-1][0] % 100], str(sortedData[-1][0])[:-2])
+    highest = [highestPeriod, sortedData[-1][1]]
     categoryStatsData = [totalSpent, monthlyAvg, highest, lowest]
     return categoryStatsData
 

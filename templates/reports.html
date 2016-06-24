@@ -112,16 +112,19 @@
           <div class="col-md-3">
           {% if categoryStatsData %}
            <table class="table table-hover">
-             <thead>
-               <tr>
-                 <th colspan="2">Actual Numbers</th>
-               </tr>
-             </thead>
              <tbody>
-                <tr><td>Total Spent</td><td>&pound;&nbsp;{{ categoryStatsData[0] }}</td></tr>
-                <tr><td>Monthly Avg</td><td>&pound;&nbsp;{{ categoryStatsData[1] }}</td></tr>
-                <tr><td>Highest</td><td>&pound;&nbsp;{{ categoryStatsData[2][1] }}&nbsp;[{{ categoryStatsData[2][0] }}]</td></tr>
-                <tr><td>Lowest</td><td>&pound;&nbsp;{{ categoryStatsData[3][1] }}&nbsp;[{{ categoryStatsData[3][0] }}]</td></tr>
+                <tr><th scope="row">Total Spent</th><td>&pound;&nbsp;{{ categoryStatsData[0] }}</td></tr>
+                <tr><th scope="row">Monthly Avg</th><td>&pound;&nbsp;{{ categoryStatsData[1] }}</td></tr>
+                <tr><th scope="row">Highest</th>
+                    <td>&pound;&nbsp;{{ categoryStatsData[2][1] }}
+                        <br><font color="gray"><em>{{ categoryStatsData[2][0] }}</em></font>
+                    </td>
+                </tr>
+                <tr><th scope="row">Lowest</th>
+                    <td>&pound;&nbsp;{{ categoryStatsData[3][1] }}
+                        <br><font color="gray"><em>{{ categoryStatsData[3][0] }}</em></font>
+                    </td>
+                </tr>
              </tbody>
            </table>
           {% endif %}
