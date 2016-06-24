@@ -1,5 +1,5 @@
 # Imports section
-from flask import Flask, render_template, request, session, flash, url_for
+from flask import Flask, render_template, request, session, flash, url_for, redirect
 from functools import wraps
 import fileinput, gc
 from datetime import date
@@ -8,7 +8,8 @@ from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
          checkTotalAccounts, addAccountDB, getAccounts, getTransactions,
-         getCategoryType, addTransactionsDB, getNetworth
+         getCategoryType, addTransactionsDB, getNetworth, getInbox,
+         getInboxCount, deleteMessageDB, sendMessage, markMsgRead
          )
 
 # Initialize Flask object
@@ -45,6 +46,7 @@ def dashboard():
   accounts = None
   networth = 0.00
   inexAllGraph = None
+  unread = None
   if not request.method == "POST":
     if 'logged_in' in session:
       if session['username'] == 'admin':
@@ -54,7 +56,10 @@ def dashboard():
         accounts = getAccounts(session['username'])
         networth = getNetworth(session['username'])
         inexAllGraph = inexTrendAll(session['username'])
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph)
+      unreadCount = getInboxCount(session['username'], "unread")
+      if unreadCount > 0:
+        unread = unreadCount
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, unread=unread)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
@@ -70,7 +75,10 @@ def dashboard():
         accounts = getAccounts(username)
         networth = getNetworth(username)
         inexAllGraph = inexTrendAll(session['username'])
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph)
+      unreadCount = getInboxCount(session['username'], "unread")
+      if unreadCount > 0:
+        unread = unreadCount
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, unread=unread)
   else:
     return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
 
@@ -242,6 +250,47 @@ def reports():
   inexGraph = inexTrend(session['username'], inexYear)
   expenseGraph = expenseStats(session['username'], expenseYear)
   return render_template('reports.html', inexGraph=inexGraph, expenseGraph=expenseGraph, categories=categories, categoryStatsGraph=categoryStatsGraph, categoryStatsData=categoryStatsData)
+
+# Messages Route
+@app.route('/messages', methods=['GET', 'POST'])
+@login_required
+def messages():
+  mails = getInbox(session['username'])
+  unread = getInboxCount(session['username'], "unread")
+  tousers = listMybankerUsers()
+  users = [name for name in tousers if name[1] != session['username']]
+  return render_template('messages.html', mails=mails, unread=unread, users=users)
+
+# Delete message Route
+@app.route('/deletemessage/<msgid>')
+@login_required
+def deletemessage(msgid):
+  if deleteMessageDB(msgid):
+    flash("Message deleted")
+  else:
+    flash("Delete operation failed")
+  return redirect(url_for('messages'))
+
+# Send message Route
+@app.route('/sendmessage', methods=['GET', 'POST'])
+@login_required
+def sendmessage():
+  if request.method == "POST":
+    subject = request.form['subject']
+    message = request.form['message']
+    touser = request.form['touser']
+    flash(sendMessage(session['username'], subject, message, touser))
+    return redirect(url_for('messages'))
+  else:
+    return redirect(url_for('messages'))
+
+# View Message Route
+@app.route('/viewmessage/<msgid>')
+@login_required
+def viewmessage(msgid):
+  mail = getInbox(session['username'], msgid)
+  markMsgRead(msgid)
+  return render_template('viewmessage.html', mail=mail)
 
 # Main Function
 if __name__ == "__main__":

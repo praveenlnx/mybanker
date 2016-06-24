@@ -75,6 +75,23 @@ def addUser(name, username, password, email):
     query = "INSERT INTO users VALUES('%s', '%s', '%s', '%s', '%s', CURDATE())" % (name, username, 'no', sha256(password).hexdigest(), email)
     cursor.execute(query)
     conn.commit()
+    # Send a welcome email to the new user
+    mailSubject = "Welcome to MyBanker!"
+    mailMsg = """
+              Hi %s,
+  
+              Welcome to MyBanker, the Personal Finance Tracker.
+              Please add new accounts and start tracking your incomes and expenses.
+
+              Note:
+              If you would like a new category that is not already listed, please send a message to the MyBanker admin \
+              who will then be able to add the category for you
+
+              Thanks,
+              MyBanker Admin
+              (The Super User)
+              """ % name
+    sendMessage("admin", mailSubject, mailMsg, username)
   except Exception as e:
     conn.close()
     gc.collect()
@@ -486,3 +503,98 @@ def getDetailedCategoryStats(data):
     highest = [sortedData[-1][0], sortedData[-1][1]]
     categoryStatsData = [totalSpent, monthlyAvg, highest, lowest]
     return categoryStatsData
+
+# Get messages for a user
+def getInbox(username, msgid=None):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  extraQuery = ""
+  if msgid:
+    extraQuery = "AND id = %s" % msgid
+  try:
+    query = "SELECT * FROM messages WHERE owner = '%s' %s ORDER BY indate DESC" % (username, extraQuery)
+    print query
+    cursor.execute(query)
+    print "after execute"
+    data = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data
+
+# Get total messages and unread count for a user
+def getInboxCount(username, msgtype="total"):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  extraQuery = ""
+  if msgtype == "read":
+    extraQuery = "AND status = 'R'"
+  elif msgtype == "unread":
+    extraQuery = "AND status = 'N'"
+  try:
+    query = "SELECT COUNT(*) FROM messages WHERE owner = '%s' %s" % (username, extraQuery)
+    cursor.execute(query)
+    data = cursor.fetchone()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data[0]
+
+# Delete a given message
+def deleteMessageDB(msgid):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "DELETE FROM messages WHERE id = %s" % msgid
+    cursor.execute(query)
+    conn.commit()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return True 
+
+# Upload message sent to database
+def sendMessage(owner, subject, message, touser):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  returnString = "Message successfully sent to %s" % touser
+  try:
+    query = "INSERT INTO messages VALUES (NULL, CURDATE(), '%s', '%s', '%s', '%s', 'N')" % (touser, subject, message.replace("\n", "<br>"), getNameofUser(owner))
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if len(data) is 0:
+      conn.commit()
+    else:
+      returnString = str(data[0])
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return str(e)
+  conn.close()
+  gc.collect()
+  return returnString
+
+# Mark message read
+def markMsgRead(msgid):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "UPDATE messages SET status = 'R' WHERE id = %s" % msgid
+    cursor.execute(query)
+    conn.commit()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return True

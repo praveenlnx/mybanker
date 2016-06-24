@@ -6,3 +6,4 @@ CREATE TABLE accounts (name varchar(50) NOT NULL, owner varchar(25) NOT NULL, ba
 CREATE TABLE transactions (opdate date NOT NULL, description varchar(100) NOT NULL, category varchar(50) NOT NULL, credit decimal(7,2) DEFAULT NULL, debit decimal(7,2) DEFAULT NULL, account varchar(50) NOT NULL, owner varchar(25) NOT NULL)
 CREATE TABLE months (name int NOT NULL, PRIMARY KEY(name))
 INSERT INTO months VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12)
+CREATE TABLE messages (id INT UNSIGNED NOT NULL AUTO_INCREMENT, indate date NOT NULL, owner varchar(25) NOT NULL, subject text NOT NULL, message text NOT NULL, fromuser varchar(25) NOT NULL, status enum('N','R') NOT NULL, PRIMARY KEY(id))
