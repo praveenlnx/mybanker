@@ -516,9 +516,7 @@ def getInbox(username, msgid=None):
     extraQuery = "AND id = %s" % msgid
   try:
     query = "SELECT * FROM messages WHERE owner = '%s' %s ORDER BY indate DESC" % (username, extraQuery)
-    print query
     cursor.execute(query)
-    print "after execute"
     data = cursor.fetchall()
   except Exception as e:
     conn.close()
