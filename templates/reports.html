@@ -16,65 +16,7 @@
   <p class="text-center"><center><h3>Charts and Reports</h3>
   <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
   </center></p><br>
-  <!-- Top Row Start -->
-  <div class="row">
-    <!-- Income Trend Panel start -->
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Income/Expense Trend</h3>
-        </div>
-        <div class="panel-body">
-         <form method="POST" action="">
-           <div class="row">
-             <div class="col-md-4">
-               <div class="input-group">
-                 <span class="input-group-addon" id="basic-addon1">Year</span>
-                 <select class="form-control" name="inexyear" onchange="this.form.submit()">
-                   <option selected disabled>Select</option>
-                   <option value="2016">2016</option>
-                   <option value="2015">2015</option>
-                   <option value="2014">2014</option>
-                 </select>
-               </div>
-             </div>
-           </div>
-         </form><br>
-         <embed type="image/svg+xml" src={{inexGraph|safe}} style='max-width:1000px'/>
-        </div>
-      </div>
-    </div>
-    <!-- Income Trend Panel end -->
-    <!-- Expense Trend Panel start -->
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Expense Stats</h3>
-        </div>
-        <div class="panel-body">
-          <form method="POST" action="">
-           <div class="row">
-             <div class="col-md-4">
-               <div class="input-group">
-                 <span class="input-group-addon" id="basic-addon1">Year</span>
-                 <select class="form-control" name="expyear" onchange="this.form.submit()">
-                   <option selected disabled>Select</option>
-                   <option value="2016">2016</option>
-                   <option value="2015">2015</option>
-                   <option value="2014">2014</option>
-                 </select>
-               </div>
-             </div>
-           </div>
-          </form><br>
-          <embed type="image/svg+xml" src={{expenseGraph|safe}} style='max-width:1000px'/>
-        </div>
-      </div>
-    </div>
-    <!-- Expense Trend Panel end -->
-  </div>
-  <!-- Top Row End -->
-  <!-- Second row start-->
+  <!-- First row start-->
   <div class="row">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -133,7 +75,65 @@
       </div>
     </div>
   </div>
-  <!-- Second row end-->
+  <!-- First row end-->
+  <!-- Second Row Start -->
+  <div class="row">
+    <!-- Income Trend Panel start -->
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Income/Expense Trend</h3>
+        </div>
+        <div class="panel-body">
+         <form method="POST" action="">
+           <div class="row">
+             <div class="col-md-4">
+               <div class="input-group">
+                 <span class="input-group-addon" id="basic-addon1">Year</span>
+                 <select class="form-control" name="inexyear" onchange="this.form.submit()">
+                   <option selected disabled>Select</option>
+                   <option value="2016">2016</option>
+                   <option value="2015">2015</option>
+                   <option value="2014">2014</option>
+                 </select>
+               </div>
+             </div>
+           </div>
+         </form><br>
+         <embed type="image/svg+xml" src={{inexGraph|safe}} style='max-width:1000px'/>
+        </div>
+      </div>
+    </div>
+    <!-- Income Trend Panel end -->
+    <!-- Expense Trend Panel start -->
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Expense Stats</h3>
+        </div>
+        <div class="panel-body">
+          <form method="POST" action="">
+           <div class="row">
+             <div class="col-md-4">
+               <div class="input-group">
+                 <span class="input-group-addon" id="basic-addon1">Year</span>
+                 <select class="form-control" name="expyear" onchange="this.form.submit()">
+                   <option selected disabled>Select</option>
+                   <option value="2016">2016</option>
+                   <option value="2015">2015</option>
+                   <option value="2014">2014</option>
+                 </select>
+               </div>
+             </div>
+           </div>
+          </form><br>
+          <embed type="image/svg+xml" src={{expenseGraph|safe}} style='max-width:1000px'/>
+        </div>
+      </div>
+    </div>
+    <!-- Expense Trend Panel end -->
+  </div>
+  <!-- Second Row End -->
 </div>
 <!-- Base container end -->
 {% endblock %}
