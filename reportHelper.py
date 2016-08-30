@@ -1,5 +1,6 @@
 from flask import current_app as app
 import pygal
+import calendar
 from pygal.style import LightColorizedStyle
 from dbHelper import getInEx, getExpenseStats, getCategoryStats, getDetailedCategoryStats
 
@@ -35,14 +36,18 @@ def expenseStats(username, year):
 
 # Generate line chart for income expense trend since beginning for a user
 def inexTrendAll(username):
-  chart = pygal.Line(legend_at_bottom=True, interpolate='cubic', pretty_print=True, tooltip_border_radius=10, fill=True, height=400, style=LightColorizedStyle, dots_size=1)
+  chart = pygal.Line(legend_at_bottom=True, interpolate='cubic', pretty_print=True, tooltip_border_radius=10, fill=True, height=400, style=LightColorizedStyle, dots_size=1, x_label_rotation=270)
   income_data = []
   expense_data = []
+  labelSeries = []
   inexAllData = getInEx(username, None, "all")
   if not inexAllData is None:
     for row in inexAllData:
+      (year,month) = (str(row[0])[:4], str(row[0])[4:])
+      labelSeries.append("%s %s" % (year, calendar.month_abbr[int(month)]))
       income_data.append(row[1])
       expense_data.append(row[2])
+    chart.x_labels = labelSeries
     chart.add('Income', income_data)
     chart.add('Expense', expense_data)
   else:
@@ -51,15 +56,19 @@ def inexTrendAll(username):
 
 # Generate line chart for category
 def categoryStats(username, category):
-  chart = pygal.Line(legend_at_bottom=True, interpolate='cubic', tooltip_border_radius=10, fill=True, style=LightColorizedStyle, height=350, dot_size=1)
+  chart = pygal.Line(interpolate='cubic', tooltip_border_radius=10, fill=True, style=LightColorizedStyle, height=350, dot_size=1, x_label_rotation=270, show_legend=False)
   chart.title = "Stats for category: %s" % category
   dataSeries = []
+  labelSeries = []
   statsdata = None
   data = getCategoryStats(username, category)
   if not data is None:
     statsdata = getDetailedCategoryStats(data)
     for row in data:
+      (year,month) = (str(row[0])[:4], str(row[0])[4:])
+      labelSeries.append("%s %s" % (year, calendar.month_abbr[int(month)]))
       dataSeries.append(row[1])
+    chart.x_labels = labelSeries
     chart.add(category, dataSeries)
   else:
     chart.add('line',[])  
