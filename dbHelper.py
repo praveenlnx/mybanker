@@ -282,6 +282,46 @@ def getTransactions(username, accountname, period, year, month):
   gc.collect()
   return data
 
+# Get account transactions for a category
+def getTransactionsForCategory(username, category, period=None, year=None, month=None):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  advQuery = ''
+
+  if period:
+    if 'thisweek' in period:
+      advQuery = "AND YEARWEEK(opdate) = YEARWEEK(NOW())"
+    elif 'lastweek' in period:
+      advQuery = "AND YEARWEEK(opdate) = YEARWEEK(NOW())-1"
+    elif 'thismonth' in period:
+      advQuery = "AND YEAR(opdate) = YEAR(CURDATE()) AND MONTH(opdate) = MONTH(NOW())"
+    elif 'lastmonth' in period:
+      advQuery = "AND YEAR(opdate) = YEAR(CURDATE()) AND MONTH(opdate) = MONTH(NOW())-1"
+    elif 'last5days' in period:
+      advQuery = "AND opdate >= DATE_SUB(CURDATE(), INTERVAL 5 DAY)"
+    elif 'last30days' in period:
+      advQuery = "AND opdate >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)"
+  else:
+    advQuery ="AND YEAR(opdate) = %s AND MONTH(opdate) = %s" % (year, month)
+
+  try:
+    query = "SELECT opdate, description, credit, debit, account \
+             FROM transactions \
+             WHERE owner = '%s' AND category = '%s' %s \
+             ORDER BY opdate DESC" \
+            % (username, category, advQuery)
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if len(data) is 0:
+      data = None
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data
+
 # Check category type
 def getCategoryType(category):
   conn = mysql.connect()

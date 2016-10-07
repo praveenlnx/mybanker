@@ -10,7 +10,7 @@ from dbHelper import (
          checkTotalAccounts, addAccountDB, getAccounts, getTransactions,
          getCategoryType, addTransactionsDB, getNetworth, getInbox,
          getInboxCount, deleteMessageDB, sendMessage, markMsgRead,
-         searchTransactions
+         searchTransactions, getTransactionsForCategory
          )
 
 # Initialize Flask object
@@ -232,11 +232,29 @@ def transferfunds():
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
-  searchresults = None
+  searchresults = listresults = None
   if request.method == "POST":
-    keyword = request.form['keyword']
-    searchresults = searchTransactions(session['username'], keyword)
-  return render_template('searchtransactions.html', searchresults=searchresults)
+    if request.form['searchForm'] == "search":
+      keyword = request.form['keyword']
+      searchresults = searchTransactions(session['username'], keyword)
+    else:
+      category = request.form['listcategory']
+      period = request.form['period']
+      year = request.form['year']
+      month = request.form['month']
+      if category == "Select":
+        flash("Please choose a category")
+      else:
+        if not "Select" in period:
+          listresults = getTransactionsForCategory(session['username'], category, period, None, None)
+        elif not "Select" in year and not "Select" in month:
+          listresults = getTransactionsForCategory(session['username'], category, None, year, month)
+        else:
+          flash("Please choose period carefully. If you didn't select one of the predefined period, you have to select both year and month")
+        if listresults is None:
+          flash("No transacations to list")
+  categories = getCategories()
+  return render_template('searchtransactions.html', searchresults=searchresults, listresults=listresults, categories=categories)
 
 
 # Reports Route
