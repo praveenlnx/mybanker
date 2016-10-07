@@ -507,6 +507,27 @@ def getDetailedCategoryStats(data):
     categoryStatsData = [totalSpent, monthlyAvg, highest, lowest]
     return categoryStatsData
 
+# Get transactions for keyword search
+def searchTransactions(username, keyword):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+
+  try:
+    query = "SELECT opdate, description, credit, debit, category, account \
+             FROM transactions \
+             WHERE owner = '%s' AND description like '%%%s%%' \
+             ORDER BY opdate DESC" \
+            % (username,keyword)
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data
+
 # Get messages for a user
 def getInbox(username, msgid=None):
   conn = mysql.connect()

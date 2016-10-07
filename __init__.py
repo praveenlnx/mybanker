@@ -9,7 +9,8 @@ from dbHelper import (
          updatePassword, listMybankerUsers, getCategories, addCategory, 
          checkTotalAccounts, addAccountDB, getAccounts, getTransactions,
          getCategoryType, addTransactionsDB, getNetworth, getInbox,
-         getInboxCount, deleteMessageDB, sendMessage, markMsgRead
+         getInboxCount, deleteMessageDB, sendMessage, markMsgRead,
+         searchTransactions
          )
 
 # Initialize Flask object
@@ -226,6 +227,17 @@ def transferfunds():
     addTransactionsDB(date, notes, amount, "TRANSFER IN", toacc, session['username'])
     flash("Funds transferred from %s to %s successfully" % (fromacc, toacc))
   return render_template('transferfunds.html', accounts=accounts)
+
+# Search Route
+@app.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+  searchresults = None
+  if request.method == "POST":
+    keyword = request.form['keyword']
+    searchresults = searchTransactions(session['username'], keyword)
+  return render_template('searchtransactions.html', searchresults=searchresults)
+
 
 # Reports Route
 @app.route('/reports', methods=['GET', 'POST'])
