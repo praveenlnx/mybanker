@@ -245,7 +245,9 @@ def search():
       if category == "Select":
         flash("Please choose a category")
       else:
-        if not "Select" in period:
+        if "Select" in period and "Select" in year and "Select" in month:
+          listresults = getTransactionsForCategory(session['username'], category, None, None, None)
+        elif not "Select" in period:
           listresults = getTransactionsForCategory(session['username'], category, period, None, None)
         elif not "Select" in year and not "Select" in month:
           listresults = getTransactionsForCategory(session['username'], category, None, year, month)

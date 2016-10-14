@@ -286,7 +286,7 @@ def getTransactions(username, accountname, period, year, month):
 def getTransactionsForCategory(username, category, period=None, year=None, month=None):
   conn = mysql.connect()
   cursor = conn.cursor()
-  advQuery = ''
+  advQuery = limitQuery = ''
 
   if period:
     if 'thisweek' in period:
@@ -302,14 +302,17 @@ def getTransactionsForCategory(username, category, period=None, year=None, month
     elif 'last30days' in period:
       advQuery = "AND opdate >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)"
   else:
-    advQuery ="AND YEAR(opdate) = %s AND MONTH(opdate) = %s" % (year, month)
+    if year and month:
+      advQuery ="AND YEAR(opdate) = %s AND MONTH(opdate) = %s" % (year, month)
+    else:
+      limitQuery = "LIMIT 20"
 
   try:
     query = "SELECT opdate, description, credit, debit, account \
              FROM transactions \
              WHERE owner = '%s' AND category = '%s' %s \
-             ORDER BY opdate DESC" \
-            % (username, category, advQuery)
+             ORDER BY opdate DESC %s" \
+            % (username, category, advQuery, limitQuery)
     cursor.execute(query)
     data = cursor.fetchall()
     if len(data) is 0:
