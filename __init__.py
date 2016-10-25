@@ -326,4 +326,4 @@ def viewmessage(msgid):
 
 # Main Function
 if __name__ == "__main__":
-  app.run(port=8003)
+  app.run(host="0.0.0.0", port=8003)
