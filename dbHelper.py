@@ -524,6 +524,32 @@ def getCategoryStats(username, category):
   return data
   return None
 
+# Get category stats to fill previous and current month expenses in reports
+def getAllCategoryStatsForMonth(username, month):
+  # month: 0 - current, 1 - previous
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = """
+            SELECT category, SUM(debit) AS debit
+            FROM transactions
+            WHERE owner = '%s'
+                  AND EXTRACT(YEAR_MONTH FROM opdate) = EXTRACT(YEAR_MONTH FROM CURDATE() - INTERVAL %s MONTH)
+                  AND debit IS NOT NULL
+                  AND category NOT IN ('TRANSFER OUT')
+            GROUP BY category
+            ORDER BY debit DESC
+            """ % (username, month)
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    conn.close()
+    gc.collect()
+    return None
+  conn.close()
+  gc.collect()
+  return data
+
 # Get accounts that are excluded
 def getIgnoredAccounts(username):
   ignoreAccounts = []

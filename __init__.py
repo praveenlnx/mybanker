@@ -10,7 +10,7 @@ from dbHelper import (
          checkTotalAccounts, addAccountDB, getAccounts, getTransactions,
          getCategoryType, addTransactionsDB, getNetworth, getInbox,
          getInboxCount, deleteMessageDB, sendMessage, markMsgRead,
-         searchTransactions, getTransactionsForCategory
+         searchTransactions, getTransactionsForCategory, getAllCategoryStatsForMonth
          )
 
 # Initialize Flask object
@@ -281,7 +281,16 @@ def reports():
   categories = getCategories()
   inexGraph = inexTrend(session['username'], inexYear)
   expenseGraph = expenseStats(session['username'], expenseYear)
-  return render_template('reports.html', inexGraph=inexGraph, expenseGraph=expenseGraph, categories=categories, categoryStatsGraph=categoryStatsGraph, categoryStatsData=categoryStatsData)
+  prevmnthexpenses = getAllCategoryStatsForMonth(session['username'], 1)
+  curmnthexpenses = getAllCategoryStatsForMonth(session['username'], 0)
+  return render_template('reports.html',
+                          inexGraph=inexGraph,
+                          expenseGraph=expenseGraph,
+                          prevmnthexpenses=prevmnthexpenses,
+                          curmnthexpenses=curmnthexpenses,
+                          categories=categories,
+                          categoryStatsGraph=categoryStatsGraph,
+                          categoryStatsData=categoryStatsData)
 
 # Messages Route
 @app.route('/messages', methods=['GET', 'POST'])
