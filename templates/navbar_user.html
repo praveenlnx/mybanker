@@ -8,6 +8,20 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Go To <span class="caret"></span></a>
+         <ul class="dropdown-menu">
+           <li><a href="{{ url_for('dashboard') }}"><span class="glyphicon glyphicon-home" style="margin-right:10px;"></span>Dashboard</a></li>
+           <li><a href="{{ url_for('addaccount') }}"><span class="glyphicon glyphicon-credit-card" style="margin-right:10px;"></span>Add Account</a></li>
+           <li><a href="{{ url_for('messages') }}"><span class="glyphicon glyphicon-envelope" style="margin-right:10px;"></span>Message Inbox</a></li>
+           <li role="separator" class="divider"></li>
+           <li><a href="{{ url_for('addtransaction') }}"><span class="glyphicon glyphicon-plus" style="margin-right:10px;"></span>Record a new transaction</a></li>
+           <li><a href="{{ url_for('transferfunds') }}"><span class="glyphicon glyphicon-flash" style="margin-right:10px;"></span>Transfer Funds</a></li>
+           <li><a href="{{ url_for('search') }}"><span class="glyphicon glyphicon-search" style="margin-right:10px;"></span>Search/List transactions</a></li>
+           <li role="separator" class="divider"></li>
+           <li><a href="{{ url_for('reports') }}"><span class="glyphicon glyphicon-list-alt" style="margin-right:10px;"></span>View Reports</a></li>
+         </ul>
+        </li>
         <li>
           <p class="navbar-text navbar-right" style="margin-right:5px;">
             <span class="glyphicon glyphicon-user" style="margin-right:5px;" aria-hidden="true"></span>{{  session['user'] }}
