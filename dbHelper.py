@@ -496,7 +496,7 @@ def getExpenseStats(username, year):
   return data
 
 # Get category stats for specific category for specific user
-def getCategoryStats(username, category):
+def getCategoryStats(username, category, period="YEAR_MONTH"):
   conn = mysql.connect()
   cursor = conn.cursor()
   optype = "debit"
@@ -504,7 +504,7 @@ def getCategoryStats(username, category):
     optype = "credit"
   try:
     query = """
-            SELECT EXTRACT(YEAR_MONTH FROM opdate) AS period, SUM(%s) AS %s
+            SELECT EXTRACT(%s FROM opdate) AS period, SUM(%s) AS %s
             FROM transactions
             WHERE owner = '%s'
                   AND category = '%s'
@@ -512,7 +512,7 @@ def getCategoryStats(username, category):
                   AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
             GROUP BY period
             ORDER BY period
-            """ % (optype, optype, username, category, getIgnoredAccounts(username))
+            """ % (period, optype, optype, username, category, getIgnoredAccounts(username))
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
@@ -560,20 +560,24 @@ def getIgnoredAccounts(username):
   return ",".join(ignoreAccounts)
 
 # Do some maths to get more detailed category stats
-def getDetailedCategoryStats(data):
+def getDetailedCategoryStats(data, period="YEAR_MONTH"):
   if data is None:
     return None
   else:
     # Find total spent in this category since beginning
     totalSpent = sum(item[1] for item in data)
-    monthlyAvg = float(totalSpent) / float(len(data))
-    monthlyAvg = "%.2f" % monthlyAvg
+    periodAvg = float(totalSpent) / float(len(data))
+    periodAvg = "%.2f" % periodAvg
     sortedData = sorted(data, key=itemgetter(1))
-    lowestPeriod = "%s %s" % (calendar.month_name[sortedData[0][0] % 100], str(sortedData[0][0])[:-2])
+    if period == "YEAR_MONTH":
+      lowestPeriod = "%s %s" % (calendar.month_name[sortedData[0][0] % 100], str(sortedData[0][0])[:-2])
+      highestPeriod = "%s %s" % (calendar.month_name[sortedData[-1][0] % 100], str(sortedData[-1][0])[:-2])
+    else:
+      lowestPeriod = sortedData[0][0]
+      highestPeriod = sortedData[-1][0]
     lowest = [lowestPeriod, sortedData[0][1]]
-    highestPeriod = "%s %s" % (calendar.month_name[sortedData[-1][0] % 100], str(sortedData[-1][0])[:-2])
     highest = [highestPeriod, sortedData[-1][1]]
-    categoryStatsData = [totalSpent, monthlyAvg, highest, lowest]
+    categoryStatsData = [totalSpent, periodAvg, highest, lowest]
     return categoryStatsData
 
 # Get transactions for keyword search

@@ -36,7 +36,7 @@ def expenseStats(username, year):
 
 # Generate line chart for income expense trend since beginning for a user
 def inexTrendAll(username):
-  chart = pygal.Line(legend_at_bottom=True, interpolate='cubic', pretty_print=True, tooltip_border_radius=10, fill=True, height=400, style=LightColorizedStyle, dots_size=1, x_label_rotation=270)
+  chart = pygal.Line(legend_at_bottom=True, interpolate="hermite", pretty_print=True, tooltip_border_radius=10, fill=True, height=400, style=LightColorizedStyle, dots_size=1, x_label_rotation=270)
   income_data = []
   expense_data = []
   labelSeries = []
@@ -55,20 +55,28 @@ def inexTrendAll(username):
   return chart.render_data_uri()
 
 # Generate line chart for category
-def categoryStats(username, category):
-  chart = pygal.Line(interpolate='cubic', tooltip_border_radius=10, fill=True, style=LightColorizedStyle, height=350, dot_size=1, x_label_rotation=270, show_legend=False)
-  chart.title = "Stats for category: %s" % category
+def categoryStats(username, category, period="YEAR_MONTH"):
+  chart = pygal.Line(tooltip_border_radius=10, interpolate="hermite", fill=True, style=LightColorizedStyle, height=350, dot_size=1, x_label_rotation=270, show_legend=False)
+  periodAbr = "Yearly"
+  periodAbr = "Monthly" if "MONTH" in period else periodAbr
+  chart.title = "(%s) Stats for category: %s" % (periodAbr, category)
   dataSeries = []
   labelSeries = []
   statsdata = None
-  data = getCategoryStats(username, category)
+  data = getCategoryStats(username, category, period)
   if not data is None:
-    statsdata = getDetailedCategoryStats(data)
+    statsdata = getDetailedCategoryStats(data, period)
     for row in data:
-      (year,month) = (str(row[0])[:4], str(row[0])[4:])
-      labelSeries.append("%s %s" % (year, calendar.month_abbr[int(month)]))
+      if period == "YEAR_MONTH":
+        (year,month) = (str(row[0])[:4], str(row[0])[4:])
+        labelSeries.append("%s %s" % (year, calendar.month_abbr[int(month)]))
+      else:
+        labelSeries.append(row[0])
       dataSeries.append(row[1])
     chart.x_labels = labelSeries
+    maxY = int(max(dataSeries))
+    maxYRounded = (int(maxY / 100) + 1) * 100
+    chart.y_labels = [0, maxYRounded]
     chart.add(category, dataSeries)
   else:
     chart.add('line',[])  

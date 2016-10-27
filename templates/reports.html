@@ -55,7 +55,7 @@
           {% if categoryStatsData %}
            <table class="table table-hover">
              <tbody>
-                <tr><th scope="row">Total Spent</th><td>&pound;&nbsp;{{ categoryStatsData[0] }}</td></tr>
+                <tr><th scope="row">Total</th><td>&pound;&nbsp;{{ categoryStatsData[0] }}</td></tr>
                 <tr><th scope="row">Monthly Avg</th><td>&pound;&nbsp;{{ categoryStatsData[1] }}</td></tr>
                 <tr><th scope="row">Highest</th>
                     <td>&pound;&nbsp;{{ categoryStatsData[2][1] }}
@@ -72,6 +72,33 @@
           {% endif %}
           </div>
          </div>
+         {% if categoryStatsGraphYearly %}
+         <div class="row">
+           <div class="col-md-9">
+             <embed type="image/svg+xml" src={{categoryStatsGraphYearly|safe}} style='max-width:1000px'/>
+           </div>
+           <div class="col-md-3">
+           {% if categoryStatsDataYearly %}
+           <table class="table table-hover">
+             <tbody>
+                <tr><th scope="row">Total</th><td>&pound;&nbsp;{{ categoryStatsDataYearly[0] }}</td></tr>
+                <tr><th scope="row">Yearly Avg</th><td>&pound;&nbsp;{{ categoryStatsDataYearly[1] }}</td></tr>
+                <tr><th scope="row">Highest</th>
+                    <td>&pound;&nbsp;{{ categoryStatsDataYearly[2][1] }}
+                        <br><font color="gray"><em>{{ categoryStatsDataYearly[2][0] }}</em></font>
+                    </td>
+                </tr>
+                <tr><th scope="row">Lowest</th>
+                    <td>&pound;&nbsp;{{ categoryStatsDataYearly[3][1] }}
+                        <br><font color="gray"><em>{{ categoryStatsDataYearly[3][0] }}</em></font>
+                    </td>
+                </tr>
+             </tbody>
+           </table>
+           {% endif %}
+           </div> 
+         </div>
+         {% endif %}
       </div>
     </div>
   </div>

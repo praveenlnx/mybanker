@@ -268,8 +268,8 @@ def reports():
     jumbomessage = dashboardMessage(session['username'])
     return render_template('dashboard.html', jumbomessage=jumbomessage)
   inexYear = expenseYear = date.today().year
-  categoryStatsGraph = None
-  categoryStatsData = None
+  categoryStatsGraph = categoryStatsGraphYearly = None
+  categoryStatsData = categoryStatsDataYearly = None
   if request.method == "POST":
     if 'inexyear' in request.form:
       inexYear = request.form['inexyear']
@@ -277,7 +277,8 @@ def reports():
       expenseYear = request.form['expyear']
     elif 'statcategory' in request.form:
       statcategory = request.form['statcategory']
-      categoryStatsGraph, categoryStatsData = categoryStats(session['username'], statcategory)
+      categoryStatsGraph, categoryStatsData = categoryStats(session['username'], statcategory, "YEAR_MONTH")
+      categoryStatsGraphYearly, categoryStatsDataYearly = categoryStats(session['username'], statcategory, "YEAR")
   categories = getCategories()
   inexGraph = inexTrend(session['username'], inexYear)
   expenseGraph = expenseStats(session['username'], expenseYear)
@@ -290,7 +291,9 @@ def reports():
                           curmnthexpenses=curmnthexpenses,
                           categories=categories,
                           categoryStatsGraph=categoryStatsGraph,
-                          categoryStatsData=categoryStatsData)
+                          categoryStatsData=categoryStatsData,
+                          categoryStatsGraphYearly=categoryStatsGraphYearly,
+                          categoryStatsDataYearly=categoryStatsDataYearly)
 
 # Messages Route
 @app.route('/messages', methods=['GET', 'POST'])
