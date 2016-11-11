@@ -666,3 +666,20 @@ def markMsgRead(msgid):
     conn.close()
     gc.collect()
   return True
+
+# Delete user accounts - delete all data from database
+def removeUser(user=None):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    cursor.execute("DELETE FROM accounts WHERE owner = '%s'" % user)
+    cursor.execute("DELETE FROM messages WHERE owner = '%s'" % user)
+    cursor.execute("DELETE FROM transactions WHERE owner = '%s'" % user)
+    cursor.execute("DELETE FROM users WHERE username = '%s'" % user)
+    conn.commit()
+  except Exception as e:
+    return None
+  finally:
+    conn.close()
+    gc.collect()
+  return True 

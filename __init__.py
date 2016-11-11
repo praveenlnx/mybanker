@@ -10,7 +10,8 @@ from dbHelper import (
          checkTotalAccounts, addAccountDB, getAccounts, getTransactions,
          getCategoryType, addTransactionsDB, getNetworth, getInbox,
          getInboxCount, deleteMessageDB, sendMessage, markMsgRead,
-         searchTransactions, getTransactionsForCategory, getAllCategoryStatsForMonth
+         searchTransactions, getTransactionsForCategory, getAllCategoryStatsForMonth,
+         removeUser
          )
 
 # Initialize Flask object
@@ -81,7 +82,7 @@ def dashboard():
         unread = unreadCount
       return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, unread=unread)
   else:
-    return render_template('index.html', message="Invalide credentials. Please try again", mtype="danger")
+    return render_template('index.html', message="Invalid credentials. Please try again", mtype="danger")
 
 def dashboardMessage(username):
   jumbomessage = []
@@ -133,6 +134,21 @@ def adduser():
     flash(data)
   return render_template('adduser.html')
 
+# Remove User route
+@app.route('/removeuser/<username>')
+@login_required
+def removeuser(username):
+  message=None
+  if username:
+    user = getNameofUser(username)
+    if user:
+      if removeUser(username):
+        message = "User %s successfully removed from MyBanker" % user
+      else:
+        message = "Something wasn't quite right. Removing %s account failed." % user
+  userdict = listMybankerUsers()
+  return render_template('listuser.html', userdict=userdict, message=message, mtype="info")
+
 # Change Admin Password route
 @app.route('/changeAdminPass', methods=['GET', 'POST'])
 @login_required
@@ -149,7 +165,7 @@ def changeAdminPass():
 @login_required
 def listuser():
   userdict = listMybankerUsers()
-  return render_template('listuser.html', userdict=userdict)
+  return render_template('listuser.html', userdict=userdict, message=None)
 
 # Manage categories Route
 @app.route('/managecategories', methods=['GET', 'POST'])

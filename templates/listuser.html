@@ -3,6 +3,11 @@
 {% include "navbar_admin.html" %}
   <!-- Page Content -->
   <div class="container">
+  {% if message %}
+     <div style="margin-top:10px;" class="alert alert-{{ mtype }}" role="alert">
+       {{ message }}
+     </div>
+  {% endif %}
    <div class="row">
    {% if userdict %}
      {% for row in userdict %}
@@ -10,8 +15,15 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">
-              <span class="glyphicon glyphicon-user" style="margin-right:5px;" aria-hidden="true"></span>
-                {{ row[0] }}
+              <div class="row">
+                <div class="col-md-10">
+                  <span class="glyphicon glyphicon-user" style="margin-right:5px;" aria-hidden="true"></span>
+                  {{ row[0] }}
+                </div>
+                <div class="col-md-2">
+                  <a href="{{ url_for('removeuser', username=row[1]) }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                </div>
+              </div>
             </h3>
           </div>
           <div class="panel-body">
