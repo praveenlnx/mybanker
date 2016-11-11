@@ -48,11 +48,10 @@ def checkLogin(username, password):
       else:
         return False
   except Exception as e:
+    return False
+  finally:
     conn.close()
     gc.collect()
-    return False
-  conn.close()
-  gc.collect()
 
 # Get Name from Username
 def getNameofUser(username):
@@ -62,11 +61,10 @@ def getNameofUser(username):
     cursor.execute('SELECT name FROM users WHERE username = "%s"' % username)
     return cursor.fetchone()[0]
   except Exception as e:
+    return False
+  finally:
     conn.close()
     gc.collect()
-    return False
-  conn.close()
-  gc.collect()
 
 # Method to add new user
 def addUser(name, username, password, email):
@@ -94,11 +92,10 @@ def addUser(name, username, password, email):
               """ % name
     sendMessage("admin", mailSubject, mailMsg, username)
   except Exception as e:
+    return str(e)
+  finally:
     conn.close()
     gc.collect()
-    return str(e)
-  conn.close()
-  gc.collect()
   return "User %s added successfully" % name
 
 # Method to update admin password
@@ -109,20 +106,19 @@ def updatePassword(username, currentpassword, newpassword):
   cursor = conn.cursor()
   currentPW = sha256(currentpassword).hexdigest()
   newPW = sha256(newpassword).hexdigest()
-  if checkLogin(username, currentpassword):
-    try:
+  try:
+    if checkLogin(username, currentpassword):
       query = "UPDATE users SET password='%s' WHERE username='%s' AND password='%s'" % (newPW, username, currentPW)
       cursor.execute(query)
       conn.commit()
-    except Exception as e:
-      conn.close()
-      gc.collect()
-      return str(e)
+      return "Password for %s updated successfully" % username
+    else:
+      return "Operation failed! Password didn't match"
+  except Exception as e:
+    return str(e)
+  finally:
     conn.close()
     gc.collect()
-    return "Password for %s updated successfully" % username
-  else:
-    return "Operation failed! Password didn't match"
 
 # List all users and send as dictionary
 def listMybankerUsers():
@@ -133,11 +129,10 @@ def listMybankerUsers():
     cursor.execute('SELECT * FROM users')
     userdict = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return userdict
     
 # Get list of categories
@@ -154,11 +149,10 @@ def getCategories():
     for item in cursor.fetchall():
       exp_categories.append(item[0])
   except:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return inc_categories, exp_categories
 
 # Add a new category
@@ -175,11 +169,10 @@ def addCategory(name, cat_type):
     else:
       returnstring = str(data[0])
   except Exception as e:
+    return str(e)
+  finally:
     conn.close()
     gc.collect()
-    return str(e)
-  conn.close()
-  gc.collect()
   return returnstring
 
 # Check how many accounts a user has got
@@ -191,11 +184,10 @@ def checkTotalAccounts(username):
     cursor.execute(query)
     accountsTotal = cursor.fetchone()[0]
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return accountsTotal
 
 # Add a new account
@@ -215,11 +207,10 @@ def addAccountDB(accinfo):
     else:
       returnString = str(data[0])
   except Exception as e:
+    return str(e)
+  finally:
     conn.close()
     gc.collect()
-    return str(e)
-  conn.close()
-  gc.collect()
   return returnString
 
 # Get accounts for dashboard table
@@ -234,11 +225,10 @@ def getAccounts(username, account="all"):
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
 
 # Get account transactions
@@ -275,11 +265,10 @@ def getTransactions(username, accountname, period, year, month):
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
 
 # Get account transactions for a category
@@ -318,11 +307,10 @@ def getTransactionsForCategory(username, category, period=None, year=None, month
     if len(data) is 0:
       data = None
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
 
 # Check category type
@@ -334,11 +322,10 @@ def getCategoryType(category):
     cursor.execute(query)
     data = cursor.fetchone()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data[0]
 
 # Add transaction
@@ -362,11 +349,10 @@ def addTransactionsDB(date, notes, amount, category, account, owner):
     else:
       returnString = str(data[0])
   except Exception as e:
+    return str(e)
+  finally:
     conn.close()
     gc.collect()
-    return str(e)
-  conn.close()
-  gc.collect()
   return returnString
 
 # Get account Type
@@ -380,11 +366,10 @@ def checkAccountType(account, owner):
     cursor.execute(query)
     data = cursor.fetchone()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   if data[0] == "L":
     isassetAcc = False
   return isassetAcc
@@ -407,11 +392,10 @@ def updateAccounts(name, owner, amount, updatetype):
     cursor.execute(query)
     conn.commit()
   except Exception as e:
+    return False
+  finally:
     conn.close()
     gc.collect()
-    return False
-  conn.close()
-  gc.collect()
   return True
 
 # Get networth of a user
@@ -461,11 +445,10 @@ def getInEx(username, year, period="selective"):
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
 
 # Get expense stats for a specific year
@@ -488,11 +471,10 @@ def getExpenseStats(username, year):
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
 
 # Get category stats for specific category for specific user
@@ -516,13 +498,11 @@ def getCategoryStats(username, category, period="YEAR_MONTH"):
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
-  return None
 
 # Get category stats to fill previous and current month expenses in reports
 def getAllCategoryStatsForMonth(username, month):
@@ -543,11 +523,10 @@ def getAllCategoryStatsForMonth(username, month):
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
 
 # Get accounts that are excluded
@@ -594,11 +573,10 @@ def searchTransactions(username, keyword):
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
 
 # Get messages for a user
@@ -613,11 +591,10 @@ def getInbox(username, msgid=None):
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data
 
 # Get total messages and unread count for a user
@@ -634,11 +611,10 @@ def getInboxCount(username, msgtype="total"):
     cursor.execute(query)
     data = cursor.fetchone()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return data[0]
 
 # Delete a given message
@@ -650,11 +626,10 @@ def deleteMessageDB(msgid):
     cursor.execute(query)
     conn.commit()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return True 
 
 # Upload message sent to database
@@ -671,11 +646,10 @@ def sendMessage(owner, subject, message, touser):
     else:
       returnString = str(data[0])
   except Exception as e:
+    return str(e)
+  finally:
     conn.close()
     gc.collect()
-    return str(e)
-  conn.close()
-  gc.collect()
   return returnString
 
 # Mark message read
@@ -687,9 +661,8 @@ def markMsgRead(msgid):
     cursor.execute(query)
     conn.commit()
   except Exception as e:
+    return None
+  finally:
     conn.close()
     gc.collect()
-    return None
-  conn.close()
-  gc.collect()
   return True
