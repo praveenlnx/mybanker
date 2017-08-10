@@ -138,9 +138,9 @@
               <span class="input-group-addon" id="basic-addon1">Year</span>
               <select class="form-control" name="year">
                 <option selected value="Select">Select</option>
-                <option value="2016">2016</option>
-                <option value="2015">2015</option>
-                <option value="2014">2014</option>
+                {% for y in range(curyear, 2013, -1) %}
+                <option value="{{ y }}">{{ y }}</option>
+                {% endfor %}
               </select>
             </div>
           </div>

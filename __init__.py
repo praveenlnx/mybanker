@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request, session, flash, url_for, redirect
 from functools import wraps
 import fileinput, gc
-from datetime import date
+from datetime import date, datetime
 from reportHelper import inexTrend, expenseStats, inexTrendAll, categoryStats
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
@@ -204,13 +204,14 @@ def addaccount():
 @login_required
 def account_transactions(username, accountname, period):
   transactions = year = month = None
+  curyear = datetime.now().year
   if username and accountname and period:
     if request.method == "POST":
       year = request.form['year']
       month = request.form['month']
     transactions = getTransactions(username, accountname, period, year, month)
     accinfo = getAccounts(username, accountname)
-  return render_template('account-transactions.html', username=username, accinfo=accinfo, transactions=transactions)
+  return render_template('account-transactions.html', username=username, accinfo=accinfo, transactions=transactions, curyear=curyear)
 
 # Add a new transaction Route
 @app.route('/addtransaction', methods=['GET', 'POST'])
@@ -249,6 +250,7 @@ def transferfunds():
 @login_required
 def search():
   searchresults = listresults = None
+  curyear = datetime.now().year
   if request.method == "POST":
     if request.form['searchForm'] == "search":
       keyword = request.form['keyword']
@@ -272,7 +274,7 @@ def search():
         if listresults is None:
           flash("No transacations to list")
   categories = getCategories()
-  return render_template('searchtransactions.html', searchresults=searchresults, listresults=listresults, categories=categories)
+  return render_template('searchtransactions.html', searchresults=searchresults, listresults=listresults, categories=categories, curyear=curyear)
 
 
 # Reports Route
