@@ -4,6 +4,7 @@ from functools import wraps
 import fileinput, gc
 from datetime import date, datetime
 from reportHelper import inexTrend, expenseStats, inexTrendAll, categoryStats
+from helper import ( getCurrencyList, getConversionRate )
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
@@ -353,6 +354,25 @@ def viewmessage(msgid):
   mail = getInbox(session['username'], msgid)
   markMsgRead(msgid)
   return render_template('viewmessage.html', mail=mail)
+
+# Currency Rates Route
+@app.route('/currencyrates', methods=['GET', 'POST'])
+@login_required
+def currencyrates():
+  currencyList = getCurrencyList()
+  conversion_result = None
+  if request.method == "POST":
+    amount = float(request.form['amount'])
+    if "fromcur" in request.form and "tocur" in request.form:
+      fromcur = request.form['fromcur']
+      tocur = request.form['tocur']
+      if fromcur == tocur:
+        flash("From and To currencies identical. Please choose carefully.")
+      else:
+        conversion_result = getConversionRate(fromcur, tocur, amount)
+    else:
+      flash("Please choose desired currency from the dropdown!")
+  return render_template('currencyrates.html', currencyList=currencyList, conversion_result=conversion_result)
 
 # Main Function
 if __name__ == "__main__":
