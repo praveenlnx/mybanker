@@ -12,7 +12,7 @@ from dbHelper import (
          getCategoryType, addTransactionsDB, getNetworth, getInbox,
          getInboxCount, deleteMessageDB, sendMessage, markMsgRead,
          searchTransactions, getTransactionsForCategory, getAllCategoryStatsForMonth,
-         removeUser
+         removeUser, checkTotalInvestmentAccounts
          )
 
 # Initialize Flask object
@@ -373,6 +373,18 @@ def currencyrates():
     else:
       flash("Please choose desired currency from the dropdown!")
   return render_template('currencyrates.html', currencyList=currencyList, conversion_result=conversion_result)
+
+# Investments Route
+@app.route('/investments')
+@login_required
+def investments():
+  totalAccounts = checkTotalInvestmentAccounts(session['username'])
+  accountsAvailable = None
+  if totalAccounts == 0:
+    flash("You don't have any investment accounts\nPlease add your investment details")
+  else:
+    accountsAvailable = "yes"
+  return render_template('investments.html', accountsAvailable=accountsAvailable)
 
 # Main Function
 if __name__ == "__main__":

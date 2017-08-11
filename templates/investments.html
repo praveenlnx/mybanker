@@ -1,0 +1,49 @@
+
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar_user.html" %}
+  <!-- Page Content -->
+  <div class="container"> <!-- Container div start -->
+   {% with messages = get_flashed_messages() %}
+     {% if messages %}
+       {% for message in messages %}
+         <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+           {{ message }}
+         </div>
+       {% endfor %}
+     {% endif %}
+   {% endwith %}
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+    <p>
+     <a class="btn btn-primary" href="#" role="button">
+     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add New Investment</a>
+     <a class="btn btn-primary" href="#" role="button">
+     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
+    </p>
+    {% if accountsAvailable %}
+    <!-- Panel start  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Your Investments (Active)</h3>
+      </div>
+      <!-- Panel Body start -->
+      <div class="panel-body">
+      </div>
+      <!-- Panel Body end -->
+    </div>
+    <!-- Panel end  -->
+    <!-- Panel start  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Your Investments (closed)</h3>
+      </div>
+      <!-- Panel Body start -->
+      <div class="panel-body">
+      </div>
+      <!-- Panel Body end -->
+    </div>
+    <!-- Panel end  -->
+    {% endif %}
+  </div>
+  <!-- Container div end -->
+{% endblock %}

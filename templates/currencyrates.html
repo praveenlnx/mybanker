@@ -5,7 +5,7 @@
   <!-- Page Content -->
   <div class="container"> <!-- Container div start -->
     <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
-    <!-- Search Panel start  -->
+    <!-- Panel start  -->
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Currency Rates</h3>
@@ -47,6 +47,7 @@
       </div>
       <!-- Panel Body end -->
     </div>
+    <!-- Panel end -->
    {% with messages = get_flashed_messages() %}
      {% if messages %}
        {% for message in messages %}

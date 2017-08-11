@@ -683,3 +683,18 @@ def removeUser(user=None):
     conn.close()
     gc.collect()
   return True 
+
+# Check total investment accounts
+def checkTotalInvestmentAccounts(username):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "SELECT COUNT(*) FROM investmentaccounts WHERE owner = '%s'" % username
+    cursor.execute(query)
+    accountsTotal = cursor.fetchone()[0]
+  except Exception as e:
+    return None
+  finally:
+    conn.close()
+    gc.collect()
+  return accountsTotal
