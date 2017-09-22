@@ -17,8 +17,10 @@
     <p>
      <a class="btn btn-primary" href="{{ url_for('addinvestment') }}" role="button">
      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add New Investment</a>
+     {% if activeAccounts %}
      <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
+     {% endif %}
     </p>
     {% if accountsAvailable %}
     {% if activeAccounts %}
