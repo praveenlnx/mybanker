@@ -6,7 +6,6 @@ from hashlib import sha256
 from operator import itemgetter
 import calendar
 import gc
-import decimal
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -810,13 +809,13 @@ def addSIPTransaction(sipinfo):
   cursor = conn.cursor()
 
   origBalanceUnits = getBalanceUnitsMF(sipinfo['owner'], sipinfo['accid'])
-  purchasedUnits = decimal.Decimal(sipinfo['units'])
-  newBalanceUnits = origBalanceUnits + purchasedUnits
+  purchasedUnits = float(sipinfo['units'])
+  newBalanceUnits = float(origBalanceUnits) + purchasedUnits
 
-  sipamount = decimal.Decimal(sipinfo['amount'])
+  sipamount = float(sipinfo['amount'])
 
   try:
-    query = "INSERT INTO investmenttransactions VALUES(%s, '%s', %d, %d, %d, '%s')" \
+    query = "INSERT INTO investmenttransactions VALUES(%s, '%s', %d, %0.3f, %0.3f, '%s')" \
             % (sipinfo['accid'], sipinfo['sipdate'], sipamount, purchasedUnits, newBalanceUnits, sipinfo['owner'])
     cursor.execute(query)
     data = cursor.fetchall()
@@ -842,7 +841,7 @@ def updateInvestmentAccounts(accid, owner, amount, balanceunits, opdate):
   try:
     query = "UPDATE investmentaccounts \
              SET invested=invested+%d, \
-                 balanceunits=%d, \
+                 balanceunits=%0.3f, \
                  lastoperated='%s' \
              WHERE accid='%s' AND owner='%s'" \
              % (amount, balanceunits, opdate, accid, owner)
