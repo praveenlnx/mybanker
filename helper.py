@@ -20,3 +20,9 @@ def getConversionRate(fromcur, tocur, amount):
   toSymbol = codes.get_symbol(tocur)
   conversion_result = "%s %0.2f = %s %0.2f" % (fromSymbol, amount, toSymbol, converted)
   return conversion_result
+
+# Get currency symbol
+def getCurrencySymbol(currencycode):
+  codes = CurrencyCodes()
+  symbol = codes.get_symbol(currencycode)
+  return symbol

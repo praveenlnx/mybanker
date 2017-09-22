@@ -15,12 +15,13 @@
    {% endwith %}
     <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
     <p>
-     <a class="btn btn-primary" href="#" role="button">
+     <a class="btn btn-primary" href="{{ url_for('addinvestment') }}" role="button">
      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add New Investment</a>
-     <a class="btn btn-primary" href="#" role="button">
+     <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
     </p>
     {% if accountsAvailable %}
+    {% if activeAccounts %}
     <!-- Panel start  -->
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -28,20 +29,63 @@
       </div>
       <!-- Panel Body start -->
       <div class="panel-body">
+       <table class="table table-hover">
+        <thead>
+         <tr>
+          <th>Fund</th>
+          <th>Invested</th>
+          <th>Units</th>
+          <th>Last Operated</th>
+         </tr>
+        </thead>
+        <tbody>
+        {% for fund in activeAccounts %}
+         <tr>
+          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0]) }}">{{ fund[1] }}</a></td>
+          <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
+          <td>{{ fund[3] }}</td>
+          <td>{{ fund[4] }}</td>
+         </tr>
+        {% endfor %}
+        </tbody>
+       </table>
       </div>
       <!-- Panel Body end -->
     </div>
+    {% endif %}
     <!-- Panel end  -->
     <!-- Panel start  -->
+    {% if closedAccounts %}
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Your Investments (closed)</h3>
       </div>
       <!-- Panel Body start -->
       <div class="panel-body">
+       <table class="table table-hover">
+        <thead>
+         <tr>
+          <th>Fund</th>
+          <th>Invested</th>
+          <th>Units</th>
+          <th>Last Operated</th>
+         </tr>
+        </thead>
+        <tbody>
+        {% for fund in closedAccounts %}
+         <tr>
+          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0]) }}">{{ fund[1] }}</a></td>
+          <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
+          <td>{{ fund[3] }}</td>
+          <td>{{ fund[4] }}</td>
+         </tr>
+        {% endfor %}
+        </tbody>
+       </table>
       </div>
       <!-- Panel Body end -->
     </div>
+    {% endif %}
     <!-- Panel end  -->
     {% endif %}
   </div>

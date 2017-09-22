@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar_user.html" %}
+  <!-- Page Content -->
+  <div class="container text-center">
+   {% with messages = get_flashed_messages() %}
+     {% if messages %}
+        {% for message in messages %}
+           <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+             {{ message }}
+           </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="col-md-8 col-md-offset-2">
+      <form method="POST" action="" class="form-signin" style="width: 600px;">
+        <h3 class="form-signin-heading" style="margin-bottom:25px;">Add a new investment account</h3>
+        <div class="row">
+         <div class="col-md-4">
+           <input type="text" class="form-control" name="accountid" placeholder="Account ID (num)" required autofocus>
+         </div>
+         <div class="col-md-4">
+           <input type="text" class="form-control" name="folio" placeholder="Folio Number" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+           <input type="text" class="form-control" name="accountname" placeholder="Investment Account Name" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="company" placeholder="Investment Company" required>
+         </div>
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="plan" placeholder="Investment Plan" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="email" placeholder="Email" required>
+         </div>
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="phone" placeholder="Phone Number" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+          <input type="text" class="form-control" name="address" placeholder="Address linked with this investment" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+          <input type="text" class="form-control" name="bank" placeholder="Bank account linked with this investment" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+          <div class="input-group">
+           <span class="input-group-addon" id="basic-addon1">SIP Start Date</span>
+           <input type='text' class="form-control" name="sipstart" id="datepicker" style="width:150px;">
+          </div>
+         </div>
+         <div class="col-md-6">
+          <div class="input-group">
+           <span class="input-group-addon" id="basic-addon1">SIP Close Date</span>
+           <input type='text' class="form-control" name="sipend" id="datepicker1" style="width:150px;">
+          </div>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+          <input type="text" class="form-control" name="url" placeholder="URL for online management if any">
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="urluser" placeholder="URL username">
+         </div>
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="urlpass" placeholder="URL password">
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+          <input type="text" class="form-control" name="notes" placeholder="Notes/comments">
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+          <button class="btn btn-md btn-primary btn-block" type="submit">
+           <span class="glyphicon glyphicon-plus" aria-hidden="true"style="margin-right:10px;"></span>Add Investment
+          </button>
+         </div>
+         <div class="col-md-6">
+          <a class="btn btn-primary" href="{{ url_for('investments') }}" role="button">&nbsp;
+          <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>&nbsp;&nbsp;Back to Investment Dashboard&nbsp;&nbsp;</a>
+         </div>
+        </div><br>
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+      </form>
+    </div>
+  </div>
+  <!-- /.container -->
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar_user.html" %}
+  <!-- Page Content -->
+  <div class="container">
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+    {% if accinfo %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+        <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>&nbsp;&nbsp;{{ accinfo[0][2] }}</h3>
+      </div>
+      <div class="panel-body">
+        <p><h4>{{ accinfo[0][5] }}</h4>
+        <small><i>{{ accinfo[0][3] }}</i></small>
+        </p>
+        <table>
+         <tr>
+          <td style="padding-top:15px;"><b>Folio</b></td>
+          <td style="padding-top:15px;" colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][4] }}</td>
+         </tr>
+         <tr>
+          <td><b>Address</b></td>
+          <td colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][8] }}</td>
+         </tr>
+         <tr>
+          <td><b>Bank</b></td>
+          <td colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][9] }}</td>
+         </tr>
+         <tr>
+          <td style="padding-bottom:15px;"><b>Fund URL</b></td>
+          <td style="padding-bottom:15px;"colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][16] if accinfo[0][16] != '' else 'Not Entered' }}</td>
+         </tr>
+         <tr>
+          <td><b>Start</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][10] }}</td>
+          <td style="padding-left:50px;"><b>End</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][11] }}</td>
+         </tr>
+         <tr>
+          <td><b>Username</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][17] if accinfo[0][17] != '' else 'Not Entered' }}</td>
+          <td style="padding-left:50px;"><b>Password</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][18] if accinfo[0][18] != '' else 'Not Entered' }}</td>
+         </tr>
+         <tr>
+          <td><b>Email</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][6] }}</td>
+          <td style="padding-left:50px;"><b>Phone</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][7] }}</td>
+         </tr>
+        </table>
+        <div class="row" style="margin-top:20px;">
+         <div class="col-md-2">
+          <h4><small>Invested&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;{{ accinfo[0][12] }}</span></h4>
+         </div>
+         <div class="col-md-2">
+          <h4><small>Value&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;0.00</span></h4>
+         </div>
+         <div class="col-md-2">
+          <h4><small>Units&nbsp;&nbsp;</small><span class="label label-default">{{ accinfo[0][13] }}</span></h4>
+         </div>
+         <div class="col-md-6"></div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <p><a href="{{ url_for('investments') }}">Back to Investment Dashboard</a></p>
+    {% if transactions %}
+      <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
+    {% endif %}
+    <div class="panel panel-default" style="margin-top:15px;">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;&nbsp;Transactions&nbsp;&nbsp;&nbsp;
+        </h3>
+      </div>
+      <div class="panel-body">
+        {% if not transactions %}
+          <p>No transactions found for this investment account</p>
+          <p>Please add SIP transactions</p>
+          <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
+        {% endif %}
+        {% if transactions %}
+         <table class="table table-hover">
+           <thead class="thead-inverse">
+             <tr>
+               <th>Date</th>
+               <th>Invested</th>
+               <th>Purchased Units</th>
+               <th>Balance Units</th>
+             </tr>
+           </thead>
+           <tbody>
+           {% for row in transactions %}
+            <tr>
+             <td>{{ row[1] }}</td>
+             <td>{{ row[2] }}</td>
+             <td>{{ row[3] }}</td>
+             <td>{{ row[4] }}</td>
+            </tr>
+           {% endfor %}
+           </tbody>
+         </table>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  <!-- /.container -->
+{% endblock %}

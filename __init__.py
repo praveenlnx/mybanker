@@ -4,7 +4,7 @@ from functools import wraps
 import fileinput, gc
 from datetime import date, datetime
 from reportHelper import inexTrend, expenseStats, inexTrendAll, categoryStats
-from helper import ( getCurrencyList, getConversionRate )
+from helper import ( getCurrencyList, getConversionRate, getCurrencySymbol )
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
@@ -12,7 +12,9 @@ from dbHelper import (
          getCategoryType, addTransactionsDB, getNetworth, getInbox,
          getInboxCount, deleteMessageDB, sendMessage, markMsgRead,
          searchTransactions, getTransactionsForCategory, getAllCategoryStatsForMonth,
-         removeUser, checkTotalInvestmentAccounts
+         removeUser, checkTotalInvestmentAccounts, addInvestmentAccountDB,
+         getInvestmentAccount, getInvestmentAccounts, getInvestmentTransactions,
+         addSIPTransaction
          )
 
 # Initialize Flask object
@@ -369,7 +371,7 @@ def currencyrates():
       if fromcur == tocur:
         flash("From and To currencies identical. Please choose carefully.")
       else:
-        conversion_result = getConversionRate(fromcur, tocur, amount)
+        conversion_result = getConversGionRate(fromcur, tocur, amount)
     else:
       flash("Please choose desired currency from the dropdown!")
   return render_template('currencyrates.html', currencyList=currencyList, conversion_result=conversion_result)
@@ -378,14 +380,76 @@ def currencyrates():
 @app.route('/investments')
 @login_required
 def investments():
+  # Currency symbol hardcoded for INR. Revisit for dynamic feature
+  currencySymbol = getCurrencySymbol('INR')
   totalAccounts = checkTotalInvestmentAccounts(session['username'])
-  accountsAvailable = None
+  accountsAvailable = activeAccounts = closedAccounts = None
   if totalAccounts == 0:
     flash("You don't have any investment accounts\nPlease add your investment details")
   else:
     accountsAvailable = "yes"
-  return render_template('investments.html', accountsAvailable=accountsAvailable)
+    activeAccounts = getInvestmentAccounts(session['username'], 'Active')
+    closedAccounts = getInvestmentAccounts(session['username'], 'Closed')
+  return render_template('investments.html', 
+                          accountsAvailable=accountsAvailable, 
+                          activeAccounts=activeAccounts,
+                          closedAccounts=closedAccounts,
+                          currencySymbol=currencySymbol)
+
+# Add new investment Route
+@app.route('/addinvestment', methods=['GET', 'POST'])
+@login_required
+def addinvestment():
+  if request.method == "POST":
+    accinfo = {}
+    accinfo['accid'] = request.form['accountid']
+    accinfo['owner'] = session['username']
+    accinfo['name'] = request.form['accountname']
+    accinfo['plan'] = request.form['plan']
+    accinfo['folio'] = request.form['folio']
+    accinfo['company'] = request.form['company']
+    accinfo['email'] = request.form['email']
+    accinfo['phone'] = request.form['phone']
+    accinfo['address'] = request.form['address']
+    accinfo['linkedbank'] = request.form['bank']
+    accinfo['sipstart'] = request.form['sipstart']
+    accinfo['sipend'] = request.form['sipend']
+    accinfo['url'] = request.form['url']
+    accinfo['urluser'] = request.form['urluser']
+    accinfo['urlpass'] = request.form['urlpass']
+    accinfo['notes'] = request.form['notes']
+    flash(addInvestmentAccountDB(accinfo))
+  return render_template('addinvestment.html')
+
+# Investment individual account details Route
+@app.route('/<username>/investments/<accid>')
+@login_required
+def investment_transactions(username, accid):
+  currencySymbol = getCurrencySymbol('INR')
+  transactions = accinfo = None
+  if username and accid:
+    transactions = getInvestmentTransactions(username, accid)
+    accinfo = getInvestmentAccount(username, accid)
+  return render_template('investment-transactions.html',
+                         transactions=transactions,
+                         accinfo=accinfo,
+                         currencySymbol=currencySymbol)
+
+# Add SIP Transaction Route
+@app.route('/addsip', methods=['GET', 'POST'])
+@login_required
+def addsip():
+  if request.method == "POST":
+    sipinfo = {}
+    sipinfo['owner'] = session['username']
+    sipinfo['accid'] = request.form['accid']
+    sipinfo['amount'] = request.form['amount']
+    sipinfo['units'] = request.form['units']
+    sipinfo['sipdate'] = request.form['sipdate']
+    flash(addSIPTransaction(sipinfo))
+  activeAccounts = getInvestmentAccounts(session['username'], 'Active')
+  return render_template('addsip.html', accounts=activeAccounts)
 
 # Main Function
 if __name__ == "__main__":
-  app.run(host="0.0.0.0", port=8003)
+  app.run(host="0.0.0.0", port=8003, debug=True)
