@@ -371,7 +371,7 @@ def currencyrates():
       if fromcur == tocur:
         flash("From and To currencies identical. Please choose carefully.")
       else:
-        conversion_result = getConversGionRate(fromcur, tocur, amount)
+        conversion_result = getConversionRate(fromcur, tocur, amount)
     else:
       flash("Please choose desired currency from the dropdown!")
   return render_template('currencyrates.html', currencyList=currencyList, conversion_result=conversion_result)
