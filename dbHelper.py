@@ -853,3 +853,23 @@ def updateInvestmentAccounts(accid, owner, amount, balanceunits, opdate):
     conn.close()
     gc.collect()
   return "Investment account updated!"
+
+# Update status of Investment accounts
+def updateInvestmentAccountStatus(accid, owner, status):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+
+  try:
+    query = "UPDATE investmentaccounts \
+             SET status='%s', \
+                 notes=CONCAT(notes, ' [Account status changed to %s ', CURDATE(), ']') \
+             WHERE accid='%s' AND owner='%s'" \
+             % (status, status, accid, owner)
+    cursor.execute(query)
+    conn.commit()
+  except Exception as e:
+    return "Exception occurred while updating status of the account"
+  finally:
+    conn.close()
+    gc.collect()
+  return "Account status changed to %s!!" % status

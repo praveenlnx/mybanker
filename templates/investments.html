@@ -25,7 +25,7 @@
     {% if accountsAvailable %}
     {% if activeAccounts %}
     <!-- Panel start  -->
-    <div class="panel panel-default">
+    <div class="panel panel-info">
       <div class="panel-heading">
         <h3 class="panel-title">Your Investments (Active)</h3>
       </div>
@@ -43,7 +43,40 @@
         <tbody>
         {% for fund in activeAccounts %}
          <tr>
-          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0]) }}">{{ fund[1] }}</a></td>
+          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
+          <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
+          <td>{{ fund[3] }}</td>
+          <td>{{ fund[4] }}</td>
+         </tr>
+        {% endfor %}
+        </tbody>
+       </table>
+      </div>
+      <!-- Panel Body end -->
+    </div>
+    {% endif %}
+    <!-- Panel end  -->
+    <!-- Panel start  -->
+    {% if holdingAccounts %}
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h3 class="panel-title">Your Investments (Holding)</h3>
+      </div>
+      <!-- Panel Body start -->
+      <div class="panel-body">
+       <table class="table table-hover">
+        <thead>
+         <tr>
+          <th>Fund</th>
+          <th>Invested</th>
+          <th>Units</th>
+          <th>Last Operated</th>
+         </tr>
+        </thead>
+        <tbody>
+        {% for fund in holdingAccounts %}
+         <tr>
+          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
           <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
           <td>{{ fund[3] }}</td>
           <td>{{ fund[4] }}</td>
@@ -58,9 +91,9 @@
     <!-- Panel end  -->
     <!-- Panel start  -->
     {% if closedAccounts %}
-    <div class="panel panel-default">
+    <div class="panel panel-danger">
       <div class="panel-heading">
-        <h3 class="panel-title">Your Investments (closed)</h3>
+        <h3 class="panel-title">Your Investments (Closed)</h3>
       </div>
       <!-- Panel Body start -->
       <div class="panel-body">
@@ -76,7 +109,7 @@
         <tbody>
         {% for fund in closedAccounts %}
          <tr>
-          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0]) }}">{{ fund[1] }}</a></td>
+          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
           <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
           <td>{{ fund[3] }}</td>
           <td>{{ fund[4] }}</td>

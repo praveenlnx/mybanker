@@ -14,7 +14,7 @@ from dbHelper import (
          searchTransactions, getTransactionsForCategory, getAllCategoryStatsForMonth,
          removeUser, checkTotalInvestmentAccounts, addInvestmentAccountDB,
          getInvestmentAccount, getInvestmentAccounts, getInvestmentTransactions,
-         addSIPTransaction
+         addSIPTransaction, updateInvestmentAccountStatus
          )
 
 # Initialize Flask object
@@ -389,10 +389,12 @@ def investments():
   else:
     accountsAvailable = "yes"
     activeAccounts = getInvestmentAccounts(session['username'], 'Active')
+    holdingAccounts = getInvestmentAccounts(session['username'], 'Holding')
     closedAccounts = getInvestmentAccounts(session['username'], 'Closed')
   return render_template('investments.html', 
                           accountsAvailable=accountsAvailable, 
                           activeAccounts=activeAccounts,
+                          holdingAccounts=holdingAccounts,
                           closedAccounts=closedAccounts,
                           currencySymbol=currencySymbol)
 
@@ -422,9 +424,11 @@ def addinvestment():
   return render_template('addinvestment.html')
 
 # Investment individual account details Route
-@app.route('/<username>/investments/<accid>')
+@app.route('/<username>/investments/<accid>/<action>')
 @login_required
-def investment_transactions(username, accid):
+def investment_transactions(username, accid, action):
+  if action == "Closed" or action == "Holding":
+    flash(updateInvestmentAccountStatus(accid, username, action))
   currencySymbol = getCurrencySymbol('INR')
   transactions = accinfo = None
   if username and accid:
