@@ -383,7 +383,7 @@ def investments():
   # Currency symbol hardcoded for INR. Revisit for dynamic feature
   currencySymbol = getCurrencySymbol('INR')
   totalAccounts = checkTotalInvestmentAccounts(session['username'])
-  accountsAvailable = activeAccounts = closedAccounts = None
+  accountsAvailable = activeAccounts = holdingAccounts = closedAccounts = None
   if totalAccounts == 0:
     flash("You don't have any investment accounts\nPlease add your investment details")
   else:
