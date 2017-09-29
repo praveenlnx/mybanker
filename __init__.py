@@ -443,6 +443,7 @@ def investment_transactions(username, accid, action):
 @app.route('/addsip', methods=['GET', 'POST'])
 @login_required
 def addsip():
+  activeAccounts = None
   if request.method == "POST":
     sipinfo = {}
     sipinfo['owner'] = session['username']
@@ -451,7 +452,11 @@ def addsip():
     sipinfo['units'] = request.form['units']
     sipinfo['sipdate'] = request.form['sipdate']
     flash(addSIPTransaction(sipinfo))
-  activeAccounts = getInvestmentAccounts(session['username'], 'Active')
+  totalAccounts = checkTotalInvestmentAccounts(session['username'])
+  if totalAccounts == 0:
+    flash("You don't have any investment accounts\nPlease add your investment details")
+  else:
+    activeAccounts = getInvestmentAccounts(session['username'], 'Active')
   return render_template('addsip.html', accounts=activeAccounts)
 
 # Main Function

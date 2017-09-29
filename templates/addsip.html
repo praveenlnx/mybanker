@@ -12,6 +12,7 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
+    {% if accounts %}
     <div class="col-md-8 col-md-offset-3">
       <form method="POST" action="" class="form-signin" style="width: 500px;">
         <h3 class="form-signin-heading" style="margin-bottom:25px;">Add SIP Transaction</h3>
@@ -20,11 +21,9 @@
          <div class="input-group">
           <span class="input-group-addon" id="basic-addon1">Select the Investment</span>
           <select class="form-control" name="accid">
-           {% if accounts %}
             {% for account in accounts %}
             <option value="{{ account[0] }}">{{ account[0] }} - {{ account[1] }}</option>
             {% endfor %}
-           {% endif %}
           </select>
          </div>
          </div>
@@ -68,6 +67,7 @@
         <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
       </form>
     </div>
+    {% endif %}
   </div>
   <!-- /.container -->
 {% endblock %}
