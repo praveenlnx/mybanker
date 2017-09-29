@@ -16,3 +16,9 @@ MYSQL_DATABASE_USER = 'mbm'
 MYSQL_DATABASE_PASSWORD = 'mbm'
 MYSQL_DATABASE_HOST = '127.0.0.1'
 MYSQL_DATABASE_DB = 'mbmdev'
+
+# ------------ #
+# MF NAV Stuff #
+# ------------ #
+MFNAV_LINK = 'http://portal.amfiindia.com/spages/NAV0.txt'
+MFNAV_FILE = '/tmp/mybanker_mfnav'

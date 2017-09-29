@@ -4,7 +4,10 @@ from functools import wraps
 import fileinput, gc
 from datetime import date, datetime
 from reportHelper import inexTrend, expenseStats, inexTrendAll, categoryStats
-from helper import ( getCurrencyList, getConversionRate, getCurrencySymbol )
+from helper import ( 
+         getCurrencyList, getConversionRate, getCurrencySymbol, 
+         mfNAV2File, removeMFNAVFile, getFundNAVDict, getNAV 
+         )
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
          updatePassword, listMybankerUsers, getCategories, addCategory, 
@@ -75,6 +78,10 @@ def dashboard():
     if username == "admin":
       return render_template(dashboard_admin)
     else:
+      # Check if user has investment accounts
+      if not checkTotalInvestmentAccounts(session['username']) == 0:
+        # Fetch MF NAV data to temp file
+        mfNAV2File() 
       jumbomessage = dashboardMessage(username)
       if checkTotalAccounts(username) != 0:
         accounts = getAccounts(username)
@@ -122,6 +129,7 @@ def setup():
 @login_required
 def logout():
   session.clear()
+  removeMFNAVFile()
   return render_template('index.html', message="You have been logged out!", mtype="info")
 
 # Add User route
@@ -391,12 +399,14 @@ def investments():
     activeAccounts = getInvestmentAccounts(session['username'], 'Active')
     holdingAccounts = getInvestmentAccounts(session['username'], 'Holding')
     closedAccounts = getInvestmentAccounts(session['username'], 'Closed')
+    navdict = getFundNAVDict(session['username'])
   return render_template('investments.html', 
                           accountsAvailable=accountsAvailable, 
                           activeAccounts=activeAccounts,
                           holdingAccounts=holdingAccounts,
                           closedAccounts=closedAccounts,
-                          currencySymbol=currencySymbol)
+                          currencySymbol=currencySymbol,
+                          navdict=navdict)
 
 # Add new investment Route
 @app.route('/addinvestment', methods=['GET', 'POST'])
@@ -409,6 +419,7 @@ def addinvestment():
     accinfo['name'] = request.form['accountname']
     accinfo['plan'] = request.form['plan']
     accinfo['folio'] = request.form['folio']
+    accinfo['schemecode'] = request.form['schemecode']
     accinfo['company'] = request.form['company']
     accinfo['email'] = request.form['email']
     accinfo['phone'] = request.form['phone']
@@ -427,6 +438,7 @@ def addinvestment():
 @app.route('/<username>/investments/<accid>/<action>')
 @login_required
 def investment_transactions(username, accid, action):
+  nav = 0.00
   if action == "Closed" or action == "Holding":
     flash(updateInvestmentAccountStatus(accid, username, action))
   currencySymbol = getCurrencySymbol('INR')
@@ -434,10 +446,12 @@ def investment_transactions(username, accid, action):
   if username and accid:
     transactions = getInvestmentTransactions(username, accid)
     accinfo = getInvestmentAccount(username, accid)
+    nav = getNAV(accinfo[0][5])
   return render_template('investment-transactions.html',
                          transactions=transactions,
                          accinfo=accinfo,
-                         currencySymbol=currencySymbol)
+                         currencySymbol=currencySymbol,
+                         nav=nav)
 
 # Add SIP Transaction Route
 @app.route('/addsip', methods=['GET', 'POST'])

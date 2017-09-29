@@ -1,5 +1,14 @@
+from flask import Flask
 from flask import current_app as app
 from forex_python.converter import CurrencyRates, CurrencyCodes
+from urllib2 import urlopen, URLError
+import os
+import re
+from dbHelper import ( getInvestmentAccounts )
+
+# Load configuration from file
+app = Flask(__name__)
+app.config.from_object('config')
 
 # Get currency list
 def getCurrencyList():
@@ -26,3 +35,39 @@ def getCurrencySymbol(currencycode):
   codes = CurrencyCodes()
   symbol = codes.get_symbol(currencycode)
   return symbol
+
+# Get Mutual Fund NAVs and store it in session
+def mfNAV2File():
+  nav_url = app.config['MFNAV_LINK']
+  nav_file = app.config['MFNAV_FILE']
+  try:
+    response = urlopen(nav_url)
+    mfnav = response.read()
+    response.close()
+    with open(nav_file, 'w') as f:
+      f.write(mfnav)
+  except URLError as e:
+    return None
+  return True
+
+# Remove MF NAV file upon logout
+def removeMFNAVFile():
+  os.remove(app.config['MFNAV_FILE'])
+
+# Get Nav of the given MF scheme code
+def getNAV(code):
+  nav = None
+  if not code is None:
+    with open(app.config['MFNAV_FILE']) as f:
+      data = f.read()
+    navdetails = re.findall("%s.*" % code, data)
+    nav = navdetails[0].split(';')[4]
+  return nav
+
+# Get Nav for all active and holding accounts in a dictionary for the given user
+def getFundNAVDict(username):
+  accounts = getInvestmentAccounts(username, "ActiveOrHold")
+  navDict = {}
+  for account in accounts:
+    navDict[account[5]] = getNAV(account[5])
+  return navDict

@@ -20,7 +20,7 @@
         <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>&nbsp;&nbsp;{{ accinfo[0][2] }}</h3>
       </div>
       <div class="panel-body">
-        <p><h4>{{ accinfo[0][5] }}</h4>
+        <p><h4>{{ accinfo[0][6] }}</h4>
         <small><i>{{ accinfo[0][3] }}</i></small>
         </p>
         <table>
@@ -29,61 +29,66 @@
           <td style="padding-top:15px;" colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][4] }}</td>
          </tr>
          <tr>
-          <td><b>Address</b></td>
-          <td colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][8] }}</td>
+          <td><b>Code</b></td>
+          <td colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][5] }}</td>
          </tr>
          <tr>
-          <td><b>Bank</b></td>
+          <td><b>Address</b></td>
           <td colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][9] }}</td>
          </tr>
          <tr>
+          <td><b>Bank</b></td>
+          <td colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][10] }}</td>
+         </tr>
+         <tr>
           <td style="padding-bottom:15px;"><b>Fund URL</b></td>
-          <td style="padding-bottom:15px;"colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][16] if accinfo[0][16] != '' else 'Not Entered' }}</td>
+          <td style="padding-bottom:15px;"colspan=3>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][17] if accinfo[0][17] != '' else 'Not Entered' }}</td>
          </tr>
          <tr>
           <td><b>Start</b></td>
-          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][10] }}</td>
-          <td style="padding-left:50px;"><b>End</b></td>
           <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][11] }}</td>
+          <td style="padding-left:50px;"><b>End</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][12] }}</td>
          </tr>
          <tr>
           <td><b>Username</b></td>
-          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][17] if accinfo[0][17] != '' else 'Not Entered' }}</td>
-          <td style="padding-left:50px;"><b>Password</b></td>
           <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][18] if accinfo[0][18] != '' else 'Not Entered' }}</td>
+          <td style="padding-left:50px;"><b>Password</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][19] if accinfo[0][19] != '' else 'Not Entered' }}</td>
          </tr>
          <tr>
           <td><b>Email</b></td>
-          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][6] }}</td>
-          <td style="padding-left:50px;"><b>Phone</b></td>
           <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][7] }}</td>
+          <td style="padding-left:50px;"><b>Phone</b></td>
+          <td>&nbsp;<b>:</b>&nbsp;&nbsp;{{ accinfo[0][8] }}</td>
          </tr>
         </table>
         <div class="row" style="margin-top:20px;">
          <div class="col-md-6">
-          <div class="well">{{ accinfo[0][19] or "No notes added to this account" }}</div>
+          <div class="well">{{ accinfo[0][20] or "No notes added to this account" }}</div>
          </div>
         </div>
         <div class="row">
          <div class="col-md-2">
-          <h4><small>Invested&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;{{ accinfo[0][12] }}</span></h4>
+          <h4><small>Invested&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;{{ accinfo[0][13] }}</span></h4>
          </div>
          <div class="col-md-2">
-          <h4><small>Value&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;0.00</span></h4>
+          {% set value = accinfo[0][14]|float * nav|float %}
+          <h4><small>Value&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;{{ '%0.2f' % value }}</span></h4>
          </div>
          <div class="col-md-2">
-          <h4><small>Units&nbsp;&nbsp;</small><span class="label label-default">{{ accinfo[0][13] }}</span></h4>
+          <h4><small>Units&nbsp;&nbsp;</small><span class="label label-default">{{ accinfo[0][14] }}</span></h4>
          </div>
          <div class="col-md-6"></div>
         </div>
         <div class="row" style="margin-top:20px;">
          <div class="col-md-6">
-          {% if accinfo[0][14] == 'Active' or accinfo[0][14] == 'Holding' %}
+          {% if accinfo[0][15] == 'Active' or accinfo[0][15] == 'Holding' %}
           <a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Closed') }}" role="button">
            Close and archive this account
           </a>
           {% endif %}
-          {% if accinfo[0][14] == 'Active' %}
+          {% if accinfo[0][15] == 'Active' %}
           <a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Holding') }}" role="button">
            Close Sip and hold this account
           </a>

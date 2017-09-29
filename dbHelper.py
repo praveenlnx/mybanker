@@ -704,10 +704,15 @@ def addInvestmentAccountDB(accinfo):
   conn = mysql.connect()
   cursor = conn.cursor()
   try:
-    query = "INSERT INTO investmentaccounts VALUES(%s, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 0.00, 0.00, 'Active', CURDATE(), '%s', '%s', '%s', '%s')" % \
-             (accinfo['accid'], accinfo['owner'], accinfo['name'], accinfo['plan'], accinfo['folio'], accinfo['company'], accinfo['email'], accinfo['phone'], \
-              accinfo['address'], accinfo['linkedbank'], accinfo['sipstart'], accinfo['sipend'], accinfo['url'], \
-              accinfo['urluser'], accinfo['urlpass'], accinfo['notes'])
+    query = "INSERT INTO investmentaccounts \
+             VALUES(%s, '%s', '%s', '%s', '%s', '%s', \
+                   '%s', '%s', '%s', '%s', '%s', '%s', \
+                   '%s', 0.00, 0.00, 'Active', CURDATE(), \
+                   '%s', '%s', '%s', '%s')" % \
+             (accinfo['accid'], accinfo['owner'], accinfo['name'], accinfo['plan'], accinfo['folio'], \
+              accinfo['schemecode'], accinfo['company'], accinfo['email'], accinfo['phone'], \
+              accinfo['address'], accinfo['linkedbank'], accinfo['sipstart'], accinfo['sipend'], \
+              accinfo['url'], accinfo['urluser'], accinfo['urlpass'], accinfo['notes'])
     cursor.execute(query)
     data = cursor.fetchall()
     if len(data) is 0:
@@ -728,11 +733,13 @@ def getInvestmentAccounts(username, accounttype="All"):
   cursor = conn.cursor()
   appendQuery = ""
 
-  if accounttype != "All":
+  if accounttype == "ActiveOrHold":
+    appendQuery = "AND status in ('Active', 'Holding')"
+  elif accounttype != "All":
     appendQuery = "AND status = '%s'" % accounttype
 
   try:
-    query = "SELECT accid, name, invested, balanceunits, lastoperated \
+    query = "SELECT accid, name, invested, balanceunits, lastoperated, schemecode \
              FROM investmentaccounts \
              WHERE owner = '%s' %s \
              ORDER BY accid" % (username, appendQuery)

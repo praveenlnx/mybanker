@@ -35,26 +35,36 @@
         <thead>
          <tr>
           <th style="width:40%;">Fund</th>
-          <th style="width:20%">Invested</th>
-          <th style="width:20%">Units</th>
-          <th>Last Operated</th>
+          <th style="width:15%">Invested</th>
+          <th style="width:15%">Value</th>
+          <th style="width:15%">Units</th>
+          <th style="width:15%">Last Operated</th>
          </tr>
         </thead>
         <tbody>
         {% set total = [0] %}
+        {% set totalValue = [0] %}
         {% for fund in activeAccounts %}
          {% if total.append(total.pop() + fund[2]) %}{% endif %}
+         {% set curValue = navdict[fund[5]]|float * fund[3]|float %}
+         {% if totalValue.append(totalValue.pop() + curValue) %}{% endif %}
          <tr>
           <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
           <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
+          {% if curValue > fund[2] %}
+            {% set color = 'green' %}
+          {% elif curValue < fund[2] %}
+            {% set color = 'red' %}
+          {% endif %}
+          <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % curValue }}</font></td>
           <td>{{ fund[3] }}</td>
           <td>{{ fund[4] }}</td>
          </tr>
         {% endfor %}
          <tr>
           <td></td>
-          <td><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></td>
-          <td></td>
+          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
+          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
           <td></td>
          </tr>
         </tbody>
@@ -76,26 +86,36 @@
         <thead>
          <tr>
           <th style="width:40%;">Fund</th>
-          <th style="width:20%;">Invested</th>
-          <th style="width:20%;">Units</th>
-          <th style="width:20%;">Last Operated</th>
+          <th style="width:15%;">Invested</th>
+          <th style="width:15%;">Value</th>
+          <th style="width:15%;">Units</th>
+          <th style="width:15%;">Last Operated</th>
          </tr>
         </thead>
         <tbody>
         {% set total = [0] %}
+        {% set totalValue = [0] %}
         {% for fund in holdingAccounts %}
          {% if total.append(total.pop() + fund[2]) %}{% endif %}
+         {% set curValue = navdict[fund[5]]|float * fund[3]|float %}
+         {% if totalValue.append(totalValue.pop() + curValue) %}{% endif %}
          <tr>
           <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
           <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
+          {% if curValue > fund[2] %}
+            {% set color = 'green' %}
+          {% elif curValue < fund[2] %}
+            {% set color = 'red' %}
+          {% endif %}
+          <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % curValue }}</font></td>
           <td>{{ fund[3] }}</td>
           <td>{{ fund[4] }}</td>
          </tr>
         {% endfor %}
          <tr>
           <td></td>
-          <td><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></td>
-          <td></td>
+          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
+          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
           <td></td>
          </tr>
         </tbody>
@@ -135,7 +155,7 @@
         {% endfor %}
          <tr>
           <td></td>
-          <td><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></td>
+          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
           <td></td>
           <td></td>
          </tr>
