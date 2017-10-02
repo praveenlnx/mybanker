@@ -435,12 +435,19 @@ def addinvestment():
   return render_template('addinvestment.html')
 
 # Investment individual account details Route
-@app.route('/<username>/investments/<accid>/<action>')
+@app.route('/<username>/investments/<accid>/<action>', methods=['GET', 'POST'])
 @login_required
 def investment_transactions(username, accid, action):
   nav = 0.00
-  if action == "Closed" or action == "Holding":
-    flash(updateInvestmentAccountStatus(accid, username, action))
+  closingvalue = 0.00
+  if request.method == "POST":
+    closingvalue = request.form['amount']
+    if closingvalue == "":
+      flash("Please re-try with closing amount entered!!")
+    else:
+      flash(updateInvestmentAccountStatus(accid, username, action, closingvalue))
+  if action == "Holding":
+    flash(updateInvestmentAccountStatus(accid, username, action, closingvalue))
   currencySymbol = getCurrencySymbol('INR')
   transactions = accinfo = None
   if username and accid:

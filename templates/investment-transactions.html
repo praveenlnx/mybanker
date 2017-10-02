@@ -1,3 +1,8 @@
+<script type="text/javascript">
+ function closesip_submit() {
+   document.getElementById("f_close").submit();
+ }
+</script>
 {% extends "base.html" %}
 {% block body %}
 {% include "navbar_user.html" %}
@@ -84,9 +89,32 @@
         <div class="row" style="margin-top:20px;">
          <div class="col-md-6">
           {% if accinfo[0][15] == 'Active' or accinfo[0][15] == 'Holding' %}
-          <a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Closed') }}" role="button">
+          <!--<a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Closed') }}" role="button">
            Close and archive this account
-          </a>
+          </a>-->
+          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#closeModal">Close and archive</button>
+          <!-- Modal dialog Start -->
+           <div id="closeModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-sm">
+             <form role="form" id="f_close" method="POST" action="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Closed') }}">
+             <div class="modal-content">
+              <div class="modal-header">
+               <h4 class="modal-title">Enter the closing value</h4>
+              </div>
+              <div class="modal-body">
+                <div class="input-group">
+                 <span class="input-group-addon" id="basic-addon1"><b>Closing amount</b></span>
+                 <input type="text" class="form-control" style="width:130px;" name="amount" placeholder="0.00" required>
+                </div>
+              </div>
+              <div class="modal-footer">
+               <button onclick="closesip_submit()" class="btn btn-info" data-dismiss="modal">Close</button>
+              </div>
+             </div>
+             </form>
+            </div>
+           </div>
+          <!-- Modal dialog End-->
           {% endif %}
           {% if accinfo[0][15] == 'Active' %}
           <a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Holding') }}" role="button">

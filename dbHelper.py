@@ -739,7 +739,7 @@ def getInvestmentAccounts(username, accounttype="All"):
     appendQuery = "AND status = '%s'" % accounttype
 
   try:
-    query = "SELECT accid, name, invested, balanceunits, lastoperated, schemecode \
+    query = "SELECT accid, name, invested, balanceunits, lastoperated, schemecode, closingvalue \
              FROM investmentaccounts \
              WHERE owner = '%s' %s \
              ORDER BY accid" % (username, appendQuery)
@@ -862,16 +862,17 @@ def updateInvestmentAccounts(accid, owner, amount, balanceunits, opdate):
   return "Investment account updated!"
 
 # Update status of Investment accounts
-def updateInvestmentAccountStatus(accid, owner, status):
+def updateInvestmentAccountStatus(accid, owner, status, closingvalue=0.00):
   conn = mysql.connect()
   cursor = conn.cursor()
 
   try:
     query = "UPDATE investmentaccounts \
              SET status='%s', \
+                 closingvalue=%s, \
                  notes=CONCAT(notes, ' [Account status changed to %s ', CURDATE(), ']') \
              WHERE accid='%s' AND owner='%s'" \
-             % (status, status, accid, owner)
+             % (status, closingvalue, status, accid, owner)
     cursor.execute(query)
     conn.commit()
   except Exception as e:
