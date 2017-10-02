@@ -742,7 +742,7 @@ def getInvestmentAccounts(username, accounttype="All"):
     query = "SELECT accid, name, invested, balanceunits, lastoperated, schemecode, closingvalue \
              FROM investmentaccounts \
              WHERE owner = '%s' %s \
-             ORDER BY accid" % (username, appendQuery)
+             ORDER BY lastoperated DESC" % (username, appendQuery)
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
