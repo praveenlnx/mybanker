@@ -708,7 +708,7 @@ def addInvestmentAccountDB(accinfo):
              VALUES(%s, '%s', '%s', '%s', '%s', '%s', \
                    '%s', '%s', '%s', '%s', '%s', '%s', \
                    '%s', 0.00, 0.00, 'Active', CURDATE(), \
-                   '%s', '%s', '%s', '%s')" % \
+                   '%s', '%s', '%s', '%s', 0.00)" % \
              (accinfo['accid'], accinfo['owner'], accinfo['name'], accinfo['plan'], accinfo['folio'], \
               accinfo['schemecode'], accinfo['company'], accinfo['email'], accinfo['phone'], \
               accinfo['address'], accinfo['linkedbank'], accinfo['sipstart'], accinfo['sipend'], \
