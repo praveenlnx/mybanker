@@ -81,10 +81,26 @@
         {% endfor %}
          <tr>
           <td></td>
+          {% if totalValue[0] >= total[0]|float %}
+            {% set label = 'success' %}
+            {% set glyph = 'up' %}
+          {% else %}
+            {% set label = 'danger' %}
+            {% set glyph = 'down' %}
+          {% endif %}
           <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
-          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
-          <td></td>
-          <td></td>
+          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
+          {% set tdiff = (totalValue[0] - total[0]|float)|abs %}
+          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % tdiff }}</span></h4></td>
+          {% if tdiff != 0.00 %}
+            {% set tdiffp = (tdiff * 100)/(total[0]|float) %}
+          {% else %}
+            {% set tdiffp = 0.00 %}
+          {% endif %}
+          <td><h4><span class="label label-{{ label }}">
+                    <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
+                    &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
+                  </span></h4></td>
           <td></td>
           <td></td>
          </tr>
@@ -153,10 +169,26 @@
         {% endfor %}
          <tr>
           <td></td>
+          {% if totalValue[0] >= total[0]|float %}
+            {% set label = 'success' %}
+            {% set glyph = 'up' %}
+          {% else %}
+            {% set label = 'danger' %}
+            {% set glyph = 'down' %}
+          {% endif %}
           <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
-          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
-          <td></td>
-          <td></td>
+          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
+          {% set tdiff = (totalValue[0] - total[0]|float)|abs %}
+          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % tdiff }}</span></h4></td>
+          {% if tdiff != 0.00 %}
+            {% set tdiffp = (tdiff * 100)/(total[0]|float) %}
+          {% else %}
+            {% set tdiffp = 0.00 %}
+          {% endif %}
+          <td><h4><span class="label label-{{ label }}">
+                    <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
+                    &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
+                  </span></h4></td>
           <td></td>
           <td></td>
          </tr>
@@ -224,10 +256,26 @@
         {% endfor %}
          <tr>
           <td></td>
+          {% if totalValue[0] >= total[0]|float %}
+            {% set label = 'success' %}
+            {% set glyph = 'up' %}
+          {% else %}
+            {% set label = 'danger' %}
+            {% set glyph = 'down' %}
+          {% endif %}
           <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
-          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
-          <td></td>
-          <td></td>
+          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
+          {% set tdiff = (totalValue[0] - total[0])|abs %}
+          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % tdiff }}</span></h4></td>
+          {% if tdiff != 0.00 %}
+            {% set tdiffp = (tdiff * 100)/total[0] %}
+          {% else %}
+            {% set tdiffp = 0.00 %}
+          {% endif %}
+          <td><h4><span class="label label-{{ label }}">
+                    <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
+                    &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
+                  </span></h4></td>
           <td></td>
           <td></td>
          </tr>
