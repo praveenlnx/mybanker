@@ -50,7 +50,15 @@
          {% if total.append(total.pop() + fund[2]) %}{% endif %}
          {% set curValue = navdict[fund[5]]|float * fund[3]|float %}
          {% if totalValue.append(totalValue.pop() + curValue) %}{% endif %}
-         {% set diff = (curValue - (fund[2]|float))|abs %}
+         {% if fund[2] != 0.00 %}
+           {% set diff = (curValue - (fund[2]|float))|abs %}
+           {% set diffp = (diff * 100)/(fund[2]|float) %}
+           {% set diff =  currencySymbol + ' %0.2f' % diff %}
+           {% set diffp = '%0.2f' % diffp + ' %' %}
+         {% else %}
+           {% set diff = '-'%}
+           {% set diffp = '-'%}
+         {% endif %}
          <tr>
           <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
           <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
@@ -62,9 +70,9 @@
             {% set glyph = 'down' %}
           {% endif %}
           <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % curValue }}</font></td>
-          <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % diff }}</td>
+          <td><font color="{{ color }}">{{ diff }}</font></td>
           <td><font color="{{ color }}">
-              <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ '%0.2f' % ((diff * 100)/(fund[2]|float)) }}&nbsp;%
+              <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ diffp }}
               </font>
           </td>
           <td>{{ fund[3] }}</td>
@@ -114,7 +122,15 @@
          {% if total.append(total.pop() + fund[2]) %}{% endif %}
          {% set curValue = navdict[fund[5]]|float * fund[3]|float %}
          {% if totalValue.append(totalValue.pop() + curValue) %}{% endif %}
-         {% set diff = ( curValue - (fund[2]|float))|abs %}
+         {% if fund[2] != 0.00 %}
+           {% set diff = ( curValue - (fund[2]|float))|abs %}
+           {% set diffp = (diff * 100)/(fund[2]|float) %}
+           {% set diff =  currencySymbol + ' %0.2f' % diff %}
+           {% set diffp = '%0.2f' % diffp + ' %' %}
+         {% else %}
+           {% set diff = '-'%}
+           {% set diffp = '-'%}
+         {% endif %}
          <tr>
           <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
           <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
@@ -126,9 +142,9 @@
             {% set glyph = 'down' %}
           {% endif %}
           <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % curValue }}</font></td>
-          <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % diff }}</font></td>
+          <td><font color="{{ color }}">{{ diff }}</font></td>
           <td><font color="{{ color }}">
-              <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ '%0.2f' % ((diff * 100)/(fund[2]|float)) }}&nbsp;%
+              <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ diffp }}
               </font>
           </td>
           <td>{{ fund[3] }}</td>
@@ -177,7 +193,15 @@
         {% for fund in closedAccounts %}
          {% if total.append(total.pop() + fund[2]) %}{% endif %}
          {% if totalValue.append(totalValue.pop() + fund[6]) %}{% endif %}
-         {% set diff = (fund[6] - fund[2])|abs %}
+         {% if fund[2] != 0.00 %}
+           {% set diff = (fund[6] - fund[2])|abs %}
+           {% set diffp = (diff * 100)/fund[2] %}
+           {% set diff =  currencySymbol + ' %0.2f' % diff %}
+           {% set diffp = '%0.2f' % diffp + ' %' %}
+         {% else %}
+           {% set diff = '-'%}
+           {% set diffp = '-'%}
+         {% endif %}
          <tr>
           <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
           <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
@@ -189,9 +213,9 @@
             {% set glyph = 'down' %}
           {% endif %}
           <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ fund[6] }}</font></td>
-          <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % diff }}</font></td>
+          <td><font color="{{ color }}">{{ diff }}</font></td>
           <td><font color="{{ color }}">
-              <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ '%0.2f' % ((diff * 100)/fund[2]) }}&nbsp;%
+              <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ diffp }}
               </font>
           </td>
           <td>N/A</td>
