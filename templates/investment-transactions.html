@@ -78,13 +78,16 @@
           <h4><small>Invested&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;{{ accinfo[0][13] }}</span></h4>
          </div>
          <div class="col-md-2">
-          {% set value = accinfo[0][14]|float * nav|float %}
+          {% set value = accinfo[0][14]|float * nav[0]|float %}
           <h4><small>Value&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;{{ '%0.2f' % value }}</span></h4>
          </div>
          <div class="col-md-2">
           <h4><small>Units&nbsp;&nbsp;</small><span class="label label-default">{{ accinfo[0][14] }}</span></h4>
          </div>
-         <div class="col-md-6"></div>
+         <div class="col-md-2">
+          <h4><small>NAV&nbsp;&nbsp;</small><span class="label label-default">{{ nav[0]|float }}&nbsp;&nbsp;[{{ nav[1] }}]</span></h4>
+         </div>
+         <div class="col-md-4"></div>
         </div>
         <div class="row" style="margin-top:20px;">
          <div class="col-md-6">
