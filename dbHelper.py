@@ -727,6 +727,39 @@ def addInvestmentAccountDB(accinfo):
     gc.collect()
   return returnString
 
+# Add a new investment account
+def updateInvestmentAccountDB(accinfo):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = "UPDATE investmentaccounts \
+             SET name='%s', \
+                 plan='%s', \
+                 company='%s', \
+                 email='%s', \
+                 phone='%s', \
+                 address='%s', \
+                 linkedbank='%s', \
+                 sipstart='%s', \
+                 sipend='%s', \
+                 url='%s', \
+                 urluser='%s', \
+                 urlpass='%s', \
+                 notes='%s' \
+             WHERE accid=%s" % \
+             (accinfo['name'], accinfo['plan'], accinfo['company'], accinfo['email'], accinfo['phone'], \
+              accinfo['address'], accinfo['linkedbank'], accinfo['sipstart'], accinfo['sipend'], \
+              accinfo['url'], accinfo['urluser'], accinfo['urlpass'], accinfo['notes'], accinfo['accid'])
+    cursor.execute(query)
+    conn.commit()
+    returnString = "Account updated successfully"
+  except Exception as e:
+    return str(e)
+  finally:
+    conn.close()
+    gc.collect()
+  return returnString
+
 # Get investment accounts for dashboard table
 def getInvestmentAccounts(username, accounttype="All"):
   conn = mysql.connect()

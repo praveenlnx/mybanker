@@ -17,7 +17,7 @@ from dbHelper import (
          searchTransactions, getTransactionsForCategory, getAllCategoryStatsForMonth,
          removeUser, checkTotalInvestmentAccounts, addInvestmentAccountDB,
          getInvestmentAccount, getInvestmentAccounts, getInvestmentTransactions,
-         addSIPTransaction, updateInvestmentAccountStatus
+         addSIPTransaction, updateInvestmentAccountStatus, updateInvestmentAccountDB
          )
 
 # Initialize Flask object
@@ -433,6 +433,36 @@ def addinvestment():
     accinfo['notes'] = request.form['notes']
     flash(addInvestmentAccountDB(accinfo))
   return render_template('addinvestment.html')
+
+# Edit existing Investment Route
+@app.route('/editinvestment', methods=['POST'])
+@app.route('/editinvestment/<accid>', methods=['GET'])
+@login_required
+def editinvestment(accid=None):
+  if request.method == "GET":
+    acc_details = getInvestmentAccount(session['username'], accid)
+    return render_template('editinvestment.html', acc_details=acc_details)
+  else:
+    accinfo = {}
+    accinfo['accid'] = request.form['accountid']
+    accinfo['owner'] = session['username']
+    accinfo['name'] = request.form['accountname']
+    accinfo['plan'] = request.form['plan']
+    accinfo['folio'] = request.form['folio']
+    accinfo['schemecode'] = request.form['schemecode']
+    accinfo['company'] = request.form['company']
+    accinfo['email'] = request.form['email']
+    accinfo['phone'] = request.form['phone']
+    accinfo['address'] = request.form['address']
+    accinfo['linkedbank'] = request.form['bank']
+    accinfo['sipstart'] = request.form['sipstart']
+    accinfo['sipend'] = request.form['sipend']
+    accinfo['url'] = request.form['url']
+    accinfo['urluser'] = request.form['urluser']
+    accinfo['urlpass'] = request.form['urlpass']
+    accinfo['notes'] = request.form['notes']
+    flash(updateInvestmentAccountDB(accinfo))
+    return redirect(url_for('investment_transactions', username=session['username'], accid=accinfo['accid'], action='list'))
 
 # Investment individual account details Route
 @app.route('/<username>/investments/<accid>/<action>', methods=['GET', 'POST'])

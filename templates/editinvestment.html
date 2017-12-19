@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar_user.html" %}
+  <!-- Page Content -->
+  <div class="container text-center">
+   {% with messages = get_flashed_messages() %}
+     {% if messages %}
+        {% for message in messages %}
+           <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+             {{ message }}
+           </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="col-md-8 col-md-offset-2">
+      {% if acc_details %}
+      <form method="POST" action="{{ url_for('editinvestment') }}" class="form-signin" style="width: 600px;">
+        <h3 class="form-signin-heading" style="margin-bottom:25px;">Edit investment account</h3>
+        <div class="row">
+         <div class="col-md-4">
+           <input type="text" class="form-control" name="accountid" value="{{ acc_details[0][0] }}" title="Account ID" readonly required>
+         </div>
+         <div class="col-md-4">
+           <input type="text" class="form-control" name="folio" value="{{ acc_details[0][4] }}" title="Folio Number" readonly required>
+         </div>
+         <div class="col-md-4">
+           <input type="text" class="form-control" name="schemecode" value="{{ acc_details[0][5] }}" title="Scheme Code" readonly required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+           <input type="text" class="form-control" name="accountname" value="{{ acc_details[0][2] }}" title="Investment Name" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="company" value="{{ acc_details[0][6] }}" title="Investment Company" required>
+         </div>
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="plan" value="{{ acc_details[0][3] }}" title="Investment Plan" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="email" value="{{ acc_details[0][7] }}" title="Registered Email" required>
+         </div>
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="phone" value="{{ acc_details[0][8] }}" title="Phone" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+          <input type="text" class="form-control" name="address" value="{{ acc_details[0][9] }}" title="Registered Address" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+          <input type="text" class="form-control" name="bank" value="{{ acc_details[0][10] }}" title="Registered Bank" required>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+          <div class="input-group">
+           <span class="input-group-addon" id="basic-addon1">SIP Start Date</span>
+           <input type='text' class="form-control" name="sipstart" value="{{ acc_details[0][11] }}" style="width:150px;">
+          </div>
+         </div>
+         <div class="col-md-6">
+          <div class="input-group">
+           <span class="input-group-addon" id="basic-addon1">SIP Close Date</span>
+           <input type='text' class="form-control" name="sipend" value="{{ acc_details[0][12] }}" style="width:150px;">
+          </div>
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+          <input type="text" class="form-control" name="url" value="{{ acc_details[0][17] }}" title="Link to Online Login">
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="urluser" value="{{ acc_details[0][18] }}" title="Online Login Username">
+         </div>
+         <div class="col-md-6">
+           <input type="text" class="form-control" name="urlpass" value="{{ acc_details[0][19] }}" title="Online Login Password">
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-12">
+          <input type="text" class="form-control" name="notes" value="{{ acc_details[0][20] }}" title="Notes or Comments">
+         </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+         <div class="col-md-6">
+          <button class="btn btn-md btn-primary btn-block" type="submit">
+           <span class="glyphicon glyphicon-plus" aria-hidden="true"style="margin-right:10px;"></span>Update Investment
+          </button>
+         </div>
+         <div class="col-md-6">
+          <a class="btn btn-primary" href="{{ url_for('investments') }}" role="button">&nbsp;
+          <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>&nbsp;&nbsp;Back to Investment Dashboard&nbsp;&nbsp;</a>
+         </div>
+        </div><br>
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  <!-- /.container -->
+{% endblock %}
