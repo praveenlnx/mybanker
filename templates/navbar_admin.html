@@ -1,11 +1,7 @@
 <!-- Navigation -->
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <a class="navbar-brand" href="{{ url_for('dashboard') }}">MyBanker</a>
   <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="{{ url_for('dashboard') }}">
-        <img style="max-width:150px; margin-top: -12px; margin-left: -12px;" src="{{ url_for('static', filename='images/mybanker-logo.png') }}">
-      </a>
-    </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
         <li>
