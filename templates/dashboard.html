@@ -12,7 +12,7 @@
        {% endfor %}
      {% endif %}
    {% endwith %}
-   <div class="jumbotron">
+   <div class="jumbotron text-center">
     <h3>Welcome {{ session['user'] }}!</h3>
      {% if jumbomessage %}
        {% for message in jumbomessage %}
@@ -20,15 +20,11 @@
        {% endfor %}
      {% endif %}
      <p>
-      <a class="btn btn-primary" href="{{ url_for('addaccount') }}" role="button">
-      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add account</a>
-      <a class="btn btn-primary" href="{{ url_for('reports') }}" role="button">
-      <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;&nbsp;View reports</a>
-      <a class="btn btn-primary" href="{{ url_for('investments') }}" role="button">
+      <a class="btn btn-sm btn-primary" href="{{ url_for('investments') }}" role="button">
       <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>&nbsp;&nbsp;Investments</a>
-      <a class="btn btn-primary" href="{{ url_for('currencyrates') }}" role="button">
+      <a class="btn btn-sm btn-primary" href="{{ url_for('currencyrates') }}" role="button">
       <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>&nbsp;Currency Rates</a>
-      <a class="btn btn-primary" href="{{ url_for('messages') }}" role="button">
+      <a class="btn btn-sm btn-primary" href="{{ url_for('messages') }}" role="button">
         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>&nbsp;&nbsp;Message Inbox
           {% if unread %}<span class="badge">{{ unread }}</span>{% endif %}
      </a>
@@ -47,6 +43,7 @@
              &pound;&nbsp;{{ networth }}
            </span></h4><br>
          {% endif %}
+	 <div class="table-responsive">
          <table class="table table-hover">
            <thead>
              <tr>
@@ -77,16 +74,7 @@
            {% endfor %} 
            </tbody>
          </table>
-         <p>
-          <a class="btn btn-default" href="{{ url_for('addtransaction') }}" role="button">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Record a new transaction</a>
-          <a class="btn btn-default" href="{{ url_for('transferfunds') }}" role="button">
-          <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>&nbsp;&nbsp;Transfer Funds between accounts</a>
-          <a class="btn btn-default" href="{{ url_for('search') }}" role="button">
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;&nbsp;Search or List Transactions</a>
-         </p>
-         <br><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-         <font color="gray">Click individual accounts to see transactions</font>
+	 </div>
        </div>
      </div>
    <div class="panel panel-default">
