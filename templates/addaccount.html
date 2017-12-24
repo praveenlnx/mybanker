@@ -12,44 +12,41 @@
       {% endfor %}
     {% endif %}
   {% endwith %}
-  <div class="col-md-8 col-md-offset-4">
-    <form method="post" id="accountform" action="{{ url_for('addaccount') }}" class="form-signin" style="width: 300px;">
-      <h3 class="form-signin-heading" style="margin-bottom:25px;">Add a new account</h3>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Name</span>
+  <div class="col-md-4 col-md-offset-4">
+    <div class="panel panel-default" sytle="width:300px;">
+      <div class="panel-heading">
+        <h3 class="panel-title">Add a new account</h3>
+      </div>
+      <div class="panel-body">
+        <form method="post" id="accountform" action="{{ url_for('addaccount') }}" class="form-signin" style="width: 300px;">
         <input type="text" class="form-control" name="accountname" placeholder="Account Name" required autofocus><br>
-      </div><br>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Balance</span>
         <input type="text" class="form-control" name="accountbalance" placeholder="Initial Balance" required><br>
-      </div><br>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Notes</span>
         <input type="text" class="form-control" name="accountnotes" placeholder="Account Description" required><br>
-      </div><br>
-      <div class="input-group text-left">
-        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> For savings/current accounts choose Asset.
-      </div><br>
-      <div class="input-group">
-        <span class="input-group-addon">
-          <input type="radio" aria-label="..." name="accounttype" value="asset" checked>
-        </span>
-        <input type="text" class="form-control" aria-label="..." value="Asset" style="width:100px;" disabled>
-        <span class="input-group-addon">
-          <input type="radio" aria-label="..." name="accounttype" value="liability">
-        </span>
-        <input type="text" class="form-control" aria-label="..." value="Liability" disabled>
-      </div><br>
-      <div class="input-group">
-        <span class="input-group-addon">
-          <input type="checkbox" aria-label="..." name="exclude" value="yes">
-        </span>
-        <input type="text" class="form-control" aria-label="..." value="Exclude from stats" disabled>
-      </div><br>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"style="margin-right:10px;"></span>Add Account
-      </button>
-    </form>
+        <div class="input-group text-left">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> For savings/current accounts choose Asset.
+        </div><br>
+        <div class="input-group">
+          <span class="input-group-addon">
+            <input type="radio" aria-label="..." name="accounttype" value="asset" checked>
+          </span>
+          <input type="text" class="form-control" aria-label="..." value="Asset" style="width:100px;" disabled>
+          <span class="input-group-addon">
+            <input type="radio" aria-label="..." name="accounttype" value="liability">
+          </span>
+          <input type="text" class="form-control" aria-label="..." value="Liability" disabled>
+        </div><br>
+        <div class="input-group">
+          <span class="input-group-addon">
+            <input type="checkbox" aria-label="..." name="exclude" value="yes">
+          </span>
+          <input type="text" class="form-control" aria-label="..." value="Exclude from stats" disabled>
+        </div><br>
+        <button class="btn btn-md btn-primary btn-block" type="submit">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"style="margin-right:10px;"></span>Add Account
+        </button>
+        </form>
+      </div>
+    </div>  
   </div>
 </div>
 <!-- /.container -->

@@ -23,18 +23,15 @@
     <!-- First row start -->
     <div class="row">
       <form method="POST" action="">
-        <div class="col-md-4">
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Keyword</span>
-            <input type="text" class="form-control" name="keyword" placeholder="Enter a keyword to search" required>
-          </div>
+        <div class="col-md-4 col-xs-9">
+          <input type="text" class="form-control" name="keyword" placeholder="Enter keywords to search" required>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-xs-3">
           <button class="btn btn-default" type="submit" name="searchForm" value="search">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"style="margin-right:10px;"></span>
-            Search
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           </button>
         </div>
+        <div class="col-md-4"></div>
       </form>
     </div>
     <!-- First row end-->
@@ -99,12 +96,12 @@
       <div class="col-md-8">
        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
        <font color="gray"><i>To see last 20 transactions, just select a category and click View Transactions</i></font>
-     </div>
-   </div>
-   <br>
-   <div class="row">
-    <form method="POST" action="">
-      <div class="col-md-3">
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <form method="POST" action="">
+        <div class="col-md-3">
         <div class="input-group">
           <span class="input-group-addon" id="basic-addon1">Category</span>
           <select class="form-control" name="listcategory">
@@ -119,8 +116,8 @@
             {% endfor %}
           </select>
         </div>
-      </div>
-      <div class="col-md-2">
+        </div><br class="visible-xs">
+        <div class="col-md-2">
         <div class="input-group">
           <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></span>
           <select class="form-control" name="period">
@@ -133,8 +130,8 @@
             <option value="last30days">Last 30 days</option>
           </select>
         </div>
-      </div>
-      <div class="col-md-2">
+        </div><br class="visible-xs">
+        <div class="col-md-2">
         <div class="input-group">
           <span class="input-group-addon" id="basic-addon1">Year</span>
           <select class="form-control" name="year">
@@ -144,8 +141,8 @@
             {% endfor %}
           </select>
         </div>
-      </div>
-      <div class="col-md-2">
+        </div><br class="visible-xs">
+        <div class="col-md-2">
         <div class="input-group">
           <span class="input-group-addon" id="basic-addon1">Month</span>
           <select class="form-control" name="month">
@@ -164,15 +161,16 @@
            <option value="12">Dec</option>
          </select>
        </div>
-     </div>
-     <div class="col-md-2">
-      <button class="btn btn-sm btn-default btn-block" type="submit" name="searchForm" value="list">
-        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-        &nbsp;&nbsp;List Transactions
-      </button>
+        </div><br class="visible-xs">
+        <div class="col-md-2">
+          <button class="btn btn-sm btn-default btn-block" type="submit" name="searchForm" value="list">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+          &nbsp;&nbsp;List Transactions
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
-</div><br>
+    <br>
 {% endif %}
 {% if listresults %}
 <div class="row">

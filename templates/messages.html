@@ -24,7 +24,7 @@
     <form method="POST" action="{{ url_for('sendmessage') }}">
       <div class="col-md-6">
         <textarea class="form-control" rows="5" name="message" placeholder="Your message here" required></textarea>
-      </div>
+      </div><br class="visible-xs">
       <div class="col-md-6">
         <div class="row">
           <div class="col-md-12">
@@ -42,7 +42,7 @@
                 {% endfor %}
               </select>
             </div>
-          </div>
+          </div><br class="visible-xs">
           <div class="col-md-6">
             <button class="btn btn-sm btn-primary btn-block" type="submit">
               <span class="glyphicon glyphicon-send" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;Send Message
@@ -65,35 +65,43 @@
  <!-- Main panel body start -->
  <div class="panel-body">
   {% if mails %}
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></th>
-          <th>Date</th>
-          <th>Subject</th>
-          <th>From</th>
-          <th>Actions</th>
-        </tr>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></th>
+            <th>Date</th>
+            <th>Subject</th>
+            <th>From</th>
+            <th>Actions</th>
+          </tr>
       </thead>
       <tbody>
         {% for item in mails %}
         <tr>
           <td>{% if item[6] == "N" %}<span class="glyphicon glyphicon-envelope" aria-hidden="true">{% endif %}</td>
-            <td>{{ item[1]}}</td>
-            <td><a href="{{ url_for('viewmessage', msgid=item[0]) }}">{{ item[3]}}</a></td>
-            <td>{{ item[5]}}</td>
-            <td><a href="{{ url_for('deletemessage', msgid=item[0]) }}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a></td>
-            </tr>
-            {% endfor %} 
-          </tbody>
-        </table>
-        {% else %}
-        <p>No Messages</p>
-        {% endif %}
-      </div>
-      <!-- Main panel body end -->
-    </div>
-    <!-- Main panel end -->
+          <td>{{ item[1]}}</td>
+          <td>
+            <a href="{{ url_for('viewmessage', msgid=item[0]) }}">{{ item[3]}}</a>
+          </td>
+          <td>{{ item[5]}}</td>
+          <td>
+            <a href="{{ url_for('deletemessage', msgid=item[0]) }}">
+              <span class="glyphicon glyphicon-trash" aria-hidden="true">
+            </a>
+          </td>
+        </tr>
+        {% endfor %} 
+      </tbody>
+    </table>
   </div>
+  {% else %}
+  <p>No Messages</p>
+  {% endif %}
+  </div>
+  <!-- Main panel body end -->
+  </div>
+   <!-- Main panel end -->
+ </div>
   <!-- /.container -->
-  {% endblock %}
+ {% endblock %}
