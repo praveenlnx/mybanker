@@ -55,22 +55,18 @@
 	       </ul>
             </div>
           </div>
-          <div class="col-md-8">
+          <div class="col-md-4"></div>
+          <div class="col-md-4 col-xs-12">
             <div class="row">
               <form method="POST" action="{{ url_for('account_transactions', username=session['username'], accountname=accinfo[0][0], period='selective') }}">
-              <div class="col-md-3 col-md-offset-4">
-                <div class="input-group">
-                 <span class="input-group-addon" id="basic-addon1">Year</span>
+              <div class="col-md-4 col-xs-4">
                   <select class="form-control" name="year">
                    {% for y in range(curyear, 2013, -1) %}
                    <option value="{{ y }}">{{ y }}</option>
                    {% endfor %}
                   </select>
-                </div>
               </div>
-              <div class="col-md-3">
-                <div class="input-group">
-                  <span class="input-group-addon" id="basic-addon1">Month</span>
+              <div class="col-md-4 col-xs-4">
                   <select class="form-control" name="month">
                    <option value="01">Jan</option>
                    <option value="02">Feb</option>
@@ -85,12 +81,11 @@
                    <option value="11">Nov</option>
                    <option value="12">Dec</option>
                   </select>
-                </div>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-4 col-xs-4">
                 <button class="btn btn-sm btn-default btn-block" type="submit">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                 View
+                &nbsp;View
                 </button>
               </div>
             </form>

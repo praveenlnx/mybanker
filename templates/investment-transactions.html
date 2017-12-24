@@ -27,6 +27,9 @@
         <p><h4>{{ accinfo[0][6] }}</h4>
         <small><i>{{ accinfo[0][3] }}</i></small>
         </p>
+        <div class="row">
+        <div class="col-md-6">
+        <div class="table-responsive">  
         <table class="table table-striped">
          <tr>
           <td><b>Folio</b></td>
@@ -39,8 +42,8 @@
          <tr>
           <td><b>Start</b></td>
           <td>{{ accinfo[0][11] }}</td>
-	 </tr>
-	 <tr>
+	       </tr>
+	       <tr>
           <td><b>End</b></td>
           <td>{{ accinfo[0][12] }}</td>
          </tr>
@@ -55,8 +58,8 @@
          <tr>
           <td><b>Email</b></td>
           <td>{{ accinfo[0][7] }}</td>
-	 </tr>
-	 <tr>
+	       </tr>
+	       <tr>
           <td><b>Phone</b></td>
           <td>{{ accinfo[0][8] }}</td>
          </tr>
@@ -67,32 +70,45 @@
          <tr>
           <td><b>Username</b></td>
           <td>{{ accinfo[0][18] if accinfo[0][18] != '' else 'Not Entered' }}</td>
-	 </tr>
-	 <tr>
+	       </tr>
+	       <tr>
           <td><b>Password</b></td>
           <td>{{ accinfo[0][19] if accinfo[0][19] != '' else 'Not Entered' }}</td>
          </tr>
         </table>
+        </div>
+        </div>
+        <div class="col-md-4">
+          <div class="table-responsive">
+          <table class="table table-striped">
+            <tr>
+              <td>Invested</td>
+              <td>{{ currencySymbol }}&nbsp;{{ accinfo[0][13] }}</td>
+            </tr>
+            <tr>
+              <td>Value</td>
+              <td>
+                {% set value = accinfo[0][14]|float * nav[0]|float %}
+                {{ currencySymbol }}&nbsp;{{ '%0.2f' % value }}
+              </td>
+            </tr>
+            <tr>
+              <td>Units</td>
+              <td>{{ accinfo[0][14] }}</td>
+            </tr>
+            <tr>
+              <td>NAV</td>
+              <td>{{ nav[0]|float }}<br><small><font color="gray">[{{ nav[1] }}]</font></small></td>
+            </tr>
+          </table>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        </div>
         <div class="row" style="margin-top:20px;">
          <div class="col-md-6">
           <div class="well">{{ accinfo[0][20] or "No notes added to this account" }}</div>
          </div>
-        </div>
-        <div class="row">
-         <div class="col-md-2">
-          <h4><small>Invested&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;{{ accinfo[0][13] }}</span></h4>
-         </div>
-         <div class="col-md-2">
-          {% set value = accinfo[0][14]|float * nav[0]|float %}
-          <h4><small>Value&nbsp;&nbsp;</small><span class="label label-default">{{ currencySymbol }}&nbsp;{{ '%0.2f' % value }}</span></h4>
-         </div>
-         <div class="col-md-2">
-          <h4><small>Units&nbsp;&nbsp;</small><span class="label label-default">{{ accinfo[0][14] }}</span></h4>
-         </div>
-         <div class="col-md-2">
-          <h4><small>NAV&nbsp;&nbsp;</small><span class="label label-default">{{ nav[0]|float }}&nbsp;&nbsp;[{{ nav[1] }}]</span></h4>
-         </div>
-         <div class="col-md-4"></div>
         </div>
         <div class="row" style="margin-top:20px;">
          <div class="col-md-6">
