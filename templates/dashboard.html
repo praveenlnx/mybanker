@@ -45,9 +45,9 @@
        <div class="panel-body">
          {% if networth %}<h4>
            <small>Networth</small>
-           <span class="label label-default">
+	   <span class="label label-default">
              &pound;&nbsp;{{ networth }}
-           </span></h4><br>
+	   </span></h4><br>
          {% endif %}
 	 <div class="table-responsive">
          <table class="table table-hover">
@@ -56,7 +56,7 @@
                <th>Account</th>
                <th>Balance</th>
                <th>Last Operated</th>
-               <th>Active Since</th>
+               <th class="hidden-xs">Active Since</th>
              </tr>
            </thead>
            <tbody>
@@ -75,7 +75,7 @@
               {% endif %}
              </td>
              <td>{{ account[2] }}</td>
-             <td>{{ account[3] }}</td>
+             <td class="hidden-xs">{{ account[3] }}</td>
             </tr>
            {% endfor %} 
            </tbody>
