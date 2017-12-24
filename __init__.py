@@ -6,7 +6,7 @@ from datetime import date, datetime
 from reportHelper import inexTrend, expenseStats, inexTrendAll, categoryStats
 from helper import ( 
          getCurrencyList, getConversionRate, getCurrencySymbol, 
-         mfNAV2File, removeMFNAVFile, getFundNAVDict, getNAV 
+         mfNAV2File, getFundNAVDict, getNAV 
          )
 from dbHelper import (
          runQueriesFromFile, checkLogin, getNameofUser, addUser, 
@@ -129,7 +129,6 @@ def setup():
 @login_required
 def logout():
   session.clear()
-  removeMFNAVFile()
   return render_template('index.html', message="You have been logged out!", mtype="info")
 
 # Add User route

@@ -50,11 +50,6 @@ def mfNAV2File():
     return None
   return True
 
-# Remove MF NAV file upon logout
-def removeMFNAVFile():
-  if os.path.exists(app.config['MFNAV_FILE']):
-    os.remove(app.config['MFNAV_FILE'])
-
 # Get Nav of the given MF scheme code
 def getNAV(code):
   nav = None
