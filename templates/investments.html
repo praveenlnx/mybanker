@@ -2,305 +2,305 @@
 {% extends "base.html" %}
 {% block body %}
 {% include "navbar_user.html" %}
-  <!-- Page Content -->
-  <div class="container"> <!-- Container div start -->
-   {% with messages = get_flashed_messages() %}
-     {% if messages %}
-       {% for message in messages %}
-         <div style="margin-top:10px;" class="alert alert-danger" role="alert">
-           {{ message }}
-         </div>
-       {% endfor %}
-     {% endif %}
-   {% endwith %}
-    <p>
-     <a class="btn btn-primary" href="{{ url_for('addinvestment') }}" role="button">
+<!-- Page Content -->
+<div class="container"> <!-- Container div start -->
+ {% with messages = get_flashed_messages() %}
+ {% if messages %}
+ {% for message in messages %}
+ <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+   {{ message }}
+ </div>
+ {% endfor %}
+ {% endif %}
+ {% endwith %}
+ <p>
+   <a class="btn btn-primary" href="{{ url_for('addinvestment') }}" role="button">
      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add New Investment</a>
      {% if activeAccounts %}
      <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
-     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
-     {% endif %}
-    </p>
-    {% if accountsAvailable %}
-    {% if activeAccounts %}
-    <!-- Panel start  -->
-    <div class="panel panel-info">
+       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
+       {% endif %}
+     </p>
+     {% if accountsAvailable %}
+     {% if activeAccounts %}
+     <!-- Panel start  -->
+     <div class="panel panel-info">
       <div class="panel-heading">
         <h3 class="panel-title">Your Investments (Active)</h3>
       </div>
       <!-- Panel Body start -->
       <div class="panel-body">
        <div class="table-responsive">
-       <table class="table table-striped">
-        <thead>
-         <tr>
-          <th style="width:34%;">Fund</th>
-          <th style="width:11%">Invested</th>
-          <th style="width:11%">Value</th>
-          <th style="width:8%;">Diff</th>
-          <th style="width:8%;">Diff %</th>
-          <th style="width:8%">Units</th>
-          <th style="width:8%">NAV</th>
-          <th style="width:12%">Last Operated</th>
-         </tr>
+         <table class="table table-striped">
+          <thead>
+           <tr>
+            <th style="width:34%;">Fund</th>
+            <th style="width:11%">Invested</th>
+            <th style="width:11%">Value</th>
+            <th style="width:8%;">Diff</th>
+            <th style="width:8%;">Diff %</th>
+            <th style="width:8%">Units</th>
+            <th style="width:8%">NAV</th>
+            <th style="width:12%">Last Operated</th>
+          </tr>
         </thead>
         <tbody>
-        {% set total = [0] %}
-        {% set totalValue = [0] %}
-        {% for fund in activeAccounts %}
-         {% if total.append(total.pop() + fund[2]) %}{% endif %}
-         {% set curValue = navdict[fund[5]][0]|float * fund[3]|float %}
-         {% if totalValue.append(totalValue.pop() + curValue) %}{% endif %}
-         {% if fund[2] != 0.00 %}
-           {% set diff = (curValue - (fund[2]|float))|abs %}
-           {% set diffp = (diff * 100)/(fund[2]|float) %}
-           {% set diff =  currencySymbol + ' %0.2f' % diff %}
-           {% set diffp = '%0.2f' % diffp + ' %' %}
-         {% else %}
-           {% set diff = '-'%}
-           {% set diffp = '-'%}
-         {% endif %}
-         <tr>
-          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
-          <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
-          {% if curValue > fund[2] %}
+          {% set total = [0] %}
+          {% set totalValue = [0] %}
+          {% for fund in activeAccounts %}
+          {% if total.append(total.pop() + fund[2]) %}{% endif %}
+          {% set curValue = navdict[fund[5]][0]|float * fund[3]|float %}
+          {% if totalValue.append(totalValue.pop() + curValue) %}{% endif %}
+          {% if fund[2] != 0.00 %}
+          {% set diff = (curValue - (fund[2]|float))|abs %}
+          {% set diffp = (diff * 100)/(fund[2]|float) %}
+          {% set diff =  currencySymbol + ' %0.2f' % diff %}
+          {% set diffp = '%0.2f' % diffp + ' %' %}
+          {% else %}
+          {% set diff = '-'%}
+          {% set diffp = '-'%}
+          {% endif %}
+          <tr>
+            <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
+            <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
+            {% if curValue > fund[2] %}
             {% set color = 'green' %}
             {% set glyph = 'up' %}
-          {% elif curValue < fund[2] %}
+            {% elif curValue < fund[2] %}
             {% set color = 'red' %}
             {% set glyph = 'down' %}
-          {% endif %}
-          <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % curValue }}</font></td>
-          <td><font color="{{ color }}">{{ diff }}</font></td>
-          <td><font color="{{ color }}">
+            {% endif %}
+            <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % curValue }}</font></td>
+            <td><font color="{{ color }}">{{ diff }}</font></td>
+            <td><font color="{{ color }}">
               <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ diffp }}
-              </font>
+            </font>
           </td>
           <td>{{ fund[3] }}</td>
           <td>{{ navdict[fund[5]][0]|float }}</td>
           <td>{{ fund[4] }}</td>
-         </tr>
+        </tr>
         {% endfor %}
-         <tr>
+        <tr>
           <td></td>
           {% if totalValue[0] >= total[0]|float %}
-            {% set label = 'success' %}
-            {% set glyph = 'up' %}
+          {% set label = 'success' %}
+          {% set glyph = 'up' %}
           {% else %}
-            {% set label = 'danger' %}
-            {% set glyph = 'down' %}
+          {% set label = 'danger' %}
+          {% set glyph = 'down' %}
           {% endif %}
           <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
           <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
           {% set tdiff = (totalValue[0] - total[0]|float)|abs %}
           <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % tdiff }}</span></h4></td>
           {% if tdiff != 0.00 %}
-            {% set tdiffp = (tdiff * 100)/(total[0]|float) %}
+          {% set tdiffp = (tdiff * 100)/(total[0]|float) %}
           {% else %}
-            {% set tdiffp = 0.00 %}
+          {% set tdiffp = 0.00 %}
           {% endif %}
           <td><h4><span class="label label-{{ label }}">
-                    <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
-                    &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
-                  </span></h4></td>
+            <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
+            &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
+          </span></h4></td>
           <td></td>
           <td></td>
           <td></td>
-         </tr>
-        </tbody>
-       </table>
-       </div>
-      </div>
-      <!-- Panel Body end -->
-    </div>
-    {% endif %}
-    <!-- Panel end  -->
-    <!-- Panel start  -->
-    {% if holdingAccounts %}
-    <div class="panel panel-warning">
-      <div class="panel-heading">
-        <h3 class="panel-title">Your Investments (Holding)</h3>
-      </div>
-      <!-- Panel Body start -->
-      <div class="panel-body">
-       <div class="table-responsive">
-       <table class="table table-striped">
-        <thead>
-         <tr>
-          <th style="width:34%;">Fund</th>
-          <th style="width:11%;">Invested</th>
-          <th style="width:11%;">Value</th>
-          <th style="width:8%;">Diff</th>
-          <th style="width:8%;">Diff %</th>
-          <th style="width:8%;">Units</th>
-          <th style="width:8%;">NAV</th>
-          <th style="width:12%;">Last Operated</th>
-         </tr>
-        </thead>
-        <tbody>
-        {% set total = [0] %}
-        {% set totalValue = [0] %}
-        {% for fund in holdingAccounts %}
-         {% if total.append(total.pop() + fund[2]) %}{% endif %}
-         {% set curValue = navdict[fund[5]][0]|float * fund[3]|float %}
-         {% if totalValue.append(totalValue.pop() + curValue) %}{% endif %}
-         {% if fund[2] != 0.00 %}
-           {% set diff = ( curValue - (fund[2]|float))|abs %}
-           {% set diffp = (diff * 100)/(fund[2]|float) %}
-           {% set diff =  currencySymbol + ' %0.2f' % diff %}
-           {% set diffp = '%0.2f' % diffp + ' %' %}
-         {% else %}
-           {% set diff = '-'%}
-           {% set diffp = '-'%}
-         {% endif %}
-         <tr>
-          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
-          <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
-          {% if curValue > fund[2] %}
-            {% set color = 'green' %}
-            {% set glyph = 'up' %}
-          {% elif curValue < fund[2] %}
-            {% set color = 'red' %}
-            {% set glyph = 'down' %}
-          {% endif %}
-          <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % curValue }}</font></td>
-          <td><font color="{{ color }}">{{ diff }}</font></td>
-          <td><font color="{{ color }}">
-              <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ diffp }}
-              </font>
-          </td>
-          <td>{{ fund[3] }}</td>
-          <td>{{ navdict[fund[5]][0]|float }}</td>
-          <td>{{ fund[4] }}</td>
-         </tr>
-        {% endfor %}
-         <tr>
-          <td></td>
-          {% if totalValue[0] >= total[0]|float %}
-            {% set label = 'success' %}
-            {% set glyph = 'up' %}
-          {% else %}
-            {% set label = 'danger' %}
-            {% set glyph = 'down' %}
-          {% endif %}
-          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
-          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
-          {% set tdiff = (totalValue[0] - total[0]|float)|abs %}
-          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % tdiff }}</span></h4></td>
-          {% if tdiff != 0.00 %}
-            {% set tdiffp = (tdiff * 100)/(total[0]|float) %}
-          {% else %}
-            {% set tdiffp = 0.00 %}
-          {% endif %}
-          <td><h4><span class="label label-{{ label }}">
-                    <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
-                    &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
-                  </span></h4></td>
-          <td></td>
-          <td></td>
-          <td></td>
-         </tr>
-        </tbody>
-       </table>
-       </div>
-      </div>
-      <!-- Panel Body end -->
-    </div>
-    {% endif %}
-    <!-- Panel end  -->
-    <!-- Panel start  -->
-    {% if closedAccounts %}
-    <div class="panel panel-danger">
-      <div class="panel-heading">
-        <h3 class="panel-title">Your Investments (Closed)</h3>
-      </div>
-      <!-- Panel Body start -->
-      <div class="panel-body">
-       <div class="table-responsive">
-       <table class="table table-striped">
-        <thead>
-         <tr>
-          <th style="width:34%;">Fund</th>
-          <th style="width:11%;">Invested</th>
-          <th style="width:11%;">Got Back</th>
-          <th style="width:8%;">Diff</th>
-          <th style="width:8%;">Diff %</th>
-          <th style="width:8%;">Units</th>
-          <th style="width:8%;"></th>
-          <th style="width:12%;">Last Operated</th>
-         </tr>
-        </thead>
-        <tbody>
-        {% set total = [0] %}
-        {% set totalValue = [0] %}
-        {% for fund in closedAccounts %}
-         {% if total.append(total.pop() + fund[2]) %}{% endif %}
-         {% if totalValue.append(totalValue.pop() + fund[6]) %}{% endif %}
-         {% if fund[2] != 0.00 %}
-           {% set diff = (fund[6] - fund[2])|abs %}
-           {% set diffp = (diff * 100)/fund[2] %}
-           {% set diff =  currencySymbol + ' %0.2f' % diff %}
-           {% set diffp = '%0.2f' % diffp + ' %' %}
-         {% else %}
-           {% set diff = '-'%}
-           {% set diffp = '-'%}
-         {% endif %}
-         <tr>
-          <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
-          <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
-          {% if fund[6] > fund[2] %}
-            {% set color = 'green' %}
-            {% set glyph = 'up' %}
-          {% elif fund[6] < fund[2] %}
-            {% set color = 'red' %}
-            {% set glyph = 'down' %}
-          {% endif %}
-          <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ fund[6] }}</font></td>
-          <td><font color="{{ color }}">{{ diff }}</font></td>
-          <td><font color="{{ color }}">
-              <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ diffp }}
-              </font>
-          </td>
-          <td>N/A</td>
-          <td></td>
-          <td>{{ fund[4] }}</td>
-         </tr>
-        {% endfor %}
-         <tr>
-          <td></td>
-          {% if totalValue[0] >= total[0]|float %}
-            {% set label = 'success' %}
-            {% set glyph = 'up' %}
-          {% else %}
-            {% set label = 'danger' %}
-            {% set glyph = 'down' %}
-          {% endif %}
-          <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
-          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
-          {% set tdiff = (totalValue[0] - total[0])|abs %}
-          <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % tdiff }}</span></h4></td>
-          {% if tdiff != 0.00 %}
-            {% set tdiffp = (tdiff * 100)/total[0] %}
-          {% else %}
-            {% set tdiffp = 0.00 %}
-          {% endif %}
-          <td><h4><span class="label label-{{ label }}">
-                    <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
-                    &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
-                  </span></h4></td>
-          <td></td>
-          <td></td>
-          <td></td>
-         </tr>
-        </tbody>
-       </table>
-       </div>
-      </div>
-      <!-- Panel Body end -->
-    </div>
-    {% endif %}
-    <!-- Panel end  -->
-    {% endif %}
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <!-- Container div end -->
+</div>
+<!-- Panel Body end -->
+</div>
+{% endif %}
+<!-- Panel end  -->
+<!-- Panel start  -->
+{% if holdingAccounts %}
+<div class="panel panel-warning">
+  <div class="panel-heading">
+    <h3 class="panel-title">Your Investments (Holding)</h3>
+  </div>
+  <!-- Panel Body start -->
+  <div class="panel-body">
+   <div class="table-responsive">
+     <table class="table table-striped">
+      <thead>
+       <tr>
+        <th style="width:34%;">Fund</th>
+        <th style="width:11%;">Invested</th>
+        <th style="width:11%;">Value</th>
+        <th style="width:8%;">Diff</th>
+        <th style="width:8%;">Diff %</th>
+        <th style="width:8%;">Units</th>
+        <th style="width:8%;">NAV</th>
+        <th style="width:12%;">Last Operated</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set total = [0] %}
+      {% set totalValue = [0] %}
+      {% for fund in holdingAccounts %}
+      {% if total.append(total.pop() + fund[2]) %}{% endif %}
+      {% set curValue = navdict[fund[5]][0]|float * fund[3]|float %}
+      {% if totalValue.append(totalValue.pop() + curValue) %}{% endif %}
+      {% if fund[2] != 0.00 %}
+      {% set diff = ( curValue - (fund[2]|float))|abs %}
+      {% set diffp = (diff * 100)/(fund[2]|float) %}
+      {% set diff =  currencySymbol + ' %0.2f' % diff %}
+      {% set diffp = '%0.2f' % diffp + ' %' %}
+      {% else %}
+      {% set diff = '-'%}
+      {% set diffp = '-'%}
+      {% endif %}
+      <tr>
+        <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
+        <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
+        {% if curValue > fund[2] %}
+        {% set color = 'green' %}
+        {% set glyph = 'up' %}
+        {% elif curValue < fund[2] %}
+        {% set color = 'red' %}
+        {% set glyph = 'down' %}
+        {% endif %}
+        <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % curValue }}</font></td>
+        <td><font color="{{ color }}">{{ diff }}</font></td>
+        <td><font color="{{ color }}">
+          <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ diffp }}
+        </font>
+      </td>
+      <td>{{ fund[3] }}</td>
+      <td>{{ navdict[fund[5]][0]|float }}</td>
+      <td>{{ fund[4] }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td></td>
+      {% if totalValue[0] >= total[0]|float %}
+      {% set label = 'success' %}
+      {% set glyph = 'up' %}
+      {% else %}
+      {% set label = 'danger' %}
+      {% set glyph = 'down' %}
+      {% endif %}
+      <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
+      <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
+      {% set tdiff = (totalValue[0] - total[0]|float)|abs %}
+      <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % tdiff }}</span></h4></td>
+      {% if tdiff != 0.00 %}
+      {% set tdiffp = (tdiff * 100)/(total[0]|float) %}
+      {% else %}
+      {% set tdiffp = 0.00 %}
+      {% endif %}
+      <td><h4><span class="label label-{{ label }}">
+        <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
+        &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
+      </span></h4></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<!-- Panel Body end -->
+</div>
+{% endif %}
+<!-- Panel end  -->
+<!-- Panel start  -->
+{% if closedAccounts %}
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <h3 class="panel-title">Your Investments (Closed)</h3>
+  </div>
+  <!-- Panel Body start -->
+  <div class="panel-body">
+   <div class="table-responsive">
+     <table class="table table-striped">
+      <thead>
+       <tr>
+        <th style="width:34%;">Fund</th>
+        <th style="width:11%;">Invested</th>
+        <th style="width:11%;">Got Back</th>
+        <th style="width:8%;">Diff</th>
+        <th style="width:8%;">Diff %</th>
+        <th style="width:8%;">Units</th>
+        <th style="width:8%;"></th>
+        <th style="width:12%;">Last Operated</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set total = [0] %}
+      {% set totalValue = [0] %}
+      {% for fund in closedAccounts %}
+      {% if total.append(total.pop() + fund[2]) %}{% endif %}
+      {% if totalValue.append(totalValue.pop() + fund[6]) %}{% endif %}
+      {% if fund[2] != 0.00 %}
+      {% set diff = (fund[6] - fund[2])|abs %}
+      {% set diffp = (diff * 100)/fund[2] %}
+      {% set diff =  currencySymbol + ' %0.2f' % diff %}
+      {% set diffp = '%0.2f' % diffp + ' %' %}
+      {% else %}
+      {% set diff = '-'%}
+      {% set diffp = '-'%}
+      {% endif %}
+      <tr>
+        <td><a href="{{ url_for('investment_transactions', username=session['username'], accid=fund[0], action='list') }}">{{ fund[1] }}</a></td>
+        <td>{{ currencySymbol }}&nbsp;{{ fund[2] }}</td>
+        {% if fund[6] > fund[2] %}
+        {% set color = 'green' %}
+        {% set glyph = 'up' %}
+        {% elif fund[6] < fund[2] %}
+        {% set color = 'red' %}
+        {% set glyph = 'down' %}
+        {% endif %}
+        <td><font color="{{ color }}">{{ currencySymbol }}&nbsp;{{ fund[6] }}</font></td>
+        <td><font color="{{ color }}">{{ diff }}</font></td>
+        <td><font color="{{ color }}">
+          <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>&nbsp;{{ diffp }}
+        </font>
+      </td>
+      <td>N/A</td>
+      <td></td>
+      <td>{{ fund[4] }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td></td>
+      {% if totalValue[0] >= total[0]|float %}
+      {% set label = 'success' %}
+      {% set glyph = 'up' %}
+      {% else %}
+      {% set label = 'danger' %}
+      {% set glyph = 'down' %}
+      {% endif %}
+      <td><h4><span class="label label-default">{{ currencySymbol }}&nbsp;{{ total[0] }}</span></h4></td>
+      <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % totalValue[0] }}</span></h4></td>
+      {% set tdiff = (totalValue[0] - total[0])|abs %}
+      <td><h4><span class="label label-{{ label }}">{{ currencySymbol }}&nbsp;{{ '%0.2f' % tdiff }}</span></h4></td>
+      {% if tdiff != 0.00 %}
+      {% set tdiffp = (tdiff * 100)/total[0] %}
+      {% else %}
+      {% set tdiffp = 0.00 %}
+      {% endif %}
+      <td><h4><span class="label label-{{ label }}">
+        <span class="glyphicon glyphicon-arrow-{{ glyph }}" aria-hidden="true"></span>
+        &nbsp;{{ '%0.2f' % tdiffp }}&nbsp%
+      </span></h4></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<!-- Panel Body end -->
+</div>
+{% endif %}
+<!-- Panel end  -->
+{% endif %}
+</div>
+<!-- Container div end -->
 {% endblock %}

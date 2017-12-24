@@ -1,72 +1,72 @@
 {% extends "base.html" %}
 {% block body %}
 {% include "navbar_user.html" %}
-  <!-- Page Content -->
-  <div class="container text-center">
-   {% with messages = get_flashed_messages() %}
-     {% if messages %}
-        {% for message in messages %}
-           <div style="margin-top:10px;" class="alert alert-danger" role="alert">
-             {{ message }}
-           </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-    {% if accounts %}
-    <div class="col-md-8 col-md-offset-3">
-      <form method="POST" action="" class="form-signin" style="width: 500px;">
-        <h3 class="form-signin-heading" style="margin-bottom:25px;">Add SIP Transaction</h3>
-        <div class="row">
-         <div class="col-md-12">
-         <div class="input-group">
-          <span class="input-group-addon" id="basic-addon1">Select the Investment</span>
-          <select class="form-control" name="accid">
-            {% for account in accounts %}
-            <option value="{{ account[0] }}">{{ account[0] }} - {{ account[1] }}</option>
-            {% endfor %}
-          </select>
-         </div>
-         </div>
-        </div>
-        <div class="row" style="margin-top:10px;">
-         <div class="col-md-6">
-           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">SIP Amount</span>
-            <input type="text" class="form-control" name="amount" placeholder="0.00" required><br>
-           </div>
-         </div>
-         <div class="col-md-6">
-           <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">Units</span>
-            <input type="text" class="form-control" name="units" placeholder="0.00" required><br>
-           </div>
-         </div>
-        </div>
-        <div class="row" style="margin-top:10px;">
-         <div class="col-md-6">
-          <div class="input-group">
-           <span class="input-group-addon" id="basic-addon1">
-             &nbsp;&nbsp;SIP Date&nbsp;&nbsp;&nbsp;
-           </span>
-           <input type='text' class="form-control" name="sipdate" id="datepicker" style="width:135px;">
-          </div>
-         </div>
-        </div>
-        <div class="row" style="margin-top:10px;">
-         <div class="col-md-6">
-          <button class="btn btn-primary btn-block" type="submit">
-           <span class="glyphicon glyphicon-plus" aria-hidden="true"style="margin-right:10px;"></span>Add SIP Transaction
-          </button>
-         </div>
-         <div class="col-md-6">
-          <a class="btn btn-primary" href="{{ url_for('investments') }}" role="button">
-          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" style="margin-left:30px;"></span>
-	  &nbsp;&nbsp;Back to Investments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-         </div>
-        </div>
-      </form>
+<!-- Page Content -->
+<div class="container text-center">
+ {% with messages = get_flashed_messages() %}
+ {% if messages %}
+ {% for message in messages %}
+ <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+   {{ message }}
+ </div>
+ {% endfor %}
+ {% endif %}
+ {% endwith %}
+ {% if accounts %}
+ <div class="col-md-8 col-md-offset-3">
+  <form method="POST" action="" class="form-signin" style="width: 500px;">
+    <h3 class="form-signin-heading" style="margin-bottom:25px;">Add SIP Transaction</h3>
+    <div class="row">
+     <div class="col-md-12">
+       <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Select the Investment</span>
+        <select class="form-control" name="accid">
+          {% for account in accounts %}
+          <option value="{{ account[0] }}">{{ account[0] }} - {{ account[1] }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
-    {% endif %}
   </div>
-  <!-- /.container -->
+  <div class="row" style="margin-top:10px;">
+   <div class="col-md-6">
+     <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">SIP Amount</span>
+      <input type="text" class="form-control" name="amount" placeholder="0.00" required><br>
+    </div>
+  </div>
+  <div class="col-md-6">
+   <div class="input-group">
+    <span class="input-group-addon" id="basic-addon1">Units</span>
+    <input type="text" class="form-control" name="units" placeholder="0.00" required><br>
+  </div>
+</div>
+</div>
+<div class="row" style="margin-top:10px;">
+ <div class="col-md-6">
+  <div class="input-group">
+   <span class="input-group-addon" id="basic-addon1">
+     &nbsp;&nbsp;SIP Date&nbsp;&nbsp;&nbsp;
+   </span>
+   <input type='text' class="form-control" name="sipdate" id="datepicker" style="width:135px;">
+ </div>
+</div>
+</div>
+<div class="row" style="margin-top:10px;">
+ <div class="col-md-6">
+  <button class="btn btn-primary btn-block" type="submit">
+   <span class="glyphicon glyphicon-plus" aria-hidden="true"style="margin-right:10px;"></span>Add SIP Transaction
+ </button>
+</div>
+<div class="col-md-6">
+  <a class="btn btn-primary" href="{{ url_for('investments') }}" role="button">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" style="margin-left:30px;"></span>
+  &nbsp;&nbsp;Back to Investments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+</div>
+</div>
+</form>
+</div>
+{% endif %}
+</div>
+<!-- /.container -->
 {% endblock %}

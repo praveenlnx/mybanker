@@ -1,41 +1,41 @@
 {% extends "base.html" %}
 {% block body %}
 {% include "navbar_admin.html" %}
-  <!-- Page Content -->
-  <div class="container">
+<!-- Page Content -->
+<div class="container">
   {% if message %}
-     <div style="margin-top:10px;" class="alert alert-{{ mtype }}" role="alert">
-       {{ message }}
-     </div>
-  {% endif %}
-   <div class="row">
+  <div style="margin-top:10px;" class="alert alert-{{ mtype }}" role="alert">
+   {{ message }}
+ </div>
+ {% endif %}
+ <div class="row">
    {% if userdict %}
-     {% for row in userdict %}
-      <div class="col-md-4">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">
-              <div class="row">
-                <div class="col-md-10">
-                  <span class="glyphicon glyphicon-user" style="margin-right:5px;" aria-hidden="true"></span>
-                  {{ row[0] }}
-                </div>
-                <div class="col-md-2">
-                  <a href="{{ url_for('removeuser', username=row[1]) }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-                </div>
-              </div>
-            </h3>
+   {% for row in userdict %}
+   <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <div class="row">
+            <div class="col-md-10">
+              <span class="glyphicon glyphicon-user" style="margin-right:5px;" aria-hidden="true"></span>
+              {{ row[0] }}
+            </div>
+            <div class="col-md-2">
+              <a href="{{ url_for('removeuser', username=row[1]) }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            </div>
           </div>
-          <div class="panel-body">
-            {{ row[1] }}<br>
-            <a href="mailto:{{ row[4] }}">{{ row[4] }}</a><br><br>
-            <small><i>Account created on {{ row[5] }}</i></small>
-          </div>
-        </div>
+        </h3>
       </div>
-     {% endfor %}
-   {% endif %}
-   </div>
+      <div class="panel-body">
+        {{ row[1] }}<br>
+        <a href="mailto:{{ row[4] }}">{{ row[4] }}</a><br><br>
+        <small><i>Account created on {{ row[5] }}</i></small>
+      </div>
+    </div>
   </div>
-  <!-- /.container -->
+  {% endfor %}
+  {% endif %}
+</div>
+</div>
+<!-- /.container -->
 {% endblock %}

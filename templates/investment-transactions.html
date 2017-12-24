@@ -6,80 +6,80 @@
 {% extends "base.html" %}
 {% block body %}
 {% include "navbar_user.html" %}
-  <!-- Page Content -->
-  <div class="container">
-   {% with messages = get_flashed_messages() %}
-     {% if messages %}
-       {% for message in messages %}
-         <div style="margin-top:10px;" class="alert alert-danger" role="alert">
-           {{ message }}
-         </div>
-       {% endfor %}
-     {% endif %}
-   {% endwith %}
-    {% if accinfo %}
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">
-        <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>&nbsp;&nbsp;{{ accinfo[0][2] }}</h3>
-      </div>
-      <div class="panel-body">
-        <p><h4>{{ accinfo[0][6] }}</h4>
+<!-- Page Content -->
+<div class="container">
+ {% with messages = get_flashed_messages() %}
+ {% if messages %}
+ {% for message in messages %}
+ <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+   {{ message }}
+ </div>
+ {% endfor %}
+ {% endif %}
+ {% endwith %}
+ {% if accinfo %}
+ <div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>&nbsp;&nbsp;{{ accinfo[0][2] }}</h3>
+    </div>
+    <div class="panel-body">
+      <p><h4>{{ accinfo[0][6] }}</h4>
         <small><i>{{ accinfo[0][3] }}</i></small>
-        </p>
-        <div class="row">
+      </p>
+      <div class="row">
         <div class="col-md-6">
-        <div class="table-responsive">  
-        <table class="table table-striped">
-         <tr>
-          <td><b>Folio</b></td>
-          <td>{{ accinfo[0][4] }}</td>
-         </tr>
-         <tr>
-          <td><b>Code</b></td>
-          <td>{{ accinfo[0][5] }}</td>
-         </tr>
-         <tr>
-          <td><b>Start</b></td>
-          <td>{{ accinfo[0][11] }}</td>
-	       </tr>
-	       <tr>
-          <td><b>End</b></td>
-          <td>{{ accinfo[0][12] }}</td>
-         </tr>
-         <tr>
-          <td><b>Address</b></td>
-          <td>{{ accinfo[0][9] }}</td>
-         </tr>
-         <tr>
-          <td><b>Bank</b></td>
-          <td>{{ accinfo[0][10] }}</td>
-         </tr>
-         <tr>
-          <td><b>Email</b></td>
-          <td>{{ accinfo[0][7] }}</td>
-	       </tr>
-	       <tr>
-          <td><b>Phone</b></td>
-          <td>{{ accinfo[0][8] }}</td>
-         </tr>
-         <tr>
-          <td><b>Fund URL</b></td>
-          <td>{{ accinfo[0][17] if accinfo[0][17] != '' else 'Not Entered' }}</td>
-         </tr>
-         <tr>
-          <td><b>Username</b></td>
-          <td>{{ accinfo[0][18] if accinfo[0][18] != '' else 'Not Entered' }}</td>
-	       </tr>
-	       <tr>
-          <td><b>Password</b></td>
-          <td>{{ accinfo[0][19] if accinfo[0][19] != '' else 'Not Entered' }}</td>
-         </tr>
-        </table>
+          <div class="table-responsive">  
+            <table class="table table-striped">
+             <tr>
+              <td><b>Folio</b></td>
+              <td>{{ accinfo[0][4] }}</td>
+            </tr>
+            <tr>
+              <td><b>Code</b></td>
+              <td>{{ accinfo[0][5] }}</td>
+            </tr>
+            <tr>
+              <td><b>Start</b></td>
+              <td>{{ accinfo[0][11] }}</td>
+            </tr>
+            <tr>
+              <td><b>End</b></td>
+              <td>{{ accinfo[0][12] }}</td>
+            </tr>
+            <tr>
+              <td><b>Address</b></td>
+              <td>{{ accinfo[0][9] }}</td>
+            </tr>
+            <tr>
+              <td><b>Bank</b></td>
+              <td>{{ accinfo[0][10] }}</td>
+            </tr>
+            <tr>
+              <td><b>Email</b></td>
+              <td>{{ accinfo[0][7] }}</td>
+            </tr>
+            <tr>
+              <td><b>Phone</b></td>
+              <td>{{ accinfo[0][8] }}</td>
+            </tr>
+            <tr>
+              <td><b>Fund URL</b></td>
+              <td>{{ accinfo[0][17] if accinfo[0][17] != '' else 'Not Entered' }}</td>
+            </tr>
+            <tr>
+              <td><b>Username</b></td>
+              <td>{{ accinfo[0][18] if accinfo[0][18] != '' else 'Not Entered' }}</td>
+            </tr>
+            <tr>
+              <td><b>Password</b></td>
+              <td>{{ accinfo[0][19] if accinfo[0][19] != '' else 'Not Entered' }}</td>
+            </tr>
+          </table>
         </div>
-        </div>
-        <div class="col-md-4">
-          <div class="table-responsive">
+      </div>
+      <div class="col-md-4">
+        <div class="table-responsive">
           <table class="table table-striped">
             <tr>
               <td>Invested</td>
@@ -101,78 +101,78 @@
               <td>{{ nav[0]|float }}<br><small><font color="gray">[{{ nav[1] }}]</font></small></td>
             </tr>
           </table>
-          </div>
         </div>
-        <div class="col-md-2"></div>
-        </div>
-        <div class="row" style="margin-top:20px;">
-         <div class="col-md-6">
-          <div class="well">{{ accinfo[0][20] or "No notes added to this account" }}</div>
-         </div>
-        </div>
-        <div class="row" style="margin-top:20px;">
-         <div class="col-md-6">
-          {% if accinfo[0][15] == 'Active' or accinfo[0][15] == 'Holding' %}
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+     <div class="col-md-6">
+      <div class="well">{{ accinfo[0][20] or "No notes added to this account" }}</div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:20px;">
+   <div class="col-md-6">
+    {% if accinfo[0][15] == 'Active' or accinfo[0][15] == 'Holding' %}
           <!--<a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Closed') }}" role="button">
            Close and archive this account
-          </a>-->
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#closeModal">Close and archive</button>
-          <!-- Modal dialog Start -->
-           <div id="closeModal" class="modal fade" role="dialog">
-            <div class="modal-dialog modal-sm">
-             <form role="form" id="f_close" method="POST" action="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Closed') }}">
+         </a>-->
+         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#closeModal">Close and archive</button>
+         <!-- Modal dialog Start -->
+         <div id="closeModal" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-sm">
+           <form role="form" id="f_close" method="POST" action="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Closed') }}">
              <div class="modal-content">
               <div class="modal-header">
                <h4 class="modal-title">Enter the closing value</h4>
-              </div>
-              <div class="modal-body">
-                <div class="input-group">
-                 <span class="input-group-addon" id="basic-addon1"><b>Closing amount</b></span>
-                 <input type="text" class="form-control" style="width:130px;" name="amount" placeholder="0.00" required>
-                </div>
-              </div>
-              <div class="modal-footer">
-               <button onclick="closesip_submit()" class="btn btn-info" data-dismiss="modal">Close</button>
-              </div>
              </div>
-             </form>
-            </div>
+             <div class="modal-body">
+              <div class="input-group">
+               <span class="input-group-addon" id="basic-addon1"><b>Closing amount</b></span>
+               <input type="text" class="form-control" style="width:130px;" name="amount" placeholder="0.00" required>
+             </div>
            </div>
-          <!-- Modal dialog End-->
-          {% endif %}
-          {% if accinfo[0][15] == 'Active' %}
-          <a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Holding') }}" role="button">
-           Close Sip and hold this account
-          </a>
-          {% endif %}
-           <a class="btn btn-default" href="{{ url_for('editinvestment', accid=accinfo[0][0]) }}" role="button">
-           Edit Account Details
-           </a>
+           <div class="modal-footer">
+             <button onclick="closesip_submit()" class="btn btn-info" data-dismiss="modal">Close</button>
+           </div>
          </div>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-    <p><a href="{{ url_for('investments') }}">Back to Investment Dashboard</a></p>
-    {% if transactions %}
-      <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
-      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
-    {% endif %}
-    <div class="panel panel-default" style="margin-top:15px;">
-      <div class="panel-heading">
-        <h3 class="panel-title">
+       </form>
+     </div>
+   </div>
+   <!-- Modal dialog End-->
+   {% endif %}
+   {% if accinfo[0][15] == 'Active' %}
+   <a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Holding') }}" role="button">
+     Close Sip and hold this account
+   </a>
+   {% endif %}
+   <a class="btn btn-default" href="{{ url_for('editinvestment', accid=accinfo[0][0]) }}" role="button">
+     Edit Account Details
+   </a>
+ </div>
+</div>
+</div>
+</div>
+{% endif %}
+<p><a href="{{ url_for('investments') }}">Back to Investment Dashboard</a></p>
+{% if transactions %}
+<a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
+  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
+  {% endif %}
+  <div class="panel panel-default" style="margin-top:15px;">
+    <div class="panel-heading">
+      <h3 class="panel-title">
         <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;&nbsp;Transactions&nbsp;&nbsp;&nbsp;
-        </h3>
-      </div>
-      <div class="panel-body">
-        {% if not transactions %}
-          <p>No transactions found for this investment account</p>
-          <p>Please add SIP transactions</p>
-          <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
+      </h3>
+    </div>
+    <div class="panel-body">
+      {% if not transactions %}
+      <p>No transactions found for this investment account</p>
+      <p>Please add SIP transactions</p>
+      <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
         {% endif %}
         {% if transactions %}
-	 <div class="table-responsive">
+        <div class="table-responsive">
          <table class="table table-striped">
            <thead>
              <tr>
@@ -183,20 +183,20 @@
              </tr>
            </thead>
            <tbody>
-           {% for row in transactions %}
-            <tr>
-             <td>{{ row[1] }}</td>
-             <td>{{ currencySymbol }}&nbsp;{{ row[2] }}</td>
-             <td>{{ row[3] }}</td>
-             <td>{{ row[4] }}</td>
-            </tr>
-           {% endfor %}
+             {% for row in transactions %}
+             <tr>
+               <td>{{ row[1] }}</td>
+               <td>{{ currencySymbol }}&nbsp;{{ row[2] }}</td>
+               <td>{{ row[3] }}</td>
+               <td>{{ row[4] }}</td>
+             </tr>
+             {% endfor %}
            </tbody>
          </table>
-	 </div>
-      </div>
-    </div>
-    {% endif %}
-  </div>
-  <!-- /.container -->
-{% endblock %}
+       </div>
+     </div>
+   </div>
+   {% endif %}
+ </div>
+ <!-- /.container -->
+ {% endblock %}
