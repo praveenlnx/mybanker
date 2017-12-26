@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "navbar_user.html" %}
+<!-- Page Content -->
+<!-- Base container start -->
+<div class="container">
+ {% with messages = get_flashed_messages() %}
+ {% if messages %}
+ {% for message in messages %}
+ <div style="margin-top:10px;" class="alert alert-danger" role="alert">
+   {{ message }}
+ </div>
+ {% endfor %}
+ {% endif %}
+ {% endwith %}
+ <p class="text-center"><center><h3>Year at a glance</h3>
+ </center></p><br>
+<!-- Third Row Start -->
+<div class="row">
+  <!-- Income Trend Panel start -->
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Income/Expense Trend</h3>
+      </div>
+      <div class="panel-body">
+       <form method="POST" action="">
+         <div class="row">
+           <div class="col-md-4">
+             <div class="input-group">
+               <span class="input-group-addon" id="basic-addon1">Year</span>
+               <select class="form-control" name="inexyear" onchange="this.form.submit()">
+                 <option selected disabled>Select</option>
+                 <option value="2016">2016</option>
+                 <option value="2015">2015</option>
+                 <option value="2014">2014</option>
+               </select>
+             </div>
+           </div>
+         </div>
+       </form><br>
+       <embed type="image/svg+xml" src={{inexGraph|safe}} style='max-width:1000px'/>
+     </div>
+   </div>
+ </div>
+ <!-- Income Trend Panel end -->
+ <!-- Expense Trend Panel start -->
+ <div class="col-md-6">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Expense Stats</h3>
+    </div>
+    <div class="panel-body">
+      <form method="POST" action="">
+       <div class="row">
+         <div class="col-md-4">
+           <div class="input-group">
+             <span class="input-group-addon" id="basic-addon1">Year</span>
+             <select class="form-control" name="expyear" onchange="this.form.submit()">
+               <option selected disabled>Select</option>
+               <option value="2016">2016</option>
+               <option value="2015">2015</option>
+               <option value="2014">2014</option>
+             </select>
+           </div>
+         </div>
+       </div>
+     </form><br>
+     <embed type="image/svg+xml" src={{expenseGraph|safe}} style='max-width:1000px'/>
+   </div>
+ </div>
+</div>
+<!-- Expense Trend Panel end -->
+</div>
+<!-- Third Row End -->
+</div>
+<!-- Base container end -->
+{% endblock %}
+{% block footer %}
+  {% include "footer.html" %}
+{% endblock %}

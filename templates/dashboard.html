@@ -21,10 +21,20 @@
   {% endif %}
   <div class="visible-sm-block visible-md-block visible-lg-block">
    <p>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary btn-sm dropdown-toggle" 
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="glyphicon glyphicon-signal" aria-hidden="true" style="margin-right:10px;"></span>View Reports 
+        <span class="caret" style="margin-left:5px;"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="{{ url_for('curvsprevexpenses') }}">Current vs Previous</a></li>
+        <li><a href="{{ url_for('categorystats') }}">Category Stats</a></li>
+        <li><a href="{{ url_for('yearataglance') }}">Year at a glance</a></li>
+      </ul>
+    </div>    
     <a class="btn btn-sm btn-primary" href="{{ url_for('addaccount') }}" role="button">
       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add account</a>
-    <a class="btn btn-sm btn-primary" href="{{ url_for('reports') }}" role="button">
-      <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;&nbsp;View reports</a>
     <a class="btn btn-sm btn-primary" href="{{ url_for('investments') }}" role="button">
       <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>&nbsp;&nbsp;Investments</a>
     <a class="btn btn-sm btn-primary" href="{{ url_for('currencyrates') }}" role="button">

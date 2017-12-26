@@ -287,41 +287,61 @@ def search():
   return render_template('searchtransactions.html', searchresults=searchresults, listresults=listresults, categories=categories, curyear=curyear)
 
 
-# Reports Route
-@app.route('/reports', methods=['GET', 'POST'])
+# Current vs Previous month expenses Route
+@app.route('/curvsprevexpenses', methods=['GET'])
 @login_required
-def reports():
+def curvsprevexpenses():
   if checkTotalAccounts(session['username']) == 0:
     flash("No reports as you don't have any accounts setup. Please start adding your accounts")
     jumbomessage = dashboardMessage(session['username'])
     return render_template('dashboard.html', jumbomessage=jumbomessage)
-  inexYear = expenseYear = date.today().year
+  prevmnthexpenses = getAllCategoryStatsForMonth(session['username'], 1)
+  curmnthexpenses = getAllCategoryStatsForMonth(session['username'], 0)
+  return render_template('curvsprevmonthexpenses.html',
+                          prevmnthexpenses=prevmnthexpenses,
+                          curmnthexpenses=curmnthexpenses)
+
+# Category stats Route
+@app.route('/categorystats', methods=['GET', 'POST'])
+@login_required
+def categorystats():
+  if checkTotalAccounts(session['username']) == 0:
+    flash("No reports as you don't have any accounts setup. Please start adding your accounts")
+    jumbomessage = dashboardMessage(session['username'])
+    return render_template('dashboard.html', jumbomessage=jumbomessage)
   categoryStatsGraph = categoryStatsGraphYearly = None
   categoryStatsData = categoryStatsDataYearly = None
   if request.method == "POST":
-    if 'inexyear' in request.form:
-      inexYear = request.form['inexyear']
-    elif 'expyear' in request.form:
-      expenseYear = request.form['expyear']
-    elif 'statcategory' in request.form:
-      statcategory = request.form['statcategory']
-      categoryStatsGraph, categoryStatsData = categoryStats(session['username'], statcategory, "YEAR_MONTH")
-      categoryStatsGraphYearly, categoryStatsDataYearly = categoryStats(session['username'], statcategory, "YEAR")
+    statcategory = request.form['statcategory']
+    categoryStatsGraph, categoryStatsData = categoryStats(session['username'], statcategory, "YEAR_MONTH")
+    categoryStatsGraphYearly, categoryStatsDataYearly = categoryStats(session['username'], statcategory, "YEAR")
   categories = getCategories()
-  inexGraph = inexTrend(session['username'], inexYear)
-  expenseGraph = expenseStats(session['username'], expenseYear)
-  prevmnthexpenses = getAllCategoryStatsForMonth(session['username'], 1)
-  curmnthexpenses = getAllCategoryStatsForMonth(session['username'], 0)
-  return render_template('reports.html',
-                          inexGraph=inexGraph,
-                          expenseGraph=expenseGraph,
-                          prevmnthexpenses=prevmnthexpenses,
-                          curmnthexpenses=curmnthexpenses,
+  return render_template('categorystats.html',
                           categories=categories,
                           categoryStatsGraph=categoryStatsGraph,
                           categoryStatsData=categoryStatsData,
                           categoryStatsGraphYearly=categoryStatsGraphYearly,
                           categoryStatsDataYearly=categoryStatsDataYearly)
+
+# Year at a glance Route
+@app.route('/yearataglance', methods=['GET', 'POST'])
+@login_required
+def yearataglance():
+  if checkTotalAccounts(session['username']) == 0:
+    flash("No reports as you don't have any accounts setup. Please start adding your accounts")
+    jumbomessage = dashboardMessage(session['username'])
+    return render_template('dashboard.html', jumbomessage=jumbomessage)
+  inexYear = expenseYear = date.today().year
+  if request.method == "POST":
+    if 'inexyear' in request.form:
+      inexYear = request.form['inexyear']
+    elif 'expyear' in request.form:
+      expenseYear = request.form['expyear']
+  inexGraph = inexTrend(session['username'], inexYear)
+  expenseGraph = expenseStats(session['username'], expenseYear)
+  return render_template('yearataglance.html',
+                          inexGraph=inexGraph,
+                          expenseGraph=expenseGraph)
 
 # Messages Route
 @app.route('/messages', methods=['GET', 'POST'])
