@@ -457,7 +457,7 @@ def getExpenseStats(username, year):
   cursor = conn.cursor()
   try:
     query = """
-            SELECT category, SUM(debit)
+            SELECT category, SUM(debit) AS debit
             FROM transactions t1
             INNER JOIN (
               SELECT name
@@ -467,6 +467,7 @@ def getExpenseStats(username, year):
             ON t1.category = t2.name
             WHERE YEAR(t1.opdate) = %s AND t1.owner = '%s' AND account NOT IN (%s)
             GROUP BY t1.category
+            ORDER BY debit DESC
             """ % (year, username, getIgnoredAccounts(username))
     cursor.execute(query)
     data = cursor.fetchall()
@@ -520,6 +521,30 @@ def getAllCategoryStatsForMonth(username, month):
             GROUP BY category
             ORDER BY debit DESC
             """ % (username, month)
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    return None
+  finally:
+    conn.close()
+    gc.collect()
+  return data
+
+# Get category stats to fill previous and current month expenses in reports
+def getAllCategoryStatsForYear(username, year):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = """
+            SELECT category, SUM(debit) AS debit
+            FROM transactions
+            WHERE owner = '%s'
+                  AND YEAR(opdate) = '%s'
+                  AND debit IS NOT NULL
+                  AND category NOT IN ('TRANSFER OUT')
+            GROUP BY category
+            ORDER BY debit DESC
+            """ % (username, year)
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:

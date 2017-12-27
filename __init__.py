@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, session, flash, url_for, redi
 from functools import wraps
 import fileinput, gc
 from datetime import date, datetime
-from reportHelper import inexTrend, expenseStats, inexTrendAll, categoryStats
+from reportHelper import inexTrend, expenseStats, expenseStatsBar, inexTrendAll, categoryStats
 from helper import ( 
          getCurrencyList, getConversionRate, getCurrencySymbol, 
          mfNAV2File, getFundNAVDict, getNAV 
@@ -15,7 +15,7 @@ from dbHelper import (
          getCategoryType, addTransactionsDB, getNetworth, getInbox,
          getInboxCount, deleteMessageDB, sendMessage, markMsgRead,
          searchTransactions, getTransactionsForCategory, getAllCategoryStatsForMonth,
-         removeUser, checkTotalInvestmentAccounts, addInvestmentAccountDB,
+         getAllCategoryStatsForYear,removeUser, checkTotalInvestmentAccounts, addInvestmentAccountDB,
          getInvestmentAccount, getInvestmentAccounts, getInvestmentTransactions,
          addSIPTransaction, updateInvestmentAccountStatus, updateInvestmentAccountDB
          )
@@ -331,17 +331,19 @@ def yearataglance():
     flash("No reports as you don't have any accounts setup. Please start adding your accounts")
     jumbomessage = dashboardMessage(session['username'])
     return render_template('dashboard.html', jumbomessage=jumbomessage)
-  inexYear = expenseYear = date.today().year
+  year = curyear = date.today().year
   if request.method == "POST":
-    if 'inexyear' in request.form:
-      inexYear = request.form['inexyear']
-    elif 'expyear' in request.form:
-      expenseYear = request.form['expyear']
-  inexGraph = inexTrend(session['username'], inexYear)
-  expenseGraph = expenseStats(session['username'], expenseYear)
+      year = request.form['year']
+  yearexpenses = getAllCategoryStatsForYear(session['username'], year)
+  inexGraph = inexTrend(session['username'], year)
+  expenseGraph = expenseStats(session['username'], year)
+  expenseBarGraph = expenseStatsBar(session['username'], year)
   return render_template('yearataglance.html',
                           inexGraph=inexGraph,
-                          expenseGraph=expenseGraph)
+                          expenseGraph=expenseGraph,
+                          expenseBarGraph=expenseBarGraph,
+                          yearexpenses=yearexpenses,
+                          curyear=curyear, year=year)
 
 # Messages Route
 @app.route('/messages', methods=['GET', 'POST'])
