@@ -20,5 +20,5 @@ MYSQL_DATABASE_DB = 'mbmdev'
 # ------------ #
 # MF NAV Stuff #
 # ------------ #
-MFNAV_LINK = 'http://portal.amfiindia.com/spages/NAV0.txt'
+MFNAV_LINK = 'http://portal.amfiindia.com/spages/NAVALL.txt'
 MFNAV_FILE = '/tmp/mybanker_mfnav'
