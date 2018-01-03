@@ -174,11 +174,14 @@
 </div>
 </div>
 {% endif %}
-<p><a href="{{ url_for('investments') }}">Back to Investment Dashboard</a></p>
+<a class="btn btn-primary" href="{{ url_for('investments') }}" role="button">
+  <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>&nbsp;&nbsp;Investment Dashboard
+</a>
 {% if transactions %}
-<a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
-  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction</a>
-  {% endif %}
+  <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction
+  </a>
+{% endif %}
   <div class="panel panel-default" style="margin-top:15px;">
     <div class="panel-heading">
       <h3 class="panel-title">
