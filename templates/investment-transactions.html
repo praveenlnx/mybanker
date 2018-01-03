@@ -86,20 +86,41 @@
               <td>{{ currencySymbol }}&nbsp;{{ accinfo[0][13] }}</td>
             </tr>
             <tr>
-              <td>Value</td>
-              <td>
-                {% set value = accinfo[0][14]|float * nav[0]|float %}
-                {{ currencySymbol }}&nbsp;{{ '%0.2f' % value }}
-              </td>
+              {% if accinfo[0][15] == "Closed" %}
+                <td>Got Back</td>
+                <td>
+                  {% if accinfo[0][21] > accinfo[0][13] %}
+                    <font color="green">
+                  {% elif accinfo[0][21] < accinfo[0][13] %}
+                    <font color="red">
+                  {% endif %}
+                  {{ currencySymbol }}&nbsp;{{ accinfo[0][21] }}
+                  </font>
+                </td>
+              {% else %}
+                <td>Value</td>
+                <td>
+                  {% set value = accinfo[0][14]|float * nav[0]|float %}
+                  {% if value > accinfo[0][13] %}
+                    <font color="green">
+                  {% elif value < accinfo[0][13] %}
+                    <font color="red">
+                  {% endif %}
+                  {{ currencySymbol }}&nbsp;{{ '%0.2f' % value }}
+                  </font>
+                </td>
+              {% endif %}
             </tr>
-            <tr>
-              <td>Units</td>
-              <td>{{ accinfo[0][14] }}</td>
-            </tr>
-            <tr>
-              <td>NAV</td>
-              <td>{{ nav[0]|float }}<br><small><font color="gray">[{{ nav[1] }}]</font></small></td>
-            </tr>
+            {% if accinfo[0][15] != "Closed" %}
+              <tr>
+                <td>Units</td>
+                <td>{{ accinfo[0][14] }}</td>
+              </tr>
+              <tr>
+                <td>NAV</td>
+                <td>{{ nav[0]|float }}<br><small><font color="gray">[{{ nav[1] }}]</font></small></td>
+              </tr>
+            {% endif %}
           </table>
         </div>
       </div>
