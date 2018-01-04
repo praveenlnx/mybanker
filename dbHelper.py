@@ -451,6 +451,30 @@ def getInEx(username, year, period="selective"):
     gc.collect()
   return data
 
+# Get expense monthly since beginning for a user
+def getEx(username):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = """
+            SELECT YEAR(opdate), SUM(debit)
+            FROM transactions
+            WHERE owner = '%s'
+                  AND YEAR(opdate) > 2013
+                  AND account NOT IN (%s)
+                  AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+            GROUP BY EXTRACT(YEAR_MONTH FROM opdate)
+            ORDER BY EXTRACT(YEAR_MONTH FROM opdate)
+            """ % (username, getIgnoredAccounts(username))
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    return None
+  finally:
+    conn.close()
+    gc.collect()
+  return data
+
 # Get expense stats for a specific year
 def getExpenseStats(username, year):
   conn = mysql.connect()

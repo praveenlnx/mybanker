@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, session, flash, url_for, redi
 from functools import wraps
 import fileinput, gc
 from datetime import date, datetime
-from reportHelper import inexTrend, expenseStats, expenseStatsBar, inexTrendAll, categoryStats
+from reportHelper import inexTrend, expenseStats, expenseStatsBar, inexTrendAll, exTrendAll, categoryStats
 from helper import ( 
          getCurrencyList, getConversionRate, getCurrencySymbol, 
          mfNAV2File, getFundNAVDict, getNAV 
@@ -64,10 +64,11 @@ def dashboard():
         accounts = getAccounts(session['username'])
         networth = getNetworth(session['username'])
         inexAllGraph = inexTrendAll(session['username'])
+        exAllGraph = exTrendAll(session['username'])
       unreadCount = getInboxCount(session['username'], "unread")
       if unreadCount > 0:
         unread = unreadCount
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, unread=unread)
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, exAllGraph=exAllGraph, unread=unread)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
@@ -87,10 +88,11 @@ def dashboard():
         accounts = getAccounts(username)
         networth = getNetworth(username)
         inexAllGraph = inexTrendAll(session['username'])
+        exAllGraph = exTrendAll(session['username'])
       unreadCount = getInboxCount(session['username'], "unread")
       if unreadCount > 0:
         unread = unreadCount
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, unread=unread)
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, exAllGraph=exAllGraph, unread=unread)
   else:
     return render_template('index.html', message="Invalid credentials. Please try again", mtype="danger")
 

@@ -2,7 +2,7 @@ from flask import current_app as app
 import pygal
 import calendar
 from pygal.style import LightColorizedStyle
-from dbHelper import getInEx, getExpenseStats, getCategoryStats, getDetailedCategoryStats
+from dbHelper import getInEx, getEx, getExpenseStats, getCategoryStats, getDetailedCategoryStats
 
 # Generate bar chart for income/expense for the selected year
 def inexTrend(username, year):
@@ -59,6 +59,19 @@ def inexTrendAll(username):
     chart.x_labels = labelSeries
     chart.add('Income', income_data)
     chart.add('Expense', expense_data)
+  else:
+    chart.add('line', [])
+  return chart.render_data_uri()
+
+# Generate dot chart for expense trend since beginning for a user
+def exTrendAll(username):
+  chart = pygal.Dot(show_legend=False)
+  exAllData = getEx(username)
+  chart.x_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  if not exAllData is None:
+    yearList = set(x[0] for x in exAllData)
+    for year in reversed(sorted(yearList)):
+      chart.add('%s' % year, [x[1] for x in exAllData if x[0] == year])    
   else:
     chart.add('line', [])
   return chart.render_data_uri()
