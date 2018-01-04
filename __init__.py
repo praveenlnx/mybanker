@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, session, flash, url_for, redi
 from functools import wraps
 import fileinput, gc
 from datetime import date, datetime
-from reportHelper import inexTrend, expenseStats, expenseStatsBar, inexTrendAll, exTrendAll, categoryStats
+from reportHelper import inexTrend, expenseStats, expenseStatsBar, inexTrendAll, exTrendAll, categoryStats, categoryAllGraphDot
 from helper import ( 
          getCurrencyList, getConversionRate, getCurrencySymbol, 
          mfNAV2File, getFundNAVDict, getNAV 
@@ -313,17 +313,20 @@ def categorystats():
     return render_template('dashboard.html', jumbomessage=jumbomessage)
   categoryStatsGraph = categoryStatsGraphYearly = None
   categoryStatsData = categoryStatsDataYearly = None
+  categoryAllGraph = None
   if request.method == "POST":
     statcategory = request.form['statcategory']
     categoryStatsGraph, categoryStatsData = categoryStats(session['username'], statcategory, "YEAR_MONTH")
     categoryStatsGraphYearly, categoryStatsDataYearly = categoryStats(session['username'], statcategory, "YEAR")
+    categoryAllGraph = categoryAllGraphDot(session['username'], statcategory)
   categories = getCategories()
   return render_template('categorystats.html',
                           categories=categories,
                           categoryStatsGraph=categoryStatsGraph,
                           categoryStatsData=categoryStatsData,
                           categoryStatsGraphYearly=categoryStatsGraphYearly,
-                          categoryStatsDataYearly=categoryStatsDataYearly)
+                          categoryStatsDataYearly=categoryStatsDataYearly,
+                          categoryAllGraph=categoryAllGraph)
 
 # Year at a glance Route
 @app.route('/yearataglance', methods=['GET', 'POST'])

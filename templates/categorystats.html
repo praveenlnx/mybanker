@@ -101,6 +101,20 @@
     {% endif %}
   </div> 
 </div>
+{% if categoryAllGraph %}
+<div class="row">
+  <div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Category Stats all Year since beginning</h3>
+    </div>
+    <div class="panel-body">
+      <embed type="image/svg+xml" src={{categoryAllGraph|safe}} style='max-width:1000px'/>
+    </div>
+  </div>
+  </div>
+</div>
+{% endif %}
 {% endif %}
 </div>
 </div>

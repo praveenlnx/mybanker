@@ -529,6 +529,33 @@ def getCategoryStats(username, category, period="YEAR_MONTH"):
     gc.collect()
   return data
 
+# Get category stats for specific category for specific user for dot graph
+def getCategoryStatsDot(username, category):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  optype = "debit"
+  if getCategoryType(category) == "IN":
+    optype = "credit"
+  try:
+    query = """
+            SELECT YEAR(opdate), SUM(%s)
+            FROM transactions
+            WHERE owner = '%s'
+                  AND category = '%s'
+                  AND account NOT IN (%s)
+                  AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+            GROUP BY EXTRACT(YEAR_MONTH FROM opdate)
+            ORDER BY EXTRACT(YEAR_MONTH FROM opdate)
+            """ % (optype, username, category, getIgnoredAccounts(username))
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    return None
+  finally:
+    conn.close()
+    gc.collect()
+  return data
+
 # Get category stats to fill previous and current month expenses in reports
 def getAllCategoryStatsForMonth(username, month):
   # month: 0 - current, 1 - previous
