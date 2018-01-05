@@ -23,7 +23,7 @@ def inexTrend(username, year):
 
 # Generate pie chart for expense stats for the selected year
 def expenseStats(username, year):
-  chart = pygal.Pie(legend_at_bottom=True, tooltip_border_radius=10, height=750)
+  chart = pygal.Pie(legend_at_bottom=True, tooltip_border_radius=10, height=750, inner_radius=.4)
   expensedata = getExpenseStats(username, year)
   if expensedata:
     for row in expensedata:
