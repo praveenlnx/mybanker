@@ -162,15 +162,15 @@ def removeuser(username):
   return render_template('listuser.html', userdict=userdict, message=message, mtype="info")
 
 # Change Admin Password route
-@app.route('/changeAdminPass', methods=['GET', 'POST'])
+@app.route('/changePass', methods=['GET', 'POST'])
 @login_required
-def changeAdminPass():
+def changePass():
   if request.method == "POST":
     currentPW = request.form['currentpw']
     newPW = request.form['newpw']
-    data = updatePassword('admin', currentPW, newPW)
+    data = updatePassword(session['username'], currentPW, newPW)
     flash(data)
-  return render_template('change_admin_pass.html')
+  return render_template('change_pass.html', username=session['username'])
 
 # List User Route
 @app.route('/listuser')
