@@ -589,7 +589,7 @@ def getTransactionYearsCategory(username, category):
 def getCategoryStatsAllYears(username, category):
   years = getTransactionYearsCategory(username, category)
   data = []
-  if not years is None:
+  if years:
     for year in years:
       data.append(getCategoryStatsForYear(username, category, year[0]))
     return data

@@ -53,7 +53,7 @@ def mfNAV2File():
 # Get Nav of the given MF scheme code
 def getNAV(code):
   nav = None
-  if not code is None:
+  if code:
     with open(app.config['MFNAV_FILE']) as f:
       data = f.read()
     navdetails = re.findall("%s.*" % code, data)

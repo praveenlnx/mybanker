@@ -11,7 +11,7 @@ def inexTrend(username, year):
   income_data = []
   expense_data = []
   inexdata = getInEx(username, year)
-  if not inexdata is None:
+  if inexdata:
     for row in inexdata:
       income_data.append(row[1])
       expense_data.append(row[2])
@@ -25,7 +25,7 @@ def inexTrend(username, year):
 def expenseStats(username, year):
   chart = pygal.Pie(legend_at_bottom=True, tooltip_border_radius=10, height=750)
   expensedata = getExpenseStats(username, year)
-  if not expensedata is None:
+  if expensedata:
     for row in expensedata:
       chart.add(row[0], row[1])
   else:
@@ -36,7 +36,7 @@ def expenseStats(username, year):
 def expenseStatsBar(username, year):
   chart = pygal.HorizontalBar(legend_at_bottom=True, tooltip_border_radius=10, height=750)
   expensedata = getExpenseStats(username, year)
-  if not expensedata is None:
+  if expensedata:
     for row in expensedata:
       chart.add(row[0], row[1])
   else:
@@ -50,7 +50,7 @@ def inexTrendAll(username):
   expense_data = []
   labelSeries = []
   inexAllData = getInEx(username, None, "all")
-  if not inexAllData is None:
+  if inexAllData:
     for row in inexAllData:
       (year,month) = (str(row[0])[:4], str(row[0])[4:])
       labelSeries.append("%s %s" % (year, calendar.month_abbr[int(month)]))
@@ -68,7 +68,7 @@ def exTrendAll(username):
   chart = pygal.Dot(show_legend=False)
   exAllData = getEx(username)
   chart.x_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'AVG']
-  if not exAllData is None:
+  if exAllData:
     yearList = set(x[0] for x in exAllData)
     for year in reversed(sorted(yearList)):
       expenses = [x[1] for x in exAllData if x[0] == year]
@@ -89,7 +89,7 @@ def categoryStats(username, category, period="YEAR_MONTH"):
   labelSeries = []
   statsdata = None
   data = getCategoryStats(username, category, period)
-  if not data is None:
+  if data:
     statsdata = getDetailedCategoryStats(data, period)
     for row in data:
       if period == "YEAR_MONTH":
@@ -112,9 +112,9 @@ def categoryAllGraphDot(username, category):
   chart = pygal.Dot(show_legend=False)
   data = getCategoryStatsAllYears(username, category)
   chart.x_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'AVG']
-  if not data is None:
+  if data:
     for row in data:
-      if not row is None:
+      if row:
         year = set(x[0] for x in row if x[0] is not None)
         expenses = [x[1] for x in row]
         expenses.append(int(sum(expenses)/len(expenses)))
