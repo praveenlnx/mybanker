@@ -134,10 +134,7 @@
   <div class="row" style="margin-top:20px;">
    <div class="col-md-6">
     {% if accinfo[0][15] == 'Active' or accinfo[0][15] == 'Holding' %}
-          <!--<a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Closed') }}" role="button">
-           Close and archive this account
-         </a>-->
-         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#closeModal">Close and archive</button>
+         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#closeModal">Close and archive</button>
          <!-- Modal dialog Start -->
          <div id="closeModal" class="modal fade" role="dialog">
           <div class="modal-dialog modal-sm">
@@ -162,11 +159,11 @@
    <!-- Modal dialog End-->
    {% endif %}
    {% if accinfo[0][15] == 'Active' %}
-   <a class="btn btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Holding') }}" role="button">
+   <a class="btn btn-sm btn-default" href="{{ url_for('investment_transactions', username=accinfo[0][1], accid=accinfo[0][0], action='Holding') }}" role="button">
      Close Sip and hold this account
    </a>
    {% endif %}
-   <a class="btn btn-default" href="{{ url_for('editinvestment', accid=accinfo[0][0]) }}" role="button">
+   <a class="btn btn-sm btn-default" href="{{ url_for('editinvestment', accid=accinfo[0][0]) }}" role="button">
      Edit Account Details
    </a>
  </div>
@@ -174,11 +171,11 @@
 </div>
 </div>
 {% endif %}
-<a class="btn btn-primary" href="{{ url_for('investments') }}" role="button">
+<a class="btn btn-sm btn-primary" href="{{ url_for('investments') }}" role="button">
   <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>&nbsp;&nbsp;Investment Dashboard
 </a>
 {% if transactions %}
-  <a class="btn btn-primary" href="{{ url_for('addsip') }}" role="button">
+  <a class="btn btn-sm btn-primary" href="{{ url_for('addsip') }}" role="button">
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add SIP Transaction
   </a>
 {% endif %}

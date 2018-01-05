@@ -48,6 +48,7 @@
                 <tr>
                   <th>Category</th>
                   <th>Expense</th>
+                  <th>Monthly Avg</th>
                 </tr>
               </thead>
               <tbody>
@@ -55,6 +56,7 @@
                   <tr>
                     <td>{{ row[0] }}</td>
                     <td>&pound;&nbsp;{{ row[1] }}</td>
+                    <td>&pound;&nbsp;{{ '%0.2f' % (row[1]/12)|float }}</td>
                   </tr>
                 {% endfor %}
               </tbody>
