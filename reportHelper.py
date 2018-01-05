@@ -67,11 +67,14 @@ def inexTrendAll(username):
 def exTrendAll(username):
   chart = pygal.Dot(show_legend=False)
   exAllData = getEx(username)
-  chart.x_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  chart.x_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'AVG']
   if not exAllData is None:
     yearList = set(x[0] for x in exAllData)
     for year in reversed(sorted(yearList)):
-      chart.add('%s' % year, [x[1] for x in exAllData if x[0] == year])    
+      expenses = [x[1] for x in exAllData if x[0] == year]
+      if len(expenses) == 12:
+        expenses.append(int(sum(expenses)/len(expenses)))
+      chart.add('%s' % year, expenses)
   else:
     chart.add('line', [])
   return chart.render_data_uri()
@@ -108,12 +111,14 @@ def categoryStats(username, category, period="YEAR_MONTH"):
 def categoryAllGraphDot(username, category):
   chart = pygal.Dot(show_legend=False)
   data = getCategoryStatsAllYears(username, category)
-  chart.x_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  chart.x_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'AVG']
   if not data is None:
     for row in data:
       if not row is None:
         year = set(x[0] for x in row if x[0] is not None)
-        chart.add('%s' % next(iter(year)), [x[1] for x in row])
+        expenses = [x[1] for x in row]
+        expenses.append(int(sum(expenses)/len(expenses)))
+        chart.add('%s' % next(iter(year)), expenses)
   else:
     chart.add('line',[])
   return chart.render_data_uri()
