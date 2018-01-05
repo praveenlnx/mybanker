@@ -319,7 +319,8 @@ def categorystats():
     categoryStatsGraph, categoryStatsData = categoryStats(session['username'], statcategory, "YEAR_MONTH")
     categoryStatsGraphYearly, categoryStatsDataYearly = categoryStats(session['username'], statcategory, "YEAR")
     categoryAllGraph = categoryAllGraphDot(session['username'], statcategory)
-  categories = getCategories()
+  categoriesRaw = getCategories()
+  categories = ([x for x in categoriesRaw[0] if x != "TRANSFER IN"], [x for x in categoriesRaw[1] if x != "TRANSFER OUT"])
   return render_template('categorystats.html',
                           categories=categories,
                           categoryStatsGraph=categoryStatsGraph,

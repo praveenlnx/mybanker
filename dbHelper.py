@@ -529,8 +529,8 @@ def getCategoryStats(username, category, period="YEAR_MONTH"):
     gc.collect()
   return data
 
-# Get category stats for specific category for specific user for dot graph
-def getCategoryStatsDot(username, category):
+# Get category stats for specific category for specific user for specific year for dot graph
+def getCategoryStatsForYear(username, category, year):
   conn = mysql.connect()
   cursor = conn.cursor()
   optype = "debit"
@@ -538,15 +538,21 @@ def getCategoryStatsDot(username, category):
     optype = "credit"
   try:
     query = """
-            SELECT YEAR(opdate), SUM(%s)
-            FROM transactions
-            WHERE owner = '%s'
-                  AND category = '%s'
-                  AND account NOT IN (%s)
-                  AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
-            GROUP BY EXTRACT(YEAR_MONTH FROM opdate)
-            ORDER BY EXTRACT(YEAR_MONTH FROM opdate)
-            """ % (optype, username, category, getIgnoredAccounts(username))
+            SELECT SUM_DATA.year, COALESCE(SUM_DATA.%s, 0.00) AS %s
+            FROM months
+            LEFT JOIN (
+              SELECT YEAR(opdate) AS year, MONTH(opdate) AS month, SUM(%s) AS %s
+              FROM transactions
+              WHERE owner = '%s'
+                    AND YEAR(opdate) = %s
+                    AND category = '%s'
+                    AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+                    AND account NOT IN (%s)
+              GROUP BY MONTH(opdate)
+            ) SUM_DATA
+            ON months.name = SUM_DATA.month
+            ORDER BY months.name
+            """ % (optype, optype, optype, optype, username, year, category, getIgnoredAccounts(username))
     cursor.execute(query)
     data = cursor.fetchall()
   except Exception as e:
@@ -555,6 +561,40 @@ def getCategoryStatsDot(username, category):
     conn.close()
     gc.collect()
   return data
+
+# Get distinct year where we have transactions for the give category
+def getTransactionYearsCategory(username, category):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = """
+            SELECT DISTINCT(YEAR(opdate))
+            FROM transactions
+            WHERE owner = '%s'
+                  AND category = '%s'
+                  AND YEAR(opdate) > 2013
+            ORDER BY YEAR(opdate) DESC
+            """ % (username, category)
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    return None
+  finally:
+    conn.close()
+    gc.collect()
+  return data
+
+# Get category stats for each year in a separate list for all years
+# It will be list of lists
+def getCategoryStatsAllYears(username, category):
+  years = getTransactionYearsCategory(username, category)
+  data = []
+  if not years is None:
+    for year in years:
+      data.append(getCategoryStatsForYear(username, category, year[0]))
+    return data
+  else:
+    return None
 
 # Get category stats to fill previous and current month expenses in reports
 def getAllCategoryStatsForMonth(username, month):
