@@ -53,7 +53,7 @@ def dashboard():
   jumbomessage = None
   accounts = None
   networth = 0.00
-  inexAllGraph = None
+  inexAllGraph = exAllGraph = None
   unread = None
   if not request.method == "POST":
     if 'logged_in' in session:
