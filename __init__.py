@@ -419,6 +419,7 @@ def investments():
   currencySymbol = getCurrencySymbol('INR')
   totalAccounts = checkTotalInvestmentAccounts(session['username'])
   accountsAvailable = activeAccounts = holdingAccounts = closedAccounts = None
+  navdict = None
   if totalAccounts == 0:
     flash("You don't have any investment accounts\nPlease add your investment details")
   else:
