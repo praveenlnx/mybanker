@@ -426,7 +426,7 @@ def getInEx(username, year, period="selective"):
                WHERE owner = '%s'
                      AND YEAR(opdate) = %s
                      AND account NOT IN (%s)
-                     AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+                     AND category NOT IN ('OPENING BALANCE','TRANSFER IN','TRANSFER OUT')
                GROUP BY MONTH(opdate)
               ) SUM_DATA
               ON months.name = SUM_DATA.mnth
@@ -438,7 +438,7 @@ def getInEx(username, year, period="selective"):
               FROM transactions
               WHERE owner = '%s'
                     AND account NOT IN (%s)
-                    AND category NOT IN ('TRANSFER IN','TRANSFER OUT')
+                    AND category NOT IN ('OPENING BALANCE','TRANSFER IN','TRANSFER OUT')
               GROUP BY period
               ORDER BY period
               """ % (username, getIgnoredAccounts(username))
