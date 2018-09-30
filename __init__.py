@@ -229,6 +229,10 @@ def account_transactions(username, accountname, period):
 @app.route('/addtransaction', methods=['GET', 'POST'])
 @login_required
 def addtransaction():
+  if checkTotalAccounts(session['username']) == 0:
+    flash("Please add an account first before trying to add a transaction!!")
+    jumbomessage = dashboardMessage(session['username'])
+    return render_template('dashboard.html', jumbomessage=jumbomessage)
   inc_categories, exp_categories = getCategories()
   categories = exp_categories + inc_categories
   accounts = getAccounts(session['username'])
@@ -245,6 +249,10 @@ def addtransaction():
 @app.route('/transferfunds', methods=['GET', 'POST'])
 @login_required
 def transferfunds():
+  if checkTotalAccounts(session['username']) == 0:
+    flash("Please add some accounts first before trying to transfer funds!!")
+    jumbomessage = dashboardMessage(session['username'])
+    return render_template('dashboard.html', jumbomessage=jumbomessage)
   accounts = getAccounts(session['username'])
   if request.method == "POST":
     fromacc = request.form['fromaccount']
