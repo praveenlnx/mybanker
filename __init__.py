@@ -3,7 +3,10 @@ from flask import Flask, render_template, request, session, flash, url_for, redi
 from functools import wraps
 import fileinput, gc
 from datetime import date, datetime
-from reportHelper import inexTrend, expenseStats, expenseStatsBar, inexTrendAll, inexTrendYearlyAll, exTrendAll, categoryStats, categoryAllGraphDot
+from reportHelper import (
+         inexTrend, expenseStats, expenseStatsBar, inexTrendAll, inexTrendYearlyAll, 
+         exTrendAll, categoryStats, categoryAllGraphDot, investmentTrend
+         )
 from helper import ( 
          getCurrencyList, getConversionRate, getCurrencySymbol, 
          mfNAV2File, getFundNAVDict, getNAV 
@@ -429,6 +432,7 @@ def investments():
   currencySymbol = getCurrencySymbol('INR')
   totalAccounts = checkTotalInvestmentAccounts(session['username'])
   accountsAvailable = activeAccounts = holdingAccounts = closedAccounts = None
+  investmentTrendGraph = None
   navdict = None
   if totalAccounts == 0:
     flash("You don't have any investment accounts\nPlease add your investment details")
@@ -437,6 +441,7 @@ def investments():
     activeAccounts = getInvestmentAccounts(session['username'], 'Active')
     holdingAccounts = getInvestmentAccounts(session['username'], 'Holding')
     closedAccounts = getInvestmentAccounts(session['username'], 'Closed')
+    investmentTrendGraph = investmentTrend(session['username'])
     navdict = getFundNAVDict(session['username'])
   return render_template('investments.html', 
                           accountsAvailable=accountsAvailable, 
@@ -444,6 +449,7 @@ def investments():
                           holdingAccounts=holdingAccounts,
                           closedAccounts=closedAccounts,
                           currencySymbol=currencySymbol,
+                          investmentTrendGraph=investmentTrendGraph,
                           navdict=navdict)
 
 # Add new investment Route

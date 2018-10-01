@@ -305,6 +305,18 @@
 </div>
 {% endif %}
 <!-- Panel end  -->
+<!-- Panel Start -->
+{% if investmentTrendGraph %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Monthly Investments since beginning</h3>
+  </div>
+  <div class="panel-body">
+    <embed type="image/svg+xml" src={{investmentTrendGraph|safe}} style='max-width:100%'>
+  </div>
+</div>
+{% endif %}
+<!-- Panel end  -->
 {% endif %}
 </div>
 <!-- Container div end -->

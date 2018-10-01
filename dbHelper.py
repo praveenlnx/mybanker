@@ -1054,3 +1054,26 @@ def updateInvestmentAccountStatus(accid, owner, status, closingvalue=0.00):
     conn.close()
     gc.collect()
   return "Account status changed to %s!!" % status
+
+# Get monthly investments made
+# To be fed to the line chart in investment dashboard
+def getMonthlyInvestments(username):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+
+  try:
+    query = "SELECT EXTRACT(YEAR_MONTH FROM opdate) AS Period, SUM(sipamount) AS Amount \
+             FROM investmenttransactions \
+             WHERE owner = '%s' \
+             GROUP BY Period \
+             ORDER BY Period" \
+            % username
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    return None
+  finally:
+    conn.close()
+    gc.collect()
+  return data
+
