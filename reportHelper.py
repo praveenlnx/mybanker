@@ -65,9 +65,10 @@ def inexTrendAll(username):
 
 # Generate line chart for income expense yearly trend since beginning for a user
 def inexTrendYearlyAll(username):
-  chart = pygal.Bar(show_legend=False, pretty_print=True, tooltip_border_radius=10, height=300, style=LightColorizedStyle)
+  chart = pygal.Bar(legend_at_bottom=True, legend_at_bottom_columns=3, pretty_print=True, tooltip_border_radius=10, height=300, style=LightColorizedStyle)
   income_data = []
   expense_data = []
+  savings_data = []
   labelSeries = []
   inexAllYearlyData = getInExYearly(username)
   if inexAllYearlyData:
@@ -75,9 +76,11 @@ def inexTrendYearlyAll(username):
       labelSeries.append(row[0])
       income_data.append(row[1])
       expense_data.append(row[2])
+      savings_data.append(row[1] - row[2])
     chart.x_labels = labelSeries
     chart.add('Income', income_data)
     chart.add('Expense', expense_data)
+    chart.add('Savings', savings_data)
   else:
     chart.add('line', [])
   return chart.render_data_uri()
