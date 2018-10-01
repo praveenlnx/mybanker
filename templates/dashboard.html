@@ -105,11 +105,21 @@
       </div>
       <div class="panel panel-default">
        <div class="panel-heading">
-         <h3 class="panel-title"> Income/Expense Trend since beginning</h3>
+         <h3 class="panel-title"> [Monthly] Income/Expense Trend since beginning</h3>
        </div>
        <div class="panel-body">
          {% if inexAllGraph %}
          <embed type="image/svg+xml" src={{inexAllGraph|safe}} style='max-width:1000px'/>
+         {% endif %}
+       </div>
+      </div>
+      <div class="panel panel-default">
+       <div class="panel-heading">
+         <h3 class="panel-title"> [Yearly] Income/Expense Trend since beginning</h3>
+       </div>
+       <div class="panel-body">
+         {% if inexAllGraph %}
+         <embed type="image/svg+xml" src={{inexYearlyAllGraph|safe}} style='max-width:1000px'/>
          {% endif %}
        </div>
       </div>

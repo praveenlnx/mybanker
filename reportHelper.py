@@ -2,7 +2,7 @@ from flask import current_app as app
 import pygal
 import calendar
 from pygal.style import LightColorizedStyle
-from dbHelper import getInEx, getEx, getExpenseStats, getCategoryStats, getCategoryStatsAllYears, getDetailedCategoryStats
+from dbHelper import getInEx, getInExYearly, getEx, getExpenseStats, getCategoryStats, getCategoryStatsAllYears, getDetailedCategoryStats
 
 # Generate bar chart for income/expense for the selected year
 def inexTrend(username, year):
@@ -54,6 +54,25 @@ def inexTrendAll(username):
     for row in inexAllData:
       (year,month) = (str(row[0])[:4], str(row[0])[4:])
       labelSeries.append("%s %s" % (year, calendar.month_abbr[int(month)]))
+      income_data.append(row[1])
+      expense_data.append(row[2])
+    chart.x_labels = labelSeries
+    chart.add('Income', income_data)
+    chart.add('Expense', expense_data)
+  else:
+    chart.add('line', [])
+  return chart.render_data_uri()
+
+# Generate line chart for income expense yearly trend since beginning for a user
+def inexTrendYearlyAll(username):
+  chart = pygal.Bar(show_legend=False, pretty_print=True, tooltip_border_radius=10, height=300, style=LightColorizedStyle)
+  income_data = []
+  expense_data = []
+  labelSeries = []
+  inexAllYearlyData = getInExYearly(username)
+  if inexAllYearlyData:
+    for row in inexAllYearlyData:
+      labelSeries.append(row[0])
       income_data.append(row[1])
       expense_data.append(row[2])
     chart.x_labels = labelSeries

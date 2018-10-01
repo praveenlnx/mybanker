@@ -475,6 +475,30 @@ def getEx(username):
     gc.collect()
   return data
 
+# Get income/expense yearly since beginning for a user
+def getInExYearly(username):
+  conn = mysql.connect()
+  cursor = conn.cursor()
+  try:
+    query = """
+            SELECT YEAR(opdate), SUM(credit), SUM(debit)
+            FROM transactions
+            WHERE owner = '%s'
+                  AND YEAR(opdate) > 2013
+                  AND account NOT IN (%s)
+                  AND category NOT IN ('OPENING BALANCE','TRANSFER IN','TRANSFER OUT')
+            GROUP BY YEAR(opdate)
+            ORDER BY YEAR(opdate)
+            """ % (username, getIgnoredAccounts(username))
+    cursor.execute(query)
+    data = cursor.fetchall()
+  except Exception as e:
+    return None
+  finally:
+    conn.close()
+    gc.collect()
+  return data
+
 # Get expense stats for a specific year
 def getExpenseStats(username, year):
   conn = mysql.connect()

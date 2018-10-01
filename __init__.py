@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, session, flash, url_for, redi
 from functools import wraps
 import fileinput, gc
 from datetime import date, datetime
-from reportHelper import inexTrend, expenseStats, expenseStatsBar, inexTrendAll, exTrendAll, categoryStats, categoryAllGraphDot
+from reportHelper import inexTrend, expenseStats, expenseStatsBar, inexTrendAll, inexTrendYearlyAll, exTrendAll, categoryStats, categoryAllGraphDot
 from helper import ( 
          getCurrencyList, getConversionRate, getCurrencySymbol, 
          mfNAV2File, getFundNAVDict, getNAV 
@@ -53,7 +53,7 @@ def dashboard():
   jumbomessage = None
   accounts = None
   networth = 0.00
-  inexAllGraph = exAllGraph = None
+  inexAllGraph = exAllGraph = inexYearlyAllGraph = None
   unread = None
   if not request.method == "POST":
     if 'logged_in' in session:
@@ -65,10 +65,11 @@ def dashboard():
         networth = getNetworth(session['username'])
         inexAllGraph = inexTrendAll(session['username'])
         exAllGraph = exTrendAll(session['username'])
+        inexYearlyAllGraph = inexTrendYearlyAll(session['username'])
       unreadCount = getInboxCount(session['username'], "unread")
       if unreadCount > 0:
         unread = unreadCount
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, exAllGraph=exAllGraph, unread=unread)
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, inexYearlyAllGraph=inexYearlyAllGraph, exAllGraph=exAllGraph, unread=unread)
     return render_template('index.html', message="You need to login first", mtype="warning")
   username = request.form['username']
   password = request.form['password']
@@ -88,11 +89,12 @@ def dashboard():
         accounts = getAccounts(username)
         networth = getNetworth(username)
         inexAllGraph = inexTrendAll(session['username'])
+        inexYearlyAllGraph = inexTrendYearlyAll(session['username'])
         exAllGraph = exTrendAll(session['username'])
       unreadCount = getInboxCount(session['username'], "unread")
       if unreadCount > 0:
         unread = unreadCount
-      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, exAllGraph=exAllGraph, unread=unread)
+      return render_template(dashboard, jumbomessage=jumbomessage, accounts=accounts, networth=networth, inexAllGraph=inexAllGraph, inexYearlyAllGraph=inexYearlyAllGraph, exAllGraph=exAllGraph, unread=unread)
   else:
     return render_template('index.html', message="Invalid credentials. Please try again", mtype="danger")
 
