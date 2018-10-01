@@ -58,7 +58,7 @@ def getNAV(code):
       data = f.read()
     navdetails = re.findall("%s.*" % code, data)
     nav = navdetails[0].split(';')[4]
-    navDate = navdetails[0].split(';')[7]
+    navDate = navdetails[0].split(';')[5]
   return [nav,navDate]
 
 # Get Nav for all active and holding accounts in a dictionary for the given user
